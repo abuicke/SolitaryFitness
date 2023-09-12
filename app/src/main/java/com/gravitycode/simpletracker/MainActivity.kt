@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,11 +57,19 @@ fun <E> LazyList(listItems: List<E>, modifier: Modifier = Modifier) {
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
             ) {
-                Text(
-                    modifier = Modifier.padding(12.dp),
-                    text = listItem.toString(),
-                    fontSize = 24.sp
-                )
+                Row() {
+                    Text(
+                        modifier = Modifier.padding(12.dp),
+                        text = listItem.toString(),
+                        fontSize = 24.sp
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        modifier = Modifier.padding(12.dp),
+                        text = Numbers.ZERO.string,
+                        fontSize = 24.sp
+                    )
+                }
             }
         }
     }
