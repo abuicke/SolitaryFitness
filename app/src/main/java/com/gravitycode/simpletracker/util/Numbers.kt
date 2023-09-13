@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker
+package com.gravitycode.simpletracker.util
 
 enum class Numbers(val integer: Int, val float: Float, val double: Double, val string: String) {
 
