@@ -48,7 +48,6 @@ android {
 
 dependencies {
 
-    //noinspection GradleDependency
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
@@ -59,6 +58,10 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     implementation("uy.kohesive.klutter:klutter-core:3.0.0")
+
+    implementation("io.reactivex.rxjava3:rxjava:3.1.7")
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -3,6 +3,7 @@ package com.gravitycode.simpletracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,6 +57,9 @@ fun <E> LazyList(listItems: List<E>, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
+                    .clickable {
+                        // TODO: This is where you need a model that gets updated and then updates the view.
+                    }
             ) {
                 Row() {
                     Text(
