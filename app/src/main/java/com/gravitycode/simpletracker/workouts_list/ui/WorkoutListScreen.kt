@@ -14,11 +14,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.gravitycode.simpletracker.workouts_list.Workouts
+import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gravitycode.simpletracker.util.Numbers
+import com.gravitycode.simpletracker.workouts_list.util.Workouts
+import com.gravitycode.simpletracker.workouts_list.view_model.WorkoutListViewModel
 
 @Composable
-fun WorkoutsList(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun WorkoutListScreen(
+    navController: NavController,
+    viewModel: WorkoutListViewModel = hiltViewModel()
+) {
+    WorkoutList()
+}
+
+@Composable
+fun WorkoutList(modifier: Modifier = Modifier, onClick: () -> Unit) {
     LazyList(modifier, Workouts.DEFAULT_WORKOUTS, onClick)
 }
 

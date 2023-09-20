@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.ui.theme
+package com.gravitycode.simpletracker.app.ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

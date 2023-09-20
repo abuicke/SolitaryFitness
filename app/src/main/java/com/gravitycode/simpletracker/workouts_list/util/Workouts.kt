@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workouts_list
+package com.gravitycode.simpletracker.workouts_list.util
 
 import uy.klutter.core.collections.asReadOnly
 

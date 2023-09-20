@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.ui.theme
+package com.gravitycode.simpletracker.app.ui
 
 import android.app.Activity
 import android.os.Build
