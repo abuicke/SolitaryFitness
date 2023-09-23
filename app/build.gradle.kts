@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,11 +49,6 @@ android {
     }
 }
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
 
     //noinspection GradleDependency
@@ -79,12 +73,20 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.2")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    // Dagger 2
+    implementation("com.google.dagger:dagger:2.48")
+    kapt("com.google.dagger:dagger-compiler:2.48")
+    implementation("com.google.dagger:dagger-android:2.48")
+//    if you use the support libraries
+//    implementation("com.google.dagger:dagger-android-support:2.x")
+    annotationProcessor("com.google.dagger:dagger-android-processor:2.48")
+
+    // Proto DataStore
+    implementation("androidx.datastore:datastore:1.0.0")
+    implementation("androidx.datastore:datastore-rxjava3:1.0.0")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
