@@ -9,6 +9,8 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 
 // TODO: Move to Dagger
 // TODO: Switch to [RxDataStore] - https://developer.android.com/reference/kotlin/androidx/datastore/preferences/rxjava3/package-summary
@@ -35,7 +37,16 @@ class WorkoutHistoryRepositoryImpl : WorkoutHistoryRepository {
 
     override suspend fun getWorkoutHistory(context: Context): Single<WorkoutHistory> {
 
-        val exampleCounterFlow = context.dataStore.data
+        val workouts = Workout.values()
+        var i = 0
+        context.dataStore.data.map { preferences ->
+            val workoutName = workouts[i].toPrettyString()
+            val count = preferences[intPreferencesKey(workouts[i++].toString())]
+            /**
+             * I think I'm supposed to return something here? I have no idea what this is even doing
+             * */
+            Log.i("read_work_history", "$workoutName: $count")
+        }
 
 
 //        for (key in preferenceKeys) {
