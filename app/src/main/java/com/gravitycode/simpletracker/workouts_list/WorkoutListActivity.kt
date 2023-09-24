@@ -1,12 +1,14 @@
 package com.gravitycode.simpletracker.workouts_list
 
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.ComponentActivity
-import com.gravitycode.simpletracker.app.SimpleTrackerApp
-import com.gravitycode.simpletracker.util.withDefault
+import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistoryRepositoryImpl
 import com.gravitycode.simpletracker.workouts_list.util.Workout
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.EnumMap
 import javax.inject.Inject
 
@@ -21,7 +23,9 @@ class WorkoutListActivity : ComponentActivity() {
 //        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
-//        val workoutReps = EnumMap<Workout, Int>(Workout::class.java)
+        GlobalScope.launch(Dispatchers.IO) {
+            WorkoutHistoryRepositoryImpl().getWorkoutHistory(this@WorkoutListActivity)
+        }
 
         /**
          * How to use Rx with Model-ViewModel architecture for onClick

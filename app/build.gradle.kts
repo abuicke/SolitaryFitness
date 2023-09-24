@@ -25,7 +25,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -61,16 +64,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    // Klutter
-    implementation("uy.kohesive.klutter:klutter-core:3.0.0")
-
     // Rx
     implementation("io.reactivex.rxjava3:rxjava:3.1.7")
     implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-
-    // Timber
-    implementation("com.jakewharton.timber:timber:5.0.1")
 
     // Navigation
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
@@ -83,10 +80,9 @@ dependencies {
 //    implementation("com.google.dagger:dagger-android-support:2.x")
     annotationProcessor("com.google.dagger:dagger-android-processor:2.48")
 
-    // Proto DataStore
-    implementation("androidx.datastore:datastore:1.0.0")
-    implementation("androidx.datastore:datastore-rxjava3:1.0.0")
-
+    // Data Store
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

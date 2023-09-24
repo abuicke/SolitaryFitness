@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.gravitycode.simpletracker.util.Numbers
+import com.gravitycode.simpletracker.util.Number
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import com.gravitycode.simpletracker.workouts_list.view_model.WorkoutListViewModel
 
@@ -60,7 +60,7 @@ private fun <E> LazyList(
                     Spacer(Modifier.weight(1f))
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = Numbers.ZERO.string,
+                        text = Number.ZERO.string,
                         fontSize = 24.sp
                     )
                 }
