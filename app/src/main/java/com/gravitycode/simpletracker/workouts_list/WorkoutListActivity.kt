@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.lifecycleScope
+import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistory
+import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistoryRepository
 import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistoryRepositoryImpl
 import com.gravitycode.simpletracker.workouts_list.repository.dataStore
 import com.gravitycode.simpletracker.workouts_list.util.Workout
@@ -28,21 +30,15 @@ class WorkoutListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-//            WorkoutHistoryRepositoryImpl().getWorkoutHistory(this@WorkoutListActivity)
-
-            val workouts = Workout.values()
-            var i = 0
-
-            dataStore.data.map { preferences ->
-                val workoutName = workouts[i].toPrettyString()
-                val count = preferences[intPreferencesKey(workouts[i++].toString())]
-                /**
-                 * I think I'm supposed to return something here? I have no idea what this is even doing
-                 * */
-                Log.i("read_work_history", "$workoutName: $count")
-            }.collect { int ->
-                Log.i("read_work_history", "$int")
-            }
+            /**
+             * TODO: Functions not working when called one after the other. Why?
+             * https://stackoverflow.com/questions/65171675/kotlin-coroutine-doesnt-execute-multiple-suspend-functions
+             * https://stackoverflow.com/questions/60770793/will-these-suspend-functions-inside-in-a-parent-suspend-function-be-run-in-seque
+             * */
+            val workoutHistoryRepository: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl()
+//            workoutHistoryRepository.readWorkoutHistory(this@WorkoutListActivity)
+            workoutHistoryRepository.writeWorkoutHistory(this@WorkoutListActivity, WorkoutHistory())
+//            workoutHistoryRepository.readWorkoutHistory(this@WorkoutListActivity)
         }
 
         /**

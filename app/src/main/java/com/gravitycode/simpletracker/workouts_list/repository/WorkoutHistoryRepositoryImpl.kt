@@ -9,8 +9,13 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.reduce
+import kotlinx.coroutines.flow.take
 
 // TODO: Move to Dagger
 // TODO: Switch to [RxDataStore] - https://developer.android.com/reference/kotlin/androidx/datastore/preferences/rxjava3/package-summary
@@ -35,27 +40,40 @@ class WorkoutHistoryRepositoryImpl : WorkoutHistoryRepository {
         }
     }
 
-    override suspend fun getWorkoutHistory(context: Context): Single<WorkoutHistory> {
+    /**
+     * TODO: Use [reduce] to get the effect I want?
+     * */
+    override suspend fun readWorkoutHistory(context: Context): WorkoutHistory {
 
+        val workoutHistory = WorkoutHistory()
         val workouts = Workout.values()
-        var i = 0
-        context.dataStore.data.map { preferences ->
-            val workoutName = workouts[i].toPrettyString()
-            val count = preferences[intPreferencesKey(workouts[i++].toString())]
-            /**
-             * I think I'm supposed to return something here? I have no idea what this is even doing
-             * */
-            Log.i("read_work_history", "$workoutName: $count")
+
+        context.dataStore.data.collect { preferences ->
+            for (workout in workouts) {
+                val workoutName = workout.toPrettyString()
+                val count = preferences[intPreferencesKey(workout.toString())]
+                workoutHistory[workout] = count!!
+                Log.i("workout_history", "read: $workoutName: $count")
+            }
         }
 
+        return workoutHistory
 
-//        for (key in preferenceKeys) {
-//            context.dataStore.edit { workout_history ->
-//                workout_history[key] = (0..10).random()
-//                Log.i("workout_history", workout_history[key].toString())
-//            }
-//        }
+//        return Single.just(WorkoutHistory())
+    }
 
-        return Single.just(WorkoutHistory())
+    override suspend fun writeWorkoutHistory(context: Context, workoutHistory: WorkoutHistory) {
+        val workouts = Workout.values()
+        var i = 0
+        context.dataStore.edit { preference ->
+            for (key in preferenceKeys) {
+                preference[key] = (0..10).random()
+                Log.i(
+                    "workout_history",
+                    "updated: ${workouts[i]} to ${preference[key].toString()}"
+                )
+                i++
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.gravitycode.simpletracker.workouts_list.repository
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import java.util.EnumMap
 import androidx.annotation.IntRange
+import kotlin.jvm.Throws
 
 /**
  * TODO: Does this need to be thread-safe? If so see how to synchronize EnumMap in [EnumMap]
@@ -22,6 +23,9 @@ class WorkoutHistory(
     }
 
     operator fun set(workout: Workout, @IntRange(from = 0) count: Int) {
+        if (count < 0) throw IllegalArgumentException(
+            "count cannot be less than zero, count provided is $count"
+        )
         history[workout] = count
     }
 
