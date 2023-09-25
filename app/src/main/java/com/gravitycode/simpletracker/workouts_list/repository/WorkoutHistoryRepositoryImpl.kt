@@ -1,15 +1,16 @@
 package com.gravitycode.simpletracker.workouts_list.repository
 
-import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import com.gravitycode.simpletracker.util.isEven
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 
+/**
+ * TODO: Should cache retrieved value (invalidate cache when write function is called)
+ * TODO: Inject DataStore with Dagger
+ * */
 class WorkoutHistoryRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : WorkoutHistoryRepository {
