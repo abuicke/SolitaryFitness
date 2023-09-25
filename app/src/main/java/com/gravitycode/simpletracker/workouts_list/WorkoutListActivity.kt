@@ -25,13 +25,18 @@ class WorkoutListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 //        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
         val dataStore = (applicationContext as SimpleTrackerApp).preferencesDataStore
+        val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
+        /**
+         * TODO: Now [WorkoutHistoryRepositoryImpl.writeWorkoutHistory] is running twice on its own,
+         * or not if put in between two calls to [WorkoutHistoryRepositoryImpl.readWorkoutHistory]!
+         * */
         lifecycleScope.launch {
-            val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
+//            repo.readWorkoutHistory()
             repo.writeWorkoutHistory()
-            repo.readWorkoutHistory()
-            repo.writeWorkoutHistory()
-            repo.readWorkoutHistory()
+//            repo.readWorkoutHistory()
+//            repo.writeWorkoutHistory()
+//            repo.readWorkoutHistory()
         }
 
 //        setContent {
