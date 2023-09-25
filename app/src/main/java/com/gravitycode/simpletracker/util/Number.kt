@@ -4,3 +4,7 @@ enum class Number(val integer: Int, val float: Float, val double: Double, val st
 
     ZERO(0, 0.0F, 0.0,"0")
 }
+
+fun Int.isEven() = this % 2 == 0
+
+fun Int.isOdd() = !isEven()
