@@ -15,6 +15,9 @@ class WorkoutHistoryRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : WorkoutHistoryRepository {
 
+    /**
+     * TODO: Replace with Map? Should be more explicit
+     * */
     private val preferenceKeys: Array<Preferences.Key<Int>>
 
     init {
