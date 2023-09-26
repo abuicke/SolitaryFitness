@@ -42,4 +42,18 @@ class WorkoutHistory(
         history[workout] = history[workout]!! - 1
         return WorkoutHistory(history)
     }
+
+    override fun toString(): String {
+        val builder = StringBuilder()
+        builder.append('{')
+        builder.append('\n')
+        for(workout in Workout.values()) {
+            builder.append(
+                "\t${workout.toPrettyString()}: ${history[workout]}\n"
+            )
+        }
+        builder.append('}')
+
+        return builder.toString()
+    }
 }

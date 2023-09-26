@@ -7,4 +7,4 @@ enum class Number(val integer: Int, val float: Float, val double: Double, val st
 
 fun Int.isEven() = this % 2 == 0
 
-fun Int.isOdd() = !isEven()
+fun Int.isOdd() = this % 2 == 1

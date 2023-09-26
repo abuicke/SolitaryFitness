@@ -31,14 +31,29 @@ class WorkoutListActivity : ComponentActivity() {
          * TODO: Now [WorkoutHistoryRepositoryImpl.writeWorkoutHistory] is running twice on its own,
          * or not if put in between two calls to [WorkoutHistoryRepositoryImpl.readWorkoutHistory]!
          *
-         * TODO: Sleep in-between calls
+         * Works when you write first, not read.
+         * TODO: Also need to stop the app and uninstall. What happens if I just stop and don't uninstall?
          * */
         lifecycleScope.launch {
-//            repo.readWorkoutHistory()
-            repo.writeWorkoutHistory()
-//            repo.readWorkoutHistory()
-//            repo.writeWorkoutHistory()
-//            repo.readWorkoutHistory()
+            try {
+                repo.readWorkoutHistory().collect { workoutHistory ->
+                    Log.i("workout_history", "collect: $workoutHistory")
+                }
+
+                repo.writeWorkoutHistory()
+
+                repo.readWorkoutHistory().collect { workoutHistory ->
+                    Log.i("workout_history", "collect: $workoutHistory")
+                }
+
+                repo.writeWorkoutHistory()
+
+                repo.readWorkoutHistory().collect { workoutHistory ->
+                    Log.i("workout_history", "collect: $workoutHistory")
+                }
+            } catch (t: Throwable) {
+                Log.e("workout_history", "error", t)
+            }
         }
 
 //        setContent {
