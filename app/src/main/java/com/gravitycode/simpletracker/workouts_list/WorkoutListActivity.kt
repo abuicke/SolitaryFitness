@@ -30,6 +30,8 @@ class WorkoutListActivity : ComponentActivity() {
         /**
          * TODO: Now [WorkoutHistoryRepositoryImpl.writeWorkoutHistory] is running twice on its own,
          * or not if put in between two calls to [WorkoutHistoryRepositoryImpl.readWorkoutHistory]!
+         *
+         * TODO: Sleep in-between calls
          * */
         lifecycleScope.launch {
 //            repo.readWorkoutHistory()
