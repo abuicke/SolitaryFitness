@@ -2,24 +2,22 @@ package com.gravitycode.simpletracker.workouts_list.repository
 
 import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workouts_list.util.Workout
-import java.util.Collections
 import java.util.EnumMap
 
 /**
- * TODO: Map is synchronized. Does it need to be?
- * See [https://developer.android.com/reference/java/util/EnumMap]
+ * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
  * */
 class WorkoutHistory(
-    private val history: EnumMap<Workout, Int> = Collections.synchronizedMap(
-        EnumMap<Workout, Int>(Workout::class.java)
-    ) as EnumMap<Workout, Int>
+    private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
 ) {
 
+    constructor(map: Map<Workout, Int>): this(EnumMap<Workout, Int>(map))
+
     init {
-        // Add each key from com.gravitycode.simpletracker.workouts_list.util.Workout
-        // into the map ahead of time and provide each entry with a default value.
         for (workout in Workout.values()) {
-            history[workout] = 0
+            if(history[workout] == null){
+                history[workout] = 0
+            }
         }
     }
 

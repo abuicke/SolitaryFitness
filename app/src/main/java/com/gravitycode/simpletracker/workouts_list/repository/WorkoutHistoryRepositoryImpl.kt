@@ -11,18 +11,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onErrorResume
+import kotlinx.coroutines.flow.take
 import java.io.IOException
 
 /**
  * TODO: Inject DataStore with Dagger
- * TODO: Go back to generating all keys at the beginning if it seems not to have been the problem.
  * */
 class WorkoutHistoryRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : WorkoutHistoryRepository {
 
-    override suspend fun readWorkoutHistory(): WorkoutHistory {
-        return dataStore.data.map { preferences ->
+    override suspend fun readWorkoutHistory(): Flow<WorkoutHistory> {
+        return dataStore.data.take(1).map { preferences ->
             val workoutHistory = WorkoutHistory()
             val workouts = Workout.values()
 
@@ -34,25 +34,16 @@ class WorkoutHistoryRepositoryImpl(
             }
 
             workoutHistory
-        }.catch { t ->
-            Log.e(
-                "workout_history",
-                "WorkoutHistoryRepositoryImpl#readWorkoutHistory()",
-                t
-            )
-        }.first()
+        }
     }
 
-    override suspend fun writeWorkoutHistory() {
+    override suspend fun writeWorkoutHistory(history: WorkoutHistory) {
         val workouts = Workout.values()
         dataStore.edit { preference ->
             for (workout in workouts) {
-                val reps = (0..10).random()
+                val reps = history[workout]
                 preference[intPreferencesKey(workout)] = reps
-                Log.i(
-                    "workout_history",
-                    "updated: $workout: $reps"
-                )
+                Log.i("workout_history", "set $workout to $reps")
             }
         }
     }

@@ -1,5 +1,9 @@
 package com.gravitycode.simpletracker.workouts_list.util
 
+/**
+ * @param[prettyString] a string which is returned by
+ * [toPrettyString] for rendering on-screen to the user
+ * */
 enum class Workout(private val prettyString: String) {
 
     HANDSTAND_PRESS_UP("Handstand Press-Up"),
