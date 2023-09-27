@@ -1,20 +1,23 @@
 package com.gravitycode.simpletracker.workouts_list.repository
 
+import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import java.util.EnumMap
-import androidx.annotation.IntRange
-import kotlin.jvm.Throws
 
 /**
- * TODO: Does this need to be thread-safe? If so see how to synchronize EnumMap in [EnumMap]
+ * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
  * */
 class WorkoutHistory(
     private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
 ) {
 
+    constructor(map: Map<Workout, Int>): this(EnumMap<Workout, Int>(map))
+
     init {
         for (workout in Workout.values()) {
-            history[workout] = 0
+            if(history[workout] == null){
+                history[workout] = 0
+            }
         }
     }
 
@@ -35,11 +38,25 @@ class WorkoutHistory(
     }
 
     /**
-     * Dec operator doesn't really make sense for this use-case,
-     * but implementing it for parity's sake
+     * Dec operator doesn't really make sense for this
+     * use-case, but implementing it for parity's sake.
      * */
     operator fun dec(workout: Workout): WorkoutHistory {
         history[workout] = history[workout]!! - 1
         return WorkoutHistory(history)
+    }
+
+    override fun toString(): String {
+        val builder = StringBuilder()
+        builder.append('{')
+        builder.append('\n')
+        for (workout in Workout.values()) {
+            builder.append(
+                "\t${workout.toPrettyString()}: ${history[workout]}\n"
+            )
+        }
+        builder.append('}')
+
+        return builder.toString()
     }
 }

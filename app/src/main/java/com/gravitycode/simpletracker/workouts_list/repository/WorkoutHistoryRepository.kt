@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface WorkoutHistoryRepository {
 
-    suspend fun readWorkoutHistory(): WorkoutHistory
+    suspend fun readWorkoutHistory(): Flow<WorkoutHistory>
 
-    suspend fun writeWorkoutHistory()
+    suspend fun writeWorkoutHistory(history: WorkoutHistory)
 }
