@@ -1,9 +1,9 @@
 package com.gravitycode.simpletracker.workout_list.domain
 
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.flow.MutableStateFlow
 
-class WorkoutListViewModel constructor() : ViewModel() {
+class WorkoutListViewModel : ViewModel() {
 
-    val observable: BehaviorSubject<WorkoutListState> = BehaviorSubject.create()
+    private val workoutListState = MutableStateFlow(WorkoutListState())
 }
