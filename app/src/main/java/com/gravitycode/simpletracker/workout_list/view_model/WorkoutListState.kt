@@ -1,6 +1,6 @@
-package com.gravitycode.simpletracker.workouts_list.view_model
+package com.gravitycode.simpletracker.workout_list.view_model
 
-import com.gravitycode.simpletracker.workouts_list.util.Workout
+import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
 
 class WorkoutListState {

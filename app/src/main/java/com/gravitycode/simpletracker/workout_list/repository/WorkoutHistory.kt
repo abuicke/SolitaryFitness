@@ -1,7 +1,7 @@
-package com.gravitycode.simpletracker.workouts_list.repository
+package com.gravitycode.simpletracker.workout_list.repository
 
 import androidx.annotation.IntRange
-import com.gravitycode.simpletracker.workouts_list.util.Workout
+import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
 
 /**

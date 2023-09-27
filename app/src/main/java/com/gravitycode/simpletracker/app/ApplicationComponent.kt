@@ -1,6 +1,6 @@
 package com.gravitycode.simpletracker.app
 
-import com.gravitycode.simpletracker.workouts_list.WorkoutListActivity
+import com.gravitycode.simpletracker.workout_list.WorkoutListActivity
 import dagger.Component
 
 @Component

@@ -1,23 +1,15 @@
-package com.gravitycode.simpletracker.workouts_list
+package com.gravitycode.simpletracker.workout_list
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
-import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistory
-import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistoryRepository
-import com.gravitycode.simpletracker.workouts_list.repository.WorkoutHistoryRepositoryImpl
-import com.gravitycode.simpletracker.workouts_list.util.Workout
+import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistory
+import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepository
+import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
 
 class WorkoutListActivity : ComponentActivity() {

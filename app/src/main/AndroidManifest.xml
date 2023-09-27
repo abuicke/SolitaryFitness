@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SimpleTracker"
         tools:targetApi="31">
         <activity
-            android:name=".workouts_list.WorkoutListActivity"
+            android:name=".workout_list.WorkoutListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SimpleTracker">

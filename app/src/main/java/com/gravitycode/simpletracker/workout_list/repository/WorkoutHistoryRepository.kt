@@ -1,6 +1,5 @@
-package com.gravitycode.simpletracker.workouts_list.repository
+package com.gravitycode.simpletracker.workout_list.repository
 
-import android.content.Context
 import kotlinx.coroutines.flow.Flow
 
 interface WorkoutHistoryRepository {

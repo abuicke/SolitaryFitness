@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workouts_list.view_model
+package com.gravitycode.simpletracker.workout_list.view_model
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.subjects.BehaviorSubject
