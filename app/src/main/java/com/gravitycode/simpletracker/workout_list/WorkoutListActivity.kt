@@ -26,6 +26,8 @@ class WorkoutListActivity : ComponentActivity() {
      *          use cases and interactors.
      *      4)  Unit tests for utility classes such as string manipulation and math.
      *
+     * [https://developer.android.com/training/testing/fundamentals/what-to-test]
+     *
      * TODO: Write tests for [WorkoutHistoryRepositoryImpl] using the same code as below
      * TODO: Inject [DataStore] into [WorkoutHistoryRepositoryImpl] with Dagger
      * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
