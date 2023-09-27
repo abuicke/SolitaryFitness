@@ -27,30 +27,20 @@ class WorkoutListActivity : ComponentActivity() {
         val dataStore = (applicationContext as SimpleTrackerApp).preferencesDataStore
         val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
-        /**
-         * TODO: Now [WorkoutHistoryRepositoryImpl.writeWorkoutHistory] is running twice on its own,
-         * or not if put in between two calls to [WorkoutHistoryRepositoryImpl.readWorkoutHistory]!
-         *
-         * Works when you write first, not read.
-         * TODO: Also need to stop the app and uninstall. What happens if I just stop and don't uninstall?
-         * */
         lifecycleScope.launch {
             try {
-                repo.readWorkoutHistory().collect { workoutHistory ->
-                    Log.i("workout_history", "collect: $workoutHistory")
-                }
+                val workoutHistory1 = repo.readWorkoutHistory()
+                Log.i("workout_history", "collect-1: $workoutHistory1")
 
                 repo.writeWorkoutHistory()
 
-                repo.readWorkoutHistory().collect { workoutHistory ->
-                    Log.i("workout_history", "collect: $workoutHistory")
-                }
+                val workoutHistory2 = repo.readWorkoutHistory()
+                Log.i("workout_history", "collect-2: $workoutHistory2")
 
                 repo.writeWorkoutHistory()
 
-                repo.readWorkoutHistory().collect { workoutHistory ->
-                    Log.i("workout_history", "collect: $workoutHistory")
-                }
+                val workoutHistory3 = repo.readWorkoutHistory()
+                Log.i("workout_history", "collect-3: $workoutHistory3")
             } catch (t: Throwable) {
                 Log.e("workout_history", "error", t)
             }

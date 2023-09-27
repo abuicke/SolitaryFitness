@@ -7,7 +7,11 @@ import androidx.datastore.preferences.core.edit
 import com.gravitycode.simpletracker.util.intPreferencesKey
 import com.gravitycode.simpletracker.workouts_list.util.Workout
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onErrorResume
+import java.io.IOException
 
 /**
  * TODO: Inject DataStore with Dagger
@@ -17,7 +21,7 @@ class WorkoutHistoryRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : WorkoutHistoryRepository {
 
-    override suspend fun readWorkoutHistory(): Flow<WorkoutHistory> {
+    override suspend fun readWorkoutHistory(): WorkoutHistory {
         return dataStore.data.map { preferences ->
             val workoutHistory = WorkoutHistory()
             val workouts = Workout.values()
@@ -30,7 +34,13 @@ class WorkoutHistoryRepositoryImpl(
             }
 
             workoutHistory
-        }
+        }.catch { t ->
+            Log.e(
+                "workout_history",
+                "WorkoutHistoryRepositoryImpl#readWorkoutHistory()",
+                t
+            )
+        }.first()
     }
 
     override suspend fun writeWorkoutHistory() {

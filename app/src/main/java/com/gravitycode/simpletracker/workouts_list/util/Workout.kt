@@ -2,16 +2,19 @@ package com.gravitycode.simpletracker.workouts_list.util
 
 enum class Workout(private val prettyString: String) {
 
+    HANDSTAND_PRESS_UP("Handstand Press-Up"),
     PRESS_UP("Press-Up"),
     SIT_UP("Sit-Up"),
     SQUAT("Squat"),
-    SQUAT_THRUST("Squat Thrust"),
+    SQUAT_THRUST("Squat-Thrust"),
     BURPEE("Burpee"),
     STAR_JUMP("Star Jump"),
-    STEP_UP("Step-up");
+    STEP_UP("Step-Up");
 
     /**
      * For rendering on UI
+     *
+     * @return UI presentable string
      * */
     fun toPrettyString() = prettyString
 }
