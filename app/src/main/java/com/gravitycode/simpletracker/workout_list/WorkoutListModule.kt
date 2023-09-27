@@ -1,7 +1,7 @@
 package com.gravitycode.simpletracker.workout_list
 
-import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepository
-import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
 import dagger.Binds
 import dagger.Module
 

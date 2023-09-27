@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.view_model
+package com.gravitycode.simpletracker.workout_list.domain
 
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap

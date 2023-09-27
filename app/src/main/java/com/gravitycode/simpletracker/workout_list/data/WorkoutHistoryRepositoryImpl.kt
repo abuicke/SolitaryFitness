@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.repository
+package com.gravitycode.simpletracker.workout_list.data
 
 import android.util.Log
 import androidx.datastore.core.DataStore

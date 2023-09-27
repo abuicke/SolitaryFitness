@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.repository
+package com.gravitycode.simpletracker.workout_list.data
 
 import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workout_list.util.Workout

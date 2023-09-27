@@ -6,9 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
-import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistory
-import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepository
-import com.gravitycode.simpletracker.workout_list.repository.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
 

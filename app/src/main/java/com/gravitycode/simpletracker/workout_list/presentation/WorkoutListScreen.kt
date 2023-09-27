@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.ui
+package com.gravitycode.simpletracker.workout_list.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.gravitycode.simpletracker.util.Number
 import com.gravitycode.simpletracker.workout_list.util.Workout
-import com.gravitycode.simpletracker.workout_list.view_model.WorkoutListViewModel
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 
 @Composable
 fun WorkoutListScreen(
