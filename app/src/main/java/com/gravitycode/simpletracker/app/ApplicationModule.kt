@@ -1,12 +1,12 @@
 package com.gravitycode.simpletracker.app
 
-import android.app.Application
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.Module
 
-class SimpleTrackerApp : Application() {
+@Module
+class ApplicationModule {
 
-    val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
-
+    val preferencesDataStore: DataStore<Preferences> by preferencesDataStore(name = "workout_history")
 }

@@ -16,18 +16,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.gravitycode.simpletracker.util.Number
-import com.gravitycode.simpletracker.workout_list.util.Workout
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
+import com.gravitycode.simpletracker.workout_list.util.Workout
 
+/**
+ * TODO: Need to learn more about [NavController] and if it's even a good solution.
+ * TODO: Need to prevent long strings in list from pushing count out of sight,
+ * replace with ellipse if text takes up too much space on smaller screen sizes.
+ * */
 @Composable
 fun WorkoutListScreen(
-    navController: NavController,
+//    navController: NavController,
     viewModel: WorkoutListViewModel
 ) {
     LazyList(
-        listItems = Workout.values().map { it.toString() },
-        onClick = {
-
+        listItems = Workout.values(),
+        onClick = { workout ->
+            viewModel.doSomething(workout)
+        },
+        onRender = { workout ->
+            workout.toPrettyString()
         }
     )
 }
@@ -35,8 +43,17 @@ fun WorkoutListScreen(
 @Composable
 private fun <E> LazyList(
     modifier: Modifier = Modifier,
+    listItems: Array<E>,
+    onClick: (E) -> Unit = {},
+    onRender: (E) -> String = { e -> e.toString() }
+) = LazyList(modifier, listItems.toList(), onClick, onRender)
+
+@Composable
+private fun <E> LazyList(
+    modifier: Modifier = Modifier,
     listItems: List<E>,
-    onClick: (() -> Unit)
+    onClick: ((E) -> Unit) = {},
+    onRender: (E) -> String = { e -> e.toString() }
 ) {
     LazyColumn(
         modifier,
@@ -48,13 +65,13 @@ private fun <E> LazyList(
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
                     .clickable {
-                        onClick()
+                        onClick(listItem)
                     }
             ) {
                 Row() {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = listItem.toString(),
+                        text = onRender(listItem),
                         fontSize = 24.sp
                     )
                     Spacer(Modifier.weight(1f))

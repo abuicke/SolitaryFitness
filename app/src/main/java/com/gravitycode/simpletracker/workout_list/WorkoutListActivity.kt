@@ -3,16 +3,27 @@ package com.gravitycode.simpletracker.workout_list
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
+import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
+import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class WorkoutListActivity : ComponentActivity() {
+
+    @Inject lateinit var workoutListViewModel: WorkoutListViewModel
 
     /**
      * Essential unit tests
@@ -34,7 +45,22 @@ class WorkoutListActivity : ComponentActivity() {
      * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
+        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
+
+        setContent {
+            SimpleTrackerTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    WorkoutListScreen(workoutListViewModel)
+                }
+            }
+        }
+    }
+
+    fun dataStoreTest() {
         val dataStore = (applicationContext as SimpleTrackerApp).preferencesDataStore
         val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
@@ -81,17 +107,5 @@ class WorkoutListActivity : ComponentActivity() {
                 Log.i("workout_history", "collect-3: $workoutHistory")
             }
         }
-
-//        setContent {
-//            SimpleTrackerTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    WorkoutList(onClick = {})
-//                }
-//            }
-//        }
     }
 }
