@@ -1,12 +1,12 @@
 package com.gravitycode.simpletracker.app
 
 import android.app.Application
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 
 class SimpleTrackerApp : Application() {
 
+    /**
+     * TODO: Should be able to add application context through component builder DaggerApplicationComponent.context(this).create()
+     * */
     val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
 
 }

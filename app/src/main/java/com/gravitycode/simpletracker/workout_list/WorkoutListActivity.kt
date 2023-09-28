@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
@@ -20,6 +21,14 @@ import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/**
+ * TODO: Finish reading Dagger articles:
+ * [https://developer.android.com/training/dependency-injection/dagger-android#best-practices]
+ * [https://distillery.com/blog/dagger-2-how-to-understand-and-use-components-and-modules/]
+ **/
+
+
 
 class WorkoutListActivity : ComponentActivity() {
 
@@ -60,8 +69,7 @@ class WorkoutListActivity : ComponentActivity() {
         }
     }
 
-    fun dataStoreTest() {
-        val dataStore = (applicationContext as SimpleTrackerApp).preferencesDataStore
+    fun workoutHistoryDataStoreTest(dataStore: DataStore<Preferences>) {
         val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
         lifecycleScope.launch {
