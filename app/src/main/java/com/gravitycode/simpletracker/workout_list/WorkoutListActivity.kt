@@ -54,7 +54,7 @@ class WorkoutListActivity : ComponentActivity() {
      * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
+//        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
 
         setContent {
             SimpleTrackerTheme {

@@ -13,6 +13,10 @@ import javax.inject.Inject
 
 /**
  * TODO: I'm trying to determine if the Context dependency on DataStore is null
+ *
+ * TODO: What module/component does [WorkoutListViewModel] come from? How do I
+ * scope it to a component or is that not how it works? Do I just put the same
+ * scoping annotation on both?
  * */
 class WorkoutListViewModel @Inject constructor(
     private val workoutHistoryRepository: WorkoutHistoryRepository
@@ -24,12 +28,16 @@ class WorkoutListViewModel @Inject constructor(
         Log.i("WorkoutListViewModel", workout.toString())
 
         viewModelScope.launch {
-            workoutHistoryRepository.writeWorkoutHistory(WorkoutHistory(
-                mapOf(
-                    /** TODO: Can this be a partial map? */
+            workoutHistoryRepository.writeWorkoutHistory(
+                WorkoutHistory(
+                    mapOf(
+                        Workout.PRESS_UP to 15
+                    )
                 )
-            ))
-            workoutHistoryRepository.readWorkoutHistory()
+            )
+            workoutHistoryRepository.readWorkoutHistory().collect { workoutHistory ->
+                Log.i("workout_debugging", workoutHistory.toString())
+            }
         }
     }
 }

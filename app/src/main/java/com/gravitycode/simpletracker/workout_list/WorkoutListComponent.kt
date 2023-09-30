@@ -1,6 +1,14 @@
 package com.gravitycode.simpletracker.workout_list
 
-import dagger.Component
+import dagger.Subcomponent
 
-@Component(modules = [WorkoutListModule::class])
-interface WorkoutListComponent
+@Subcomponent
+interface WorkoutListComponent {
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): WorkoutListComponent
+    }
+
+    fun inject(activity: WorkoutListActivity)
+}
