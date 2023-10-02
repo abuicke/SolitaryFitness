@@ -22,17 +22,17 @@ import javax.inject.Singleton
 @Module
 class WorkoutListModule {
 
-    @Provides fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create {
-            context.preferencesDataStoreFile("workout_history")
-        }
-    }
-
-    @Provides fun provideWorkoutHistoryRepository(
-        dataStore: DataStore<Preferences>
-    ): WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
-
-    @Provides fun providesWorkoutListViewModel(
-        workoutHistoryRepository: WorkoutHistoryRepository
-    ): WorkoutListViewModel = WorkoutListViewModel(workoutHistoryRepository)
+//    @Provides fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
+//        return PreferenceDataStoreFactory.create {
+//            context.preferencesDataStoreFile("workout_history")
+//        }
+//    }
+//
+//    @Provides fun provideWorkoutHistoryRepository(
+//        dataStore: DataStore<Preferences>
+//    ): WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
+//
+//    @Provides fun providesWorkoutListViewModel(
+//        workoutHistoryRepository: WorkoutHistoryRepository
+//    ): WorkoutListViewModel = WorkoutListViewModel(workoutHistoryRepository)
 }

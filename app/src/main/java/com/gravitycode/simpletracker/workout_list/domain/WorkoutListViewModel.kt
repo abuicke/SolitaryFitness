@@ -12,20 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * TODO: I'm trying to determine if the Context dependency on DataStore is null
- *
- * TODO: What module/component does [WorkoutListViewModel] come from? How do I
- * scope it to a component or is that not how it works? Do I just put the same
- * scoping annotation on both?
- * */
-class WorkoutListViewModel(
+@ActivityScope
+class WorkoutListViewModel @Inject constructor(
     private val workoutHistoryRepository: WorkoutHistoryRepository
 ) : ViewModel() {
-//@ActivityScope
-//class WorkoutListViewModel @Inject constructor(
-//    private val workoutHistoryRepository: WorkoutHistoryRepository
-//) : ViewModel() {
 
     private val workoutListState: StateFlow<WorkoutListState> = MutableStateFlow(WorkoutListState())
 
