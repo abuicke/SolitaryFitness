@@ -11,18 +11,14 @@ import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryI
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 /**
  * TODO: Can this module be turned into an object? Will [Application] still be injected?
- * TODO: Need to use Android scopes, e.g. @ActivityScope
  * */
 @Module
-class ApplicationModule(
-    private val app: Application
-) {
+class AppModule {
 
-    @Provides fun providesApplicationContext(): Context = app
+    @Provides fun providesApplicationContext(app: Application): Context = app
 
     @Provides fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {

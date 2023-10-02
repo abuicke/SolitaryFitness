@@ -48,21 +48,21 @@ class WorkoutListActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val appComponent = (applicationContext as SimpleTrackerApp).appComponent
-        workoutListComponent = appComponent.workoutListComponent().create()
-        workoutListComponent.inject(this)
+        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
+//        workoutListComponent = appComponent.workoutListComponent().create()
+//        workoutListComponent.inject(this)
 
-//        setContent {
-//            SimpleTrackerTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    WorkoutListScreen(workoutListViewModel)
-//                }
-//            }
-//        }
+        setContent {
+            SimpleTrackerTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    WorkoutListScreen(workoutListViewModel)
+                }
+            }
+        }
     }
 
     fun workoutHistoryDataStoreTest(dataStore: DataStore<Preferences>) {
