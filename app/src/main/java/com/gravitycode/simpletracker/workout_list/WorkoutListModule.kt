@@ -13,17 +13,21 @@ import javax.inject.Singleton
 
 /**
  * TODO: Need to use Android scopes, e.g. @ActivityScope
+ *
+ * TODO: These functions need to be scoped!!!
+ *
+ * TODO: Should apply `@Binds` to [provideWorkoutHistoryRepository]
  * */
 @Module
 class WorkoutListModule {
 
-    @Provides @Singleton fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
+    @Provides fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
             context.preferencesDataStoreFile("workout_history")
         }
     }
 
-    @Provides @Singleton fun provideWorkoutHistoryRepository(
+    @Provides fun provideWorkoutHistoryRepository(
         dataStore: DataStore<Preferences>
     ): WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 }

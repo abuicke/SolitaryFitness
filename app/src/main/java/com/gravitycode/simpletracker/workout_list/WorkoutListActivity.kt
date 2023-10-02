@@ -29,9 +29,9 @@ import javax.inject.Inject
  **/
 
 
-
 class WorkoutListActivity : ComponentActivity() {
 
+    private lateinit var workoutListComponent: WorkoutListComponent
     @Inject lateinit var workoutListViewModel: WorkoutListViewModel
 
     /**
@@ -51,10 +51,14 @@ class WorkoutListActivity : ComponentActivity() {
      * TODO: Write tests for [WorkoutHistoryRepositoryImpl] using the same code as below
      * TODO: Inject [DataStore] into [WorkoutHistoryRepositoryImpl] with Dagger
      * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
+     * TODO: In the [documentation](https://developer.android.com/training/dependency-injection/dagger-android#dagger-subcomponents)
+     * `super.onCreate(Bundle)` is called after the component is instantiated. Is there a reason for this?
      * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        (applicationContext as SimpleTrackerApp).appComponent.inject(this)
+        val appComponent = (applicationContext as SimpleTrackerApp).appComponent
+        workoutListComponent = appComponent.workoutListComponent().create()
+        workoutListComponent.inject(this)
 
         setContent {
             SimpleTrackerTheme {
