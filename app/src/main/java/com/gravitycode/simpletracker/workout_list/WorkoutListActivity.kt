@@ -38,8 +38,6 @@ import javax.inject.Inject
  *
  * TODO: Write tests for [WorkoutHistoryRepositoryImpl] using the same code as below
  * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
- * TODO: In the [documentation](https://developer.android.com/training/dependency-injection/dagger-android#dagger-subcomponents)
- * `super.onCreate(Bundle)` is called after the component is instantiated. Is there a reason for this?
  * */
 class WorkoutListActivity : ComponentActivity() {
 

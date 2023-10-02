@@ -12,9 +12,6 @@ import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import dagger.Module
 import dagger.Provides
 
-/**
- * TODO: Can this module be turned into an object? Will [Application] still be injected?
- * */
 @Module
 class AppModule {
 
