@@ -22,9 +22,6 @@ class WorkoutListModule {
         }
     }
 
-    /**
-     * TODO: Replace with binding like this [https://stackoverflow.com/a/53635909/4596649]
-     * */
     @Provides @ActivityScope fun provideWorkoutHistoryRepository(
         dataStore: DataStore<Preferences>
     ): WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
