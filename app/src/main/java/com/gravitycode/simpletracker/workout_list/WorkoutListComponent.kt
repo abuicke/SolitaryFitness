@@ -3,7 +3,7 @@ package com.gravitycode.simpletracker.workout_list
 import com.gravitycode.simpletracker.app.ActivityScope
 import dagger.Subcomponent
 
-//@ActivityScope
+@ActivityScope
 @Subcomponent(modules = [WorkoutListModule::class])
 interface WorkoutListComponent {
 

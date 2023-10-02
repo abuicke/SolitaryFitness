@@ -1,7 +1,7 @@
 package com.gravitycode.simpletracker.app
 
 import android.app.Application
-import com.gravitycode.simpletracker.workout_list.WorkoutListActivity
+import com.gravitycode.simpletracker.workout_list.WorkoutListComponent
 import dagger.BindsInstance
 import dagger.Component
 
@@ -15,8 +15,6 @@ import dagger.Component
 @Component(modules = [AppModule::class])
 interface AppComponent {
 
-    fun inject(activity: WorkoutListActivity)
-
     @Component.Builder
     interface Builder {
 
@@ -24,4 +22,6 @@ interface AppComponent {
 
         fun build(): AppComponent
     }
+
+    fun workoutListComponent(): WorkoutListComponent.Factory
 }
