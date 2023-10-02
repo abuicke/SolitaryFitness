@@ -3,6 +3,7 @@ package com.gravitycode.simpletracker.workout_list.domain
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
 import com.gravitycode.simpletracker.workout_list.util.Workout
@@ -18,9 +19,13 @@ import javax.inject.Inject
  * scope it to a component or is that not how it works? Do I just put the same
  * scoping annotation on both?
  * */
-class WorkoutListViewModel @Inject constructor(
+class WorkoutListViewModel(
     private val workoutHistoryRepository: WorkoutHistoryRepository
 ) : ViewModel() {
+//@ActivityScope
+//class WorkoutListViewModel @Inject constructor(
+//    private val workoutHistoryRepository: WorkoutHistoryRepository
+//) : ViewModel() {
 
     private val workoutListState: StateFlow<WorkoutListState> = MutableStateFlow(WorkoutListState())
 

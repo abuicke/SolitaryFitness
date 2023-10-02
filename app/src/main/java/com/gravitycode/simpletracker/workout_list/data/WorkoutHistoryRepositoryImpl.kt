@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 
-/**
- * TODO: Inject DataStore with Dagger
- * */
 class WorkoutHistoryRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : WorkoutHistoryRepository {
