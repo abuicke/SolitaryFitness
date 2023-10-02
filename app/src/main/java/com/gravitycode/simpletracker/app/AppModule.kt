@@ -11,11 +11,13 @@ import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryI
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import dagger.Module
 import dagger.Provides
+import dagger.Binds
+import javax.inject.Singleton
 
 @Module
 class AppModule {
 
-    @Provides fun providesApplicationContext(app: Application): Context = app
+    @Provides fun providesApplicationContext(app: Application): Context = app.applicationContext
 
     @Provides fun providesWorkoutHistoryDataStore(context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
@@ -23,11 +25,10 @@ class AppModule {
         }
     }
 
+    /**
+     * TODO: Replace with binding like this [https://stackoverflow.com/a/53635909/4596649]
+     * */
     @Provides fun provideWorkoutHistoryRepository(
         dataStore: DataStore<Preferences>
     ): WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
-
-    @Provides fun providesWorkoutListViewModel(
-        workoutHistoryRepository: WorkoutHistoryRepository
-    ): WorkoutListViewModel = WorkoutListViewModel(workoutHistoryRepository)
 }
