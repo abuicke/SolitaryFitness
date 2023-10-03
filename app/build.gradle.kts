@@ -64,11 +64,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    // Rx
-    implementation("io.reactivex.rxjava3:rxjava:3.1.7")
-    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
-    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-
     // Navigation
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.3")
 
@@ -76,19 +71,34 @@ dependencies {
     implementation("com.google.dagger:dagger:2.48")
     kapt("com.google.dagger:dagger-compiler:2.48")
     implementation("com.google.dagger:dagger-android:2.48")
-//    if you use the support libraries
-//    implementation("com.google.dagger:dagger-android-support:2.x")
+    // if you use the support libraries
+    // implementation("com.google.dagger:dagger-android-support:2.x")
     annotationProcessor("com.google.dagger:dagger-android-processor:2.48")
 
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // JUnit
+    testImplementation("junit:junit:4.13.2")
+
+    // Android Instrumentation Testing
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    // Kotlin Coroutines
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    // I don't know what this is, there's another another compose library specified in
+    // https://developer.android.com/training/testing/instrumented-tests, which is below
+    // androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    // Optional -- UI testing with Espresso
+    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Optional -- UI testing with UI Automator
+    // androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    // Optional -- UI testing with Compose
+    // androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
