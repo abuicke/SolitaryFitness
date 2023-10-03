@@ -16,20 +16,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * Essential unit tests
- *
- * When following best practice, you should ensure you use unit tests in the following cases:
- *      1)  Unit tests for ViewModels, or presenters.
- *      2)  Unit tests for the data layer, especially repositories. Most of the data layer should
- *          be platform-independent. Doing so enables test doubles to replace database modules and
- *          remote data sources in tests. See the guide on using test doubles in Android
- *      3)  Unit tests for other platform-independent layers such as the Domain layer, as with
- *          use cases and interactors.
- *      4)  Unit tests for utility classes such as string manipulation and math.
- *
- * [https://developer.android.com/training/testing/fundamentals/what-to-test]
- *
- * TODO: Write tests for [WorkoutHistoryRepoImpl] using the same code as below
  * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
  * */
 class WorkoutListActivity : ComponentActivity() {
