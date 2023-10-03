@@ -1,5 +1,6 @@
 package com.gravitycode.simpletracker.workout_list
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -38,18 +39,6 @@ import javax.inject.Inject
  *
  * TODO: Write tests for [WorkoutHistoryRepositoryImpl] using the same code as below
  * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
- *
- * TODO: Test Dagger isn't producing different instances when it shouldn't and different instances
- * when it should like this:
- *
- *      val applicationGraph: ApplicationGraph = DaggerApplicationGraph.create()
- *
- *      val userRepository: UserRepository = applicationGraph.repository()
- *      val userRepository2: UserRepository = applicationGraph.repository()
- *
- *      assert(userRepository != userRepository2)
- *
- * @see [https://developer.android.com/training/dependency-injection/dagger-basics#dagger-components]
  * */
 class WorkoutListActivity : ComponentActivity() {
 
@@ -62,17 +51,17 @@ class WorkoutListActivity : ComponentActivity() {
         workoutListComponent = appComponent.workoutListComponent().create()
         workoutListComponent.inject(this)
 
-        setContent {
-            SimpleTrackerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    WorkoutListScreen(workoutListViewModel)
-                }
-            }
-        }
+//        setContent {
+//            SimpleTrackerTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    WorkoutListScreen(workoutListViewModel)
+//                }
+//            }
+//        }
     }
 
     fun workoutHistoryDataStoreTest(dataStore: DataStore<Preferences>) {
