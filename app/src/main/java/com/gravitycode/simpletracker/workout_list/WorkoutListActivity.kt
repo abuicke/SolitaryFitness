@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 /**
  * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
+ * TODO: Implement onClick for [WorkoutListScreen]
  * */
 class WorkoutListActivity : ComponentActivity() {
 
