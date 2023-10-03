@@ -3,6 +3,7 @@ package com.gravitycode.simpletracker.workout_list.data
 import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
+import kotlin.jvm.Throws
 
 /**
  * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
@@ -11,12 +12,17 @@ class WorkoutHistory(
     private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
 ) {
 
-    constructor(map: Map<Workout, Int>): this(EnumMap<Workout, Int>(map))
+    constructor(map: Map<Workout, Int>) : this(EnumMap<Workout, Int>(map))
 
     init {
         for (workout in Workout.values()) {
-            if(history[workout] == null){
+            val reps = history[workout]
+            if (reps == null) {
                 history[workout] = 0
+            } else if (reps < 0) {
+                throw IllegalArgumentException(
+                    "cannot assign negative reps value: $workout = $reps"
+                )
             }
         }
     }
@@ -45,6 +51,16 @@ class WorkoutHistory(
         history[workout] = history[workout]!! - 1
         return WorkoutHistory(history)
     }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is WorkoutHistory) {
+            history == other.history
+        } else {
+            false
+        }
+    }
+
+    override fun hashCode() = history.hashCode()
 
     override fun toString(): String {
         val builder = StringBuilder()

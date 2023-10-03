@@ -87,6 +87,14 @@ dependencies {
 
     // JUnit
     testImplementation("junit:junit:4.13.2")
+    // Optional -- Robolectric environment
+    // testImplementation("androidx.test:core:1.5.0")
+    // Optional -- Mockito framework
+    // testImplementation("org.mockito:mockito-core:5.5.0")
+    // Optional -- mockito-kotlin
+    // testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    // Optional -- Mockk framework
+    // testImplementation("io.mockk:mockk:1.13.8")
 
     // Android Instrumentation Testing
     androidTestImplementation("androidx.test:runner:1.5.2")

@@ -1,7 +1,6 @@
 package com.gravitycode.simpletracker
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -10,8 +9,10 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepoImpl
+import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.AfterClass
@@ -38,10 +39,11 @@ class WorkoutListStorageInstrumentedTest {
         private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
             applicationContext.preferencesDataStoreFile(TEST_DATA_STORE)
         }
-        private val repository: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
+        private val repository: WorkoutHistoryRepo = WorkoutHistoryRepoImpl(dataStore)
 
-        @JvmStatic
         @AfterClass
+        @JvmStatic
+        @JvmName("staticClearTestDataStore")
         fun clearTestDataStore() {
             runTest {
                 dataStore.edit { preferences ->
@@ -60,7 +62,27 @@ class WorkoutListStorageInstrumentedTest {
     fun readEmptyRepository() {
         runTest {
             repository.readWorkoutHistory().collect { workoutHistory ->
-                Log.i("test_workout_history", workoutHistory.toString())
+                assertEquals(WorkoutHistory(), workoutHistory)
+            }
+        }
+    }
+
+    @Test
+    fun writeAndReadRepository() {
+        runTest {
+
+            val workoutHistory = WorkoutHistory(
+                mapOf(
+                    Workout.PRESS_UP to 15,
+                    Workout.HANDSTAND_PRESS_UP to 5,
+                    Workout.STAR_JUMP to 25
+                )
+            )
+
+            repository.writeWorkoutHistory(workoutHistory)
+
+            repository.readWorkoutHistory().collect { wH ->
+                assertEquals(workoutHistory, wH)
             }
         }
     }
