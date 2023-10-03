@@ -84,7 +84,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // JUnit
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("junit:junit:4.10")
 
     // Android Instrumentation Testing
     androidTestImplementation("androidx.test:runner:1.5.2")

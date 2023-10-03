@@ -1,61 +1,53 @@
 package com.gravitycode.simpletracker
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
 import kotlinx.coroutines.test.runTest
-import org.junit.After
+import org.junit.AfterClass
 import org.junit.Assert.*
-import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- * TODO: `@Before` functions should be replaced with `@BeforeClass`, but instance
- * variables will then have to be initialized statically, so in the class companion object?
- * */
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class WorkoutListStorageInstrumentedTest {
 
-    private lateinit var applicationContext: Context
-    private lateinit var workoutHistoryDataStore: DataStore<Preferences>
-    private lateinit var workoutHistoryRepository: WorkoutHistoryRepository
-
-    @Before
-    fun loadApplicationContext() {
-        applicationContext = ApplicationProvider.getApplicationContext()
-    }
-
-    @Before
-    fun loadWorkoutHistoryTestDataStore() {
-        workoutHistoryDataStore = PreferenceDataStoreFactory.create {
+    companion object {
+        private val applicationContext: Context = ApplicationProvider.getApplicationContext()
+        private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
             applicationContext.preferencesDataStoreFile("test_workout_history")
         }
-    }
+        private val repository: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
-    @Before
-    fun loadWorkoutHistoryRepository() {
-        workoutHistoryRepository = WorkoutHistoryRepositoryImpl(workoutHistoryDataStore)
+        @JvmStatic
+        @BeforeClass
+        @AfterClass
+        fun clearTestDataStore() {
+            runTest {
+                dataStore.edit { preferences ->
+                    preferences.clear()
+                }
+            }
+        }
     }
 
     @Test
-    fun testReadAndWriteWorkoutHistoryRepository() {
+    fun readEmptyRepository() {
         runTest {
-
+            repository.readWorkoutHistory().collect { workoutHistory ->
+                Log.i("test_workout_history", workoutHistory.toString())
+            }
         }
-    }
-
-    @After
-    fun clearTestDataStore() {
-
     }
 }
