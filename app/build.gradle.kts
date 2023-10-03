@@ -54,7 +54,7 @@ android {
 
 dependencies {
 
-    //noinspection GradleDependency
+    // noinspection GradleDependency
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
@@ -93,6 +93,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     // Kotlin Coroutines
+    // noinspection GradleDependency - versions 1.7.0 -> 1.7.3 causes NoClassDefFoundError
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     // I don't know what this is, there's another another compose library specified in
     // https://developer.android.com/training/testing/instrumented-tests, which is below

@@ -16,24 +16,31 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.AfterClass
 import org.junit.Assert.*
-import org.junit.BeforeClass
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * TODO: Check to see if retaining the [java.io.File] object from [preferencesDataStoreFile]
+ * allows me to delete the preferencesDataStoreFile after it's been cleared. Check that file
+ * exists afterwards and that it's returned a valid completion code.
+ * */
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class WorkoutListStorageInstrumentedTest {
 
     companion object {
+
+        private const val TEST_DATA_STORE = "test_workout_history"
+
         private val applicationContext: Context = ApplicationProvider.getApplicationContext()
         private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
-            applicationContext.preferencesDataStoreFile("test_workout_history")
+            applicationContext.preferencesDataStoreFile(TEST_DATA_STORE)
         }
         private val repository: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
 
         @JvmStatic
-        @BeforeClass
         @AfterClass
         fun clearTestDataStore() {
             runTest {
@@ -42,6 +49,11 @@ class WorkoutListStorageInstrumentedTest {
                 }
             }
         }
+    }
+
+    @Before
+    fun clearTestDataStore() {
+        WorkoutListStorageInstrumentedTest.clearTestDataStore()
     }
 
     @Test
