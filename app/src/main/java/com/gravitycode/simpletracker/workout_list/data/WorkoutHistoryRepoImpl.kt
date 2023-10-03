@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 
-class WorkoutHistoryRepositoryImpl(
-    private val dataStore: DataStore<Preferences>
-) : WorkoutHistoryRepository {
+class WorkoutHistoryRepoImpl(
+    private val preferencesStore: DataStore<Preferences>
+) : WorkoutHistoryRepo {
 
     override suspend fun readWorkoutHistory(): Flow<WorkoutHistory> {
-        return dataStore.data.take(1).map { preferences ->
+        return preferencesStore.data.take(1).map { preferences ->
             val workoutHistory = WorkoutHistory()
             val workouts = Workout.values()
 
@@ -32,7 +32,7 @@ class WorkoutHistoryRepositoryImpl(
 
     override suspend fun writeWorkoutHistory(history: WorkoutHistory) {
         val workouts = Workout.values()
-        dataStore.edit { preference ->
+        preferencesStore.edit { preference ->
             for (workout in workouts) {
                 val reps = history[workout]
                 preference[intPreferencesKey(workout)] = reps

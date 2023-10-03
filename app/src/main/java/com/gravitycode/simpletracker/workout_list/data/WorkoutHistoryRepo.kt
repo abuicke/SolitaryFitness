@@ -2,7 +2,7 @@ package com.gravitycode.simpletracker.workout_list.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface WorkoutHistoryRepository {
+interface WorkoutHistoryRepo {
 
     suspend fun readWorkoutHistory(): Flow<WorkoutHistory>
 

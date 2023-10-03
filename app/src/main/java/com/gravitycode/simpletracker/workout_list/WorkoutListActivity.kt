@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepositoryImpl
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepoImpl
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import javax.inject.Inject
  *
  * [https://developer.android.com/training/testing/fundamentals/what-to-test]
  *
- * TODO: Write tests for [WorkoutHistoryRepositoryImpl] using the same code as below
+ * TODO: Write tests for [WorkoutHistoryRepoImpl] using the same code as below
  * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
  * */
 class WorkoutListActivity : ComponentActivity() {
@@ -57,7 +57,7 @@ class WorkoutListActivity : ComponentActivity() {
     }
 
     fun workoutHistoryDataStoreTest(dataStore: DataStore<Preferences>) {
-        val repo: WorkoutHistoryRepository = WorkoutHistoryRepositoryImpl(dataStore)
+        val repo: WorkoutHistoryRepo = WorkoutHistoryRepoImpl(dataStore)
 
         lifecycleScope.launch {
             repo.readWorkoutHistory().collect { workoutHistory ->

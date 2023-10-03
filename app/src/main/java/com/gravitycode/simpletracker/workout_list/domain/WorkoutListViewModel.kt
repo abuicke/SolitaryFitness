@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepository
+import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @ActivityScope
 class WorkoutListViewModel @Inject constructor(
-    private val workoutHistoryRepository: WorkoutHistoryRepository
+    private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
 
     private val workoutListState: StateFlow<WorkoutListState> = MutableStateFlow(WorkoutListState())
@@ -23,14 +23,14 @@ class WorkoutListViewModel @Inject constructor(
         Log.i("WorkoutListViewModel", workout.toString())
 
         viewModelScope.launch {
-            workoutHistoryRepository.writeWorkoutHistory(
+            workoutHistoryRepo.writeWorkoutHistory(
                 WorkoutHistory(
                     mapOf(
                         Workout.PRESS_UP to 15
                     )
                 )
             )
-            workoutHistoryRepository.readWorkoutHistory().collect { workoutHistory ->
+            workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
                 Log.i("workout_debugging", workoutHistory.toString())
             }
         }
