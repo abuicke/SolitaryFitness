@@ -3,7 +3,6 @@ package com.gravitycode.simpletracker.workout_list.data
 import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
-import kotlin.jvm.Throws
 
 /**
  * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
@@ -27,15 +26,15 @@ class WorkoutHistory(
         }
     }
 
-    operator fun get(workout: Workout): Int {
+    @IntRange(from = 0) operator fun get(workout: Workout): Int {
         return history[workout]!!
     }
 
-    operator fun set(workout: Workout, @IntRange(from = 0) count: Int) {
-        if (count < 0) throw IllegalArgumentException(
-            "count cannot be less than zero, count provided is $count"
+    operator fun set(workout: Workout, @IntRange(from = 0) reps: Int) {
+        if (reps < 0) throw IllegalArgumentException(
+            "reps cannot be less than zero, reps provided: $reps"
         )
-        history[workout] = count
+        history[workout] = reps
     }
 
     operator fun inc(workout: Workout): WorkoutHistory {

@@ -23,7 +23,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * TODO: get, set, inc and dec functions on [WorkoutHistory] need to be synchronized
+ * TODO: `get`, `set`, `inc` and `dec` functions on [WorkoutHistory] need to be synchronized,
+ * write tests for `get`, `set`, `inc` and `dec` and make sure synchronization works.
+ *
  * TODO: Implement onClick for [WorkoutListScreen]
  * */
 class WorkoutListActivity : ComponentActivity() {
