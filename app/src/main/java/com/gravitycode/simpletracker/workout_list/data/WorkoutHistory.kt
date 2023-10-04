@@ -4,9 +4,6 @@ import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
 
-/**
- * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
- * */
 class WorkoutHistory(
     private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
 ) {

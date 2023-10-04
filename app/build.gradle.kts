@@ -81,12 +81,16 @@ dependencies {
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+    // JCIP Concurrency Annotations
+    // implementation("net.jcip:jcip-annotations:1.0")
+
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // JUnit
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     // Optional -- Robolectric environment
     // testImplementation("androidx.test:core:1.5.0")
     // Optional -- Mockito framework
