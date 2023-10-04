@@ -2,11 +2,10 @@ package com.gravitycode.simpletracker.workout_list.data
 
 import androidx.annotation.IntRange
 import com.gravitycode.simpletracker.workout_list.util.Workout
+import net.jcip.annotations.ThreadSafe
 import java.util.EnumMap
 
-/**
- * TODO: Mutator functions need to be synchronized to prevent concurrent modifications to history map.
- * */
+@ThreadSafe
 class WorkoutHistory(
     private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
 ) {
@@ -26,7 +25,9 @@ class WorkoutHistory(
         }
     }
 
-    @IntRange(from = 0) operator fun get(workout: Workout): Int {
+//    @Synchronized
+    @IntRange(from = 0)
+    operator fun get(workout: Workout): Int {
         return history[workout]!!
     }
 
@@ -34,9 +35,12 @@ class WorkoutHistory(
         if (reps < 0) throw IllegalArgumentException(
             "reps cannot be less than zero, reps provided: $reps"
         )
-        history[workout] = reps
+//        synchronized(this) {
+            history[workout] = reps
+//        }
     }
 
+//    @Synchronized
     operator fun inc(workout: Workout): WorkoutHistory {
         history[workout] = history[workout]!! + 1
         return WorkoutHistory(history)
@@ -46,6 +50,7 @@ class WorkoutHistory(
      * Dec operator doesn't really make sense for this
      * use-case, but implementing it for parity's sake.
      * */
+//    @Synchronized
     operator fun dec(workout: Workout): WorkoutHistory {
         history[workout] = history[workout]!! - 1
         return WorkoutHistory(history)
