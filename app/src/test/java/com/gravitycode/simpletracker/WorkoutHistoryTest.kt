@@ -2,6 +2,11 @@ package com.gravitycode.simpletracker
 
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.util.Workout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -22,6 +27,95 @@ import org.junit.Test
  *
  * */
 class WorkoutHistoryTest {
+
+    @Test
+    fun `empty WorkoutHistory returns zero for all values`() {
+        val workoutHistory = WorkoutHistory()
+        for (workout in Workout.values()) {
+            assertEquals(0, workoutHistory[workout])
+        }
+    }
+
+    @Test
+    fun `assign negative values to WorkoutHistory - in constructor`() {
+        assertThrows(
+            "WorkoutHistory should not accept negative values",
+            IllegalArgumentException::class.java
+        ) {
+            WorkoutHistory(
+                mapOf(
+                    Workout.BURPEE to -50,
+                    Workout.HANDSTAND_PRESS_UP to 10,
+                    Workout.SQUAT_THRUST to 100
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `assign negative values to WorkoutHistory - in setter`() {
+        assertThrows(
+            "WorkoutHistory should not accept negative values",
+            IllegalArgumentException::class.java
+        ) {
+            val history = WorkoutHistory()
+            history[Workout.SIT_UP] = -50
+            history[Workout.STAR_JUMP] = 12
+            history[Workout.HANDSTAND_PRESS_UP] = -15
+        }
+    }
+
+    @Test
+    fun `does get() retrieve what set() sets`() {
+        val workoutHistory = WorkoutHistory()
+        workoutHistory[Workout.STAR_JUMP] = 15
+        workoutHistory[Workout.BURPEE] = 5
+        workoutHistory[Workout.SQUAT_THRUST] = 100
+
+        assertEquals(15, workoutHistory[Workout.STAR_JUMP])
+        assertEquals(5, workoutHistory[Workout.BURPEE])
+        assertEquals(100, workoutHistory[Workout.SQUAT_THRUST])
+    }
+
+    @Test
+    fun `test inc()`() {
+        val workoutHistory = WorkoutHistory()
+        workoutHistory[Workout.STAR_JUMP] = 15
+        workoutHistory[Workout.BURPEE] = 5
+        workoutHistory[Workout.SQUAT_THRUST] = 100
+
+        workoutHistory.inc(Workout.STAR_JUMP)
+        workoutHistory.inc(Workout.STAR_JUMP)
+        workoutHistory.inc(Workout.STAR_JUMP)
+
+        workoutHistory.inc(Workout.BURPEE)
+
+        assertEquals(18, workoutHistory[Workout.STAR_JUMP])
+        assertEquals(6, workoutHistory[Workout.BURPEE])
+        assertEquals(100, workoutHistory[Workout.SQUAT_THRUST])
+    }
+
+    @Test
+    fun `test dec()`() {
+        val workoutHistory = WorkoutHistory()
+        workoutHistory[Workout.HANDSTAND_PRESS_UP] = 30
+        workoutHistory[Workout.SIT_UP] = 100
+        workoutHistory[Workout.SQUAT] = 500
+
+        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
+        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
+        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
+
+        workoutHistory.dec(Workout.SIT_UP)
+        workoutHistory.dec(Workout.SIT_UP)
+        workoutHistory.dec(Workout.SIT_UP)
+        workoutHistory.dec(Workout.SIT_UP)
+        workoutHistory.dec(Workout.SIT_UP)
+
+        assertEquals(27, workoutHistory[Workout.HANDSTAND_PRESS_UP])
+        assertEquals(95, workoutHistory[Workout.SIT_UP])
+        assertEquals(500, workoutHistory[Workout.SQUAT])
+    }
 
     @Test
     fun `does empty WorkoutHistory equal empty WorkoutHistory`() {
@@ -76,34 +170,5 @@ class WorkoutHistoryTest {
 
         assertEquals(workoutHistory_1, workoutHistory_2)
         assertEquals(workoutHistory_1.hashCode(), workoutHistory_2.hashCode())
-    }
-
-    @Test
-    fun `assign negative values to WorkoutHistory - in constructor`() {
-        assertThrows(
-            "WorkoutHistory should not accept negative values",
-            IllegalArgumentException::class.java
-        ) {
-            WorkoutHistory(
-                mapOf(
-                    Workout.BURPEE to -50,
-                    Workout.HANDSTAND_PRESS_UP to 10,
-                    Workout.SQUAT_THRUST to 100
-                )
-            )
-        }
-    }
-
-    @Test
-    fun `assign negative values to WorkoutHistory - in setter`() {
-        assertThrows(
-            "WorkoutHistory should not accept negative values",
-            IllegalArgumentException::class.java
-        ) {
-            val history = WorkoutHistory()
-            history[Workout.SIT_UP] = -50
-            history[Workout.STAR_JUMP] = 12
-            history[Workout.HANDSTAND_PRESS_UP] = -15
-        }
     }
 }
