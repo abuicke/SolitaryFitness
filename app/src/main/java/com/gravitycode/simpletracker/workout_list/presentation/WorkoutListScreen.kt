@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,52 @@ import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
 /**
+ * Composable functions should be idempotent, and free of side-effects:
+ *
+ *      1) The function behaves the same way when called multiple times with the same argument,
+ *      and it does not use other values such as global variables or calls to random().
+ *
+ *      2) The function describes the UI without any side-effects,
+ *      such as modifying properties or global variables.
+ *
+ * [https://developer.android.com/jetpack/compose/mental-model#simple-example]
+ *
+ *
+ *
+ *
+ * Never depend on side-effects from executing composable functions, since a function's
+ * recomposition may be skipped. If you do, users may experience strange and unpredictable
+ * behavior in your app. A side-effect is any change that is visible to the rest of your app.
+ * For example, these actions are all dangerous side-effects:
+ *
+ *      1) Writing to a property of a shared object
+ *      2) Updating an observable in ViewModel
+ *      3) Updating shared preferences
+ *
+ * If you need to do expensive operations, such as reading from shared preferences, do it in
+ * a background coroutine and pass the value result to the composable function as a parameter.
+ *
+ * [https://developer.android.com/jetpack/compose/mental-model#recomposition]
+ *
+ *
+ *
+ *
+ * To ensure your application behaves correctly, all composable functions
+ * should have no side-effects. Instead, trigger side-effects from
+ * callbacks such as onClick that always execute on the UI thread.
+ *
+ * [https://developer.android.com/jetpack/compose/mental-model#parallel]
+ *
+ *
+ *
+ *
+ * The rememberSaveable API behaves similarly to remember because it retains state across
+ * recompositions, and also across activity or process recreation using the saved instance
+ * state mechanism. For example, this happens, when the screen is rotated.
+ *
+ * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
+ *
+ *
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * TODO: Need to prevent long strings in list from pushing count out of sight,
  * replace with ellipse if text takes up too much space on smaller screen sizes.
@@ -31,7 +78,7 @@ fun WorkoutListScreen(
     viewModel: WorkoutListViewModel
 ) {
     LazyList(
-        listItems = viewModel.listItems(),
+        listItems = Workout.values(),
         onClick = { workout ->
             viewModel.onEvent(WorkoutListEvent.Increment(workout, 1))
         },
@@ -60,7 +107,7 @@ private fun <E> LazyList(
         modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(listItems) { listItem ->
+        itemsIndexed(listItems) { i, listItem ->
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)

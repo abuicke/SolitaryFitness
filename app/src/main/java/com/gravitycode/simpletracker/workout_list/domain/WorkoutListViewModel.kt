@@ -1,5 +1,7 @@
 package com.gravitycode.simpletracker.workout_list.domain
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.simpletracker.app.ActivityScope
@@ -31,14 +33,8 @@ class WorkoutListViewModel @Inject constructor(
     private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
 
-    /**
-     * TODO: Should this be read from a [androidx.compose.runtime.State] variable? They seem custom
-     * built to work with composables but I'm still not sure exactly in what way.
-     *
-     * Are there variables like [kotlinx.coroutines.flow.StateFlow] which will automatically
-     * render updates to the composable? That would be the ideal situation.
-     * */
-    fun listItems() = Workout.values()
+    private val _state = mutableStateOf(WorkoutListState())
+    val state: State<WorkoutListState> = _state
 
     fun onEvent(event: WorkoutListEvent) {
         when (event) {
