@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.gravitycode.simpletracker.util.Number
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutListEvent
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
@@ -30,9 +31,9 @@ fun WorkoutListScreen(
     viewModel: WorkoutListViewModel
 ) {
     LazyList(
-        listItems = Workout.values(),
+        listItems = viewModel.listItems(),
         onClick = { workout ->
-            viewModel.doSomething(workout)
+            viewModel.onEvent(WorkoutListEvent.Increment(workout, 1))
         },
         onRender = { workout ->
             workout.toPrettyString()

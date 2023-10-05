@@ -1,32 +1,23 @@
 package com.gravitycode.simpletracker.workout_list
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.lifecycleScope
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepoImpl
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutListEvent
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
-import com.gravitycode.simpletracker.workout_list.util.Workout
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * TODO: `get`, `set`, `inc` and `dec` functions on [WorkoutHistory] need to be synchronized,
- * write tests for `get`, `set`, `inc` and `dec` and make sure synchronization works.
+ * Use data classes where applicable
  *
- * TODO: Implement onClick for [WorkoutListScreen]
+ * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  * */
 class WorkoutListActivity : ComponentActivity() {
 
