@@ -77,43 +77,46 @@ fun WorkoutListScreen(
 //    navController: NavController,
     viewModel: WorkoutListViewModel
 ) {
-    LazyList(
-        listItems = Workout.values(),
-        onClick = { workout ->
-            viewModel.onEvent(WorkoutListEvent.Increment(workout, 1))
-        },
-        onRender = { workout ->
-            workout.toPrettyString()
-        }
-    )
-}
+    /**
+     * TODO: Why doesn't `listState` use remember? I can't remember any of what I spent an hour reading,
+     * need to check again.
+     * */
+    val listState = viewModel.state.value
 
-@Composable
-private fun <E> LazyList(
-    modifier: Modifier = Modifier,
-    listItems: Array<E>,
-    onClick: (E) -> Unit = {},
-    onRender: (E) -> String = { e -> e.toString() }
-) = LazyList(modifier, listItems.toList(), onClick, onRender)
 
-@Composable
-private fun <E> LazyList(
-    modifier: Modifier = Modifier,
-    listItems: List<E>,
-    onClick: ((E) -> Unit) = {},
-    onRender: (E) -> String = { e -> e.toString() }
-) {
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     * TODO: I'm just giving up at this point. Need to continue tomorrow with a clear head.
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     * */
+
+
+
+
     LazyColumn(
-        modifier,
+        Modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        itemsIndexed(listItems) { i, listItem ->
+        itemsIndexed(Workout.values()) { i, listItem ->
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
                     .clickable {
-                        onClick(listItem)
+                        viewModel.onEvent(WorkoutListEvent.Increment(1))
                     }
             ) {
                 Row() {
