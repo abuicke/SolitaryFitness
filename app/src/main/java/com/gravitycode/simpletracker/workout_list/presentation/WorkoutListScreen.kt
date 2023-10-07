@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -74,61 +75,43 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * */
 @Composable
 fun WorkoutListScreen(
+    modifier: Modifier = Modifier,
 //    navController: NavController,
     viewModel: WorkoutListViewModel
 ) {
     /**
      * TODO: Why doesn't `listState` use remember? I can't remember any of what I spent an hour reading,
      * need to check again.
+     *
+     * TODO: Is it also safe not to use remember for `val workouts = Workout.values()`, when is
+     * remember necessary?
      * */
     val listState = viewModel.state.value
-
-
-    /**
-     *
-     *
-     *
-     *
-     *
-     *
-     * TODO: I'm just giving up at this point. Need to continue tomorrow with a clear head.
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * */
-
-
-
+    val workouts = remember { Workout.values() }
 
     LazyColumn(
-        Modifier,
+        modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        itemsIndexed(Workout.values()) { i, listItem ->
+        itemsIndexed(workouts) { i, listItem ->
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
                     .clickable {
-                        viewModel.onEvent(WorkoutListEvent.Increment(1))
+                        viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
                     }
             ) {
                 Row() {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = onRender(listItem),
+                        text = listItem.toPrettyString(),
                         fontSize = 24.sp
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = Number.ZERO.string,
+                        text = listState[i].toString(),
                         fontSize = 24.sp
                     )
                 }

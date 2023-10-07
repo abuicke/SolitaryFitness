@@ -38,8 +38,15 @@ class WorkoutHistory(
         history[workout] = reps
     }
 
-    operator fun inc(workout: Workout): WorkoutHistory {
-        history[workout] = history[workout]!! + 1
+    operator fun inc(workout: Workout): WorkoutHistory = inc(workout, 1)
+
+    /**
+     * TODO: Why is operator allowed on this function? It seems like any number of arguments is okay.
+     * Need to create mirror function in `dec()` once I understand what's going on here. Does []
+     * accept multiple arguments if they're provided in the operator function?
+     * */
+    operator fun inc(workout: Workout, quantity: Int): WorkoutHistory {
+        history[workout] = history[workout]!! + quantity
         return WorkoutHistory(history)
     }
 
