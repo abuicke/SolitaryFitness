@@ -118,6 +118,35 @@ class WorkoutHistoryTest {
     }
 
     @Test
+    fun `test inc() as ++ operator`() {
+        val workoutHistory = WorkoutHistory()
+        workoutHistory[Workout.STAR_JUMP]++
+        workoutHistory[Workout.BURPEE]
+        workoutHistory[Workout.SQUAT_THRUST]++
+
+        assertEquals(1, workoutHistory[Workout.STAR_JUMP])
+        assertEquals(0, workoutHistory[Workout.BURPEE])
+        assertEquals(1, workoutHistory[Workout.SQUAT_THRUST])
+    }
+
+    @Test
+    fun `test dec() as -- operator`() {
+        val workoutHistory = WorkoutHistory(mapOf(
+            Workout.SIT_UP to 5,
+            Workout.SQUAT_THRUST to 11,
+            Workout.BURPEE to 0
+        ))
+
+        workoutHistory[Workout.SIT_UP]--
+        workoutHistory[Workout.SIT_UP]--
+        workoutHistory[Workout.SQUAT_THRUST]--
+
+        assertEquals(3, workoutHistory[Workout.SIT_UP])
+        assertEquals(10, workoutHistory[Workout.SQUAT_THRUST])
+        assertEquals(0, workoutHistory[Workout.BURPEE])
+    }
+
+    @Test
     fun `does empty WorkoutHistory equal empty WorkoutHistory`() {
         assertEquals(
             "empty WorkoutHistory objects should be equal",

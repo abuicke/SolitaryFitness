@@ -45,14 +45,14 @@ class WorkoutHistory(
      * anything without error, or is the argument list just variable? I need to test if any of this
      * overrides the functioning of `++` on the object.
      * */
-    operator fun inc(workout: Workout): WorkoutHistory = inc(workout, 1)
+    operator fun inc(workout: Workout, any: Any): WorkoutHistory = inc(workout, 1)
 
     /**
      * TODO: Why is operator allowed on this function? It seems like any number of arguments is okay.
      * Need to create mirror function in `dec()` once I understand what's going on here. Does []
      * accept multiple arguments if they're provided in the operator function?
      * */
-    operator fun inc(workout: Workout, quantity: Int): WorkoutHistory {
+    operator fun inc(workout: Workout, quantity: Int, string: String = "", i: Double = 2.8): WorkoutHistory {
         history[workout] = history[workout]!! + quantity
         return WorkoutHistory(history)
     }

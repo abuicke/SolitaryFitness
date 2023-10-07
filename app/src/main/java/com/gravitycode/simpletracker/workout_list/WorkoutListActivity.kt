@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.util.Preconditions
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutListEvent
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
 import javax.inject.Inject
@@ -18,6 +18,8 @@ import javax.inject.Inject
  * Use data classes where applicable
  *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
+ *
+ * TODO: If I keep Guava, replace exception throws with [Preconditions.checkArgument]
  * */
 class WorkoutListActivity : ComponentActivity() {
 
