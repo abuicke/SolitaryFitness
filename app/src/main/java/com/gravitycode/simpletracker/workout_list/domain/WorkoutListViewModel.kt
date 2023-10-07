@@ -1,8 +1,6 @@
 package com.gravitycode.simpletracker.workout_list.domain
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +8,7 @@ import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
+import java.util.EnumMap
 import javax.inject.Inject
 
 /**
@@ -41,11 +40,12 @@ class WorkoutListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
-                _state.value = WorkoutListState.from(workoutHistory)
+                /**
+                 * TODO: This is just an absolute mess.
+                 * */
+                _state.value = WorkoutListState(EnumMap(workoutHistory.toMap()))
             }
         }
-
-        mutableStateListOf()
     }
 
     fun onEvent(event: WorkoutListEvent) {
@@ -56,12 +56,14 @@ class WorkoutListViewModel @Inject constructor(
 
     private fun incrementWorkout(workout: Workout, quantity: Int) {
 
-        val workoutListState = _state.value.copy()
         /**
-         * TODO: Replace with [WorkoutListState.inc]
+         * TODO: state has now lost its immutability even though a write can't be triggered, the map
+         * can be tampered with.
+         *
+         * TODO: Results of `state.value.map[workout]` can also be null now
          * */
-        workoutListState[workout] = workoutListState[workout] + quantity
-        _state.value = workoutListState
+        state.value.map[workout] = state.value.map[workout]!! + quantity
+        _state.value = WorkoutListState(state.value.map)
 
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->

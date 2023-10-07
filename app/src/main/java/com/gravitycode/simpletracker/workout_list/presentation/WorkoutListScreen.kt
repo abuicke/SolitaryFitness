@@ -93,7 +93,7 @@ fun WorkoutListScreen(
         modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        itemsIndexed(workouts) { i, listItem ->
+        itemsIndexed(workouts) { i, workout ->
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
@@ -105,13 +105,13 @@ fun WorkoutListScreen(
                 Row() {
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = listItem.toPrettyString(),
+                        text = workout.toPrettyString(),
                         fontSize = 24.sp
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = listState[i].toString(),
+                        text = listState.map[workout].toString(),
                         fontSize = 24.sp
                     )
                 }

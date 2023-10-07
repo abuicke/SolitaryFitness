@@ -87,6 +87,9 @@ dependencies {
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")
 
+    // Guava
+    implementation("com.google.guava:guava:32.1.2-android")
+
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

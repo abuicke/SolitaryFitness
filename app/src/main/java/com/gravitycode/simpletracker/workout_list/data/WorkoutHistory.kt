@@ -1,6 +1,7 @@
 package com.gravitycode.simpletracker.workout_list.data
 
 import androidx.annotation.IntRange
+import com.google.common.collect.ImmutableMap
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
 
@@ -38,6 +39,12 @@ class WorkoutHistory(
         history[workout] = reps
     }
 
+    /**
+     * TODO: How was this even supposed to work the first time. I never tested it with the `++`
+     * operator which it's supposed to have overloaded. It seems that `operator` can be applied to
+     * anything without error, or is the argument list just variable? I need to test if any of this
+     * overrides the functioning of `++` on the object.
+     * */
     operator fun inc(workout: Workout): WorkoutHistory = inc(workout, 1)
 
     /**
@@ -58,6 +65,8 @@ class WorkoutHistory(
         history[workout] = history[workout]!! - 1
         return WorkoutHistory(history)
     }
+
+    fun toMap(): Map<Workout, Int> = ImmutableMap.copyOf(history)
 
     override fun equals(other: Any?): Boolean {
         return if (other is WorkoutHistory) {
