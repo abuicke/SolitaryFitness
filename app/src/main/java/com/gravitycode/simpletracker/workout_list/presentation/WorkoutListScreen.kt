@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -17,9 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.gravitycode.simpletracker.util.Number
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutListEvent
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
 /**

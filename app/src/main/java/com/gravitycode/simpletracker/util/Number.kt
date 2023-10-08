@@ -1,10 +1,6 @@
 package com.gravitycode.simpletracker.util
 
-enum class Number(val integer: Int, val float: Float, val double: Double, val string: String) {
+enum class Number(val integer: Int, val double: Double, val char: Char) {
 
-    ZERO(0, 0.0F, 0.0,"0")
+    ZERO(0, 0.0, '0')
 }
-
-fun Int.isEven() = this % 2 == 0
-
-fun Int.isOdd() = this % 2 == 1

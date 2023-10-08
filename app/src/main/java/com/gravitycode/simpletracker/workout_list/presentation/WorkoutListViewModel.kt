@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.domain
+package com.gravitycode.simpletracker.workout_list.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -40,10 +40,7 @@ class WorkoutListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
-                /**
-                 * TODO: This is just an absolute mess.
-                 * */
-                _state.value = WorkoutListState(EnumMap(workoutHistory.toMap()))
+                _state.value = WorkoutListState(workoutHistory.toMap())
             }
         }
     }
@@ -62,8 +59,8 @@ class WorkoutListViewModel @Inject constructor(
          *
          * TODO: Results of `state.value.map[workout]` can also be null now
          * */
-        state.value.map[workout] = state.value.map[workout]!! + quantity
-        _state.value = WorkoutListState(state.value.map)
+        state.value._map[workout] = state.value[workout] + quantity
+        _state.value = WorkoutListState(state.value._map)
 
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->

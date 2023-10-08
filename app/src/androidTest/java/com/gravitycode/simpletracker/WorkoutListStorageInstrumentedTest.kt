@@ -9,7 +9,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepoImpl
 import com.gravitycode.simpletracker.workout_list.util.Workout

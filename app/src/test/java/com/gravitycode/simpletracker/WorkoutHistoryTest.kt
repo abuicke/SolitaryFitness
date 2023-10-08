@@ -1,12 +1,7 @@
 package com.gravitycode.simpletracker
 
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistory
+import com.gravitycode.simpletracker.workout_list.domain.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.util.Workout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -37,7 +32,7 @@ class WorkoutHistoryTest {
     }
 
     @Test
-    fun `assign negative values to WorkoutHistory - in constructor`() {
+    fun `assigning negative values in constructor throws IllegalArgumentException`() {
         assertThrows(
             "WorkoutHistory should not accept negative values",
             IllegalArgumentException::class.java
@@ -53,7 +48,7 @@ class WorkoutHistoryTest {
     }
 
     @Test
-    fun `assign negative values to WorkoutHistory - in setter`() {
+    fun `assigning negative values in setter throws IllegalArgumentException`() {
         assertThrows(
             "WorkoutHistory should not accept negative values",
             IllegalArgumentException::class.java
@@ -68,6 +63,7 @@ class WorkoutHistoryTest {
     @Test
     fun `does get() retrieve what set() sets`() {
         val workoutHistory = WorkoutHistory()
+
         workoutHistory[Workout.STAR_JUMP] = 15
         workoutHistory[Workout.BURPEE] = 5
         workoutHistory[Workout.SQUAT_THRUST] = 100
@@ -75,75 +71,6 @@ class WorkoutHistoryTest {
         assertEquals(15, workoutHistory[Workout.STAR_JUMP])
         assertEquals(5, workoutHistory[Workout.BURPEE])
         assertEquals(100, workoutHistory[Workout.SQUAT_THRUST])
-    }
-
-    @Test
-    fun `test inc()`() {
-        val workoutHistory = WorkoutHistory()
-        workoutHistory[Workout.STAR_JUMP] = 15
-        workoutHistory[Workout.BURPEE] = 5
-        workoutHistory[Workout.SQUAT_THRUST] = 100
-
-        workoutHistory.inc(Workout.STAR_JUMP)
-        workoutHistory.inc(Workout.STAR_JUMP)
-        workoutHistory.inc(Workout.STAR_JUMP)
-
-        workoutHistory.inc(Workout.BURPEE)
-
-        assertEquals(18, workoutHistory[Workout.STAR_JUMP])
-        assertEquals(6, workoutHistory[Workout.BURPEE])
-        assertEquals(100, workoutHistory[Workout.SQUAT_THRUST])
-    }
-
-    @Test
-    fun `test dec()`() {
-        val workoutHistory = WorkoutHistory()
-        workoutHistory[Workout.HANDSTAND_PRESS_UP] = 30
-        workoutHistory[Workout.SIT_UP] = 100
-        workoutHistory[Workout.SQUAT] = 500
-
-        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
-        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
-        workoutHistory.dec(Workout.HANDSTAND_PRESS_UP)
-
-        workoutHistory.dec(Workout.SIT_UP)
-        workoutHistory.dec(Workout.SIT_UP)
-        workoutHistory.dec(Workout.SIT_UP)
-        workoutHistory.dec(Workout.SIT_UP)
-        workoutHistory.dec(Workout.SIT_UP)
-
-        assertEquals(27, workoutHistory[Workout.HANDSTAND_PRESS_UP])
-        assertEquals(95, workoutHistory[Workout.SIT_UP])
-        assertEquals(500, workoutHistory[Workout.SQUAT])
-    }
-
-    @Test
-    fun `test inc() as ++ operator`() {
-        val workoutHistory = WorkoutHistory()
-        workoutHistory[Workout.STAR_JUMP]++
-        workoutHistory[Workout.BURPEE]
-        workoutHistory[Workout.SQUAT_THRUST]++
-
-        assertEquals(1, workoutHistory[Workout.STAR_JUMP])
-        assertEquals(0, workoutHistory[Workout.BURPEE])
-        assertEquals(1, workoutHistory[Workout.SQUAT_THRUST])
-    }
-
-    @Test
-    fun `test dec() as -- operator`() {
-        val workoutHistory = WorkoutHistory(mapOf(
-            Workout.SIT_UP to 5,
-            Workout.SQUAT_THRUST to 11,
-            Workout.BURPEE to 0
-        ))
-
-        workoutHistory[Workout.SIT_UP]--
-        workoutHistory[Workout.SIT_UP]--
-        workoutHistory[Workout.SQUAT_THRUST]--
-
-        assertEquals(3, workoutHistory[Workout.SIT_UP])
-        assertEquals(10, workoutHistory[Workout.SQUAT_THRUST])
-        assertEquals(0, workoutHistory[Workout.BURPEE])
     }
 
     @Test

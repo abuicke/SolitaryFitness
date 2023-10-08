@@ -8,9 +8,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.util.Preconditions
+import com.google.common.collect.ImmutableMap
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutListViewModel
+import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
 import javax.inject.Inject
 
@@ -20,6 +21,12 @@ import javax.inject.Inject
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
  * TODO: If I keep Guava, replace exception throws with [Preconditions.checkArgument]
+ *
+ * TODO: URLs work in Kdoc by using an anchor tag with a href attribute, @see [ImmutableMap] docs
+ *
+ * TODO: Run ProGuard on app for build
+ *
+ * TODO: Packages should be restructured. Look into what presentation, data and domain should contain.
  * */
 class WorkoutListActivity : ComponentActivity() {
 

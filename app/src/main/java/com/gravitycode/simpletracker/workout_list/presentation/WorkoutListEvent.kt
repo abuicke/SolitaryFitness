@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.domain
+package com.gravitycode.simpletracker.workout_list.presentation
 
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
