@@ -1,6 +1,7 @@
 package com.gravitycode.simpletracker.workout_list.domain
 
 import androidx.annotation.IntRange
+import com.google.common.base.Preconditions.checkArgument
 import com.google.common.collect.ImmutableMap
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
@@ -29,9 +30,7 @@ class WorkoutHistory(
     }
 
     operator fun set(workout: Workout, @IntRange(from = 0) reps: Int) {
-        if (reps < 0) throw IllegalArgumentException(
-            "reps cannot be less than zero, reps provided: $reps"
-        )
+        checkArgument(reps >= 0, "reps cannot be less than zero, reps provided: $reps")
         history[workout] = reps
     }
 
