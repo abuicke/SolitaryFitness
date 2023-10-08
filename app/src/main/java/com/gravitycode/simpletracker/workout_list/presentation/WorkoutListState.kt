@@ -3,14 +3,14 @@ package com.gravitycode.simpletracker.workout_list.presentation
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
 data class WorkoutListState(
-    var handstandPressUps: Int = 0,
-    var pressUps: Int = 0,
-    var sitUps: Int = 0,
-    var squats: Int = 0,
-    var squatThrusts: Int = 0,
-    var burpees: Int = 0,
-    var starJumps: Int = 0,
-    var stepUps: Int = 0
+    val handstandPressUps: Int = 0,
+    val pressUps: Int = 0,
+    val sitUps: Int = 0,
+    val squats: Int = 0,
+    val squatThrusts: Int = 0,
+    val burpees: Int = 0,
+    val starJumps: Int = 0,
+    val stepUps: Int = 0
 ) {
 
     constructor(map: Map<Workout, Int>) : this(
@@ -37,16 +37,16 @@ data class WorkoutListState(
         }
     }
 
-    operator fun set(workout: Workout, reps: Int) {
-        when (workout) {
-            Workout.HANDSTAND_PRESS_UP -> handstandPressUps = reps
-            Workout.PRESS_UP -> pressUps = reps
-            Workout.SIT_UP -> sitUps = reps
-            Workout.SQUAT -> squats = reps
-            Workout.SQUAT_THRUST -> squatThrusts = reps
-            Workout.BURPEE -> burpees = reps
-            Workout.STAR_JUMP -> starJumps = reps
-            Workout.STEP_UP -> stepUps = reps
+    fun copy(workout: Workout, reps: Int): WorkoutListState {
+        return when (workout) {
+            Workout.HANDSTAND_PRESS_UP -> copy(handstandPressUps = reps)
+            Workout.PRESS_UP -> copy(pressUps = reps)
+            Workout.SIT_UP -> copy(sitUps = reps)
+            Workout.SQUAT -> copy(squats = reps)
+            Workout.SQUAT_THRUST -> copy(squatThrusts = reps)
+            Workout.BURPEE -> copy(burpees = reps)
+            Workout.STAR_JUMP -> copy(starJumps = reps)
+            Workout.STEP_UP -> copy(stepUps = reps)
         }
     }
 }

@@ -31,14 +31,20 @@ class WorkoutHistoryRepoImpl(
         }
     }
 
-    override suspend fun writeWorkoutHistory(history: WorkoutHistory) {
+    override suspend fun writeWorkoutHistory(history: WorkoutHistory): Result<Unit> {
         val workouts = Workout.values()
-        preferencesStore.edit { preference ->
-            for (workout in workouts) {
-                val reps = history[workout]
-                preference[intPreferencesKey(workout)] = reps
-                Log.i("workout_history", "set $workout to $reps")
+        return try {
+            preferencesStore.edit { preference ->
+                for (workout in workouts) {
+                    val reps = history[workout]
+                    preference[intPreferencesKey(workout)] = reps
+                    Log.i("workout_history", "set $workout to $reps")
+                }
             }
+
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
         }
     }
 }
