@@ -13,9 +13,6 @@ data class WorkoutListState(
     var stepUps: Int = 0
 ) {
 
-    /**
-     * TODO: Implement non-null enum map? Does Guava provide non-null maps?
-     * */
     constructor(map: Map<Workout, Int>) : this(
         handstandPressUps = map[Workout.HANDSTAND_PRESS_UP]!!,
         pressUps = map[Workout.PRESS_UP]!!,

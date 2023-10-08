@@ -2,6 +2,7 @@ package com.gravitycode.simpletracker.workout_list.presentation
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.simpletracker.app.ActivityScope
@@ -34,7 +35,7 @@ class WorkoutListViewModel @Inject constructor(
     private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(WorkoutListState())
+    private val _state = mutableStateOf(WorkoutListState(), neverEqualPolicy())
     val state: State<WorkoutListState> = _state
 
     init {
@@ -51,6 +52,10 @@ class WorkoutListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * TODO: What should be done when the button is pressed many times over. Should I delay for 100ms
+     * before writing to file?
+     * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
 
         /**
@@ -67,6 +72,9 @@ class WorkoutListViewModel @Inject constructor(
 
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
+                /**
+                 * TODO: Replace with overload of plusEquals operator
+                 * */
                 workoutHistory[workout] = workoutHistory[workout] + quantity
                 workoutHistoryRepo.writeWorkoutHistory(workoutHistory)
 

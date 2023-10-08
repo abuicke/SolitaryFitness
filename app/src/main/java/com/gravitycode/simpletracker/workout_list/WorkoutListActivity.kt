@@ -8,11 +8,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.util.Preconditions
-import com.google.common.collect.ImmutableMap
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
+import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
 import javax.inject.Inject
 
 /**
@@ -22,11 +21,14 @@ import javax.inject.Inject
  *
  * TODO: If I keep Guava, replace exception throws with [Preconditions.checkArgument]
  *
- * TODO: URLs work in Kdoc by using an anchor tag with a href attribute, @see [ImmutableMap] docs
+ * TODO: URLs work in Kdoc by using an anchor tag with a href attribute
  *
  * TODO: Run ProGuard on app for build
  *
  * TODO: Packages should be restructured. Look into what presentation, data and domain should contain.
+ *
+ * TODO: There's a multiple DataStore instances exception on first install.
+ * When you run again after that it launches without issue.
  * */
 class WorkoutListActivity : ComponentActivity() {
 

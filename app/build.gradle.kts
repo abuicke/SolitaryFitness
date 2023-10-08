@@ -72,7 +72,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     // Multi Dex
-     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.multidex:multidex:2.0.1")
 
     // Navigation
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
@@ -90,6 +90,9 @@ dependencies {
 
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")
+
+    // Klutter
+    // implementation("uy.kohesive.klutter:klutter-core:3.0.0")
 
     // Guava
     implementation("com.google.guava:guava:32.1.2-android")
