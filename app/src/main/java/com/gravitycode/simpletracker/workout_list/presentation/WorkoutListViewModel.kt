@@ -58,9 +58,12 @@ class WorkoutListViewModel @Inject constructor(
          * can be tampered with.
          *
          * TODO: Results of `state.value.map[workout]` can also be null now
+         *
+         * TODO: Should overload plusEquals operator, Should this also be overloaded in WorkoutHistory?
+         * Both need testing
          * */
-        state.value._map[workout] = state.value[workout] + quantity
-        _state.value = WorkoutListState(state.value._map)
+        state.value[workout] = state.value[workout] + quantity
+        _state.value = state.value.copy()
 
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->

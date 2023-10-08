@@ -107,7 +107,7 @@ fun WorkoutListScreen(
                     Spacer(Modifier.weight(1f))
                     Text(
                         modifier = Modifier.padding(12.dp),
-                        text = listState.map[workout].toString(),
+                        text = listState[workout].toString(),
                         fontSize = 24.sp
                     )
                 }

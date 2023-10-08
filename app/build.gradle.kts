@@ -15,7 +15,11 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-        // multiDexEnabled = true
+        /**
+         * TODO: Does this to be enabled if I use ProGuard? I needed to enable it after adding Guava
+         * to the project.
+         * */
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -68,7 +72,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     // Multi Dex
-    // implementation("androidx.multidex:multidex:2.0.1")
+     implementation("androidx.multidex:multidex:2.0.1")
 
     // Navigation
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")

@@ -2,21 +2,15 @@ package com.gravitycode.simpletracker.workout_list.presentation
 
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
-/**
- * TODO: This class seems like a mess, duplicating a lot of functionality from [WorkoutHistory]. It
- * could just contain a [WorkoutHistory]?
- *
- * TODO: Is there any purpose in making this a data class?
- * */
-class WorkoutListState(
-    val handstandPressUps: Int = 0,
-    val pressUps: Int = 0,
-    val sitUps: Int = 0,
-    val squats: Int = 0,
-    val squatThrusts: Int = 0,
-    val burpees: Int = 0,
-    val starJumps: Int = 0,
-    val stepUps: Int = 0
+data class WorkoutListState(
+    var handstandPressUps: Int = 0,
+    var pressUps: Int = 0,
+    var sitUps: Int = 0,
+    var squats: Int = 0,
+    var squatThrusts: Int = 0,
+    var burpees: Int = 0,
+    var starJumps: Int = 0,
+    var stepUps: Int = 0
 ) {
 
     /**
@@ -34,7 +28,7 @@ class WorkoutListState(
     )
 
     operator fun get(workout: Workout): Int {
-        return when(workout) {
+        return when (workout) {
             Workout.HANDSTAND_PRESS_UP -> handstandPressUps
             Workout.PRESS_UP -> pressUps
             Workout.SIT_UP -> sitUps
@@ -46,7 +40,16 @@ class WorkoutListState(
         }
     }
 
-    fun copy() {
-        
+    operator fun set(workout: Workout, reps: Int) {
+        when (workout) {
+            Workout.HANDSTAND_PRESS_UP -> handstandPressUps = reps
+            Workout.PRESS_UP -> pressUps = reps
+            Workout.SIT_UP -> sitUps = reps
+            Workout.SQUAT -> squats = reps
+            Workout.SQUAT_THRUST -> squatThrusts = reps
+            Workout.BURPEE -> burpees = reps
+            Workout.STAR_JUMP -> starJumps = reps
+            Workout.STEP_UP -> stepUps = reps
+        }
     }
 }
