@@ -1,6 +1,7 @@
-package com.gravitycode.simpletracker.workout_list.data
+package com.gravitycode.simpletracker.workout_list.domain
 
 import androidx.annotation.IntRange
+import com.google.common.collect.ImmutableMap
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import java.util.EnumMap
 
@@ -34,27 +35,10 @@ class WorkoutHistory(
         history[workout] = reps
     }
 
-    operator fun inc(workout: Workout): WorkoutHistory {
-        history[workout] = history[workout]!! + 1
-        return WorkoutHistory(history)
-    }
+    fun toMap(): Map<Workout, Int> = ImmutableMap.copyOf(history)
 
-    /**
-     * Dec operator doesn't really make sense for this
-     * use-case, but implementing it for parity's sake.
-     * */
-    operator fun dec(workout: Workout): WorkoutHistory {
-        history[workout] = history[workout]!! - 1
-        return WorkoutHistory(history)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return if (other is WorkoutHistory) {
-            history == other.history
-        } else {
-            false
-        }
-    }
+    override fun equals(other: Any?) =
+        other is WorkoutHistory && history == other.history
 
     override fun hashCode() = history.hashCode()
 
