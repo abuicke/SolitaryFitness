@@ -36,12 +36,6 @@ import org.junit.runner.RunWith
  * [https://developer.android.com/training/testing/fundamentals/what-to-test]
  *
  * */
-
-/**
- * TODO: Check to see if retaining the [java.io.File] object from [preferencesDataStoreFile]
- * allows me to delete the preferencesDataStoreFile after it's been cleared. Check that file
- * exists afterwards and that it's returned a valid completion code.
- * */
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi

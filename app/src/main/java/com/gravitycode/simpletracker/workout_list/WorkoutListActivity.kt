@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.util.Preconditions
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
@@ -15,17 +14,9 @@ import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewMo
 import javax.inject.Inject
 
 /**
- * Use data classes where applicable
- *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
- * TODO: If I keep Guava, replace exception throws with [Preconditions.checkArgument]
- *
- * TODO: URLs work in Kdoc by using an anchor tag with a href attribute
- *
  * TODO: Run ProGuard on app for build
- *
- * TODO: Packages should be restructured. Look into what presentation, data and domain should contain.
  *
  * TODO: There's a multiple DataStore instances exception on first install.
  * When you run again after that it launches without issue.

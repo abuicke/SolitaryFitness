@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,15 +74,8 @@ fun WorkoutListScreen(
 //    navController: NavController,
     viewModel: WorkoutListViewModel
 ) {
-    /**
-     * TODO: Why doesn't `listState` use remember? I can't remember any of what I spent an hour reading,
-     * need to check again.
-     *
-     * TODO: Is it also safe not to use remember for `val workouts = Workout.values()`, when is
-     * remember necessary?
-     * */
     val listState = viewModel.state.value
-    val workouts = remember { Workout.values() }
+    val workouts = Workout.values()
 
     LazyColumn(
         modifier,
