@@ -8,6 +8,8 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepoImpl
+import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
+import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModelImpl
 import dagger.Module
 import dagger.Provides
 
@@ -27,4 +29,9 @@ class WorkoutListModule {
     fun provideWorkoutHistoryRepo(
         preferencesStore: DataStore<Preferences>
     ): WorkoutHistoryRepo = WorkoutHistoryRepoImpl(preferencesStore)
+
+    @Provides
+    @ActivityScope
+    fun provideWorkoutListViewModel(repo: WorkoutHistoryRepo): WorkoutListViewModel =
+        WorkoutListViewModelImpl(repo)
 }

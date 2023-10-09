@@ -12,9 +12,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.gravitycode.simpletracker.workout_list.presentation.preview.PreviewWorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
 /**
@@ -62,8 +64,14 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * state mechanism. For example, this happens, when the screen is rotated.
  *
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
- *
- *
+ * */
+@Composable
+@Preview(showSystemUi = true)
+fun WorkoutListScreen() {
+    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel())
+}
+
+/**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * TODO: Need to prevent long strings in list from pushing count out of sight,
  * replace with ellipse if text takes up too much space on smaller screen sizes.
