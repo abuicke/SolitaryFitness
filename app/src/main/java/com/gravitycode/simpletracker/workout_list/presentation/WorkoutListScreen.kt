@@ -75,8 +75,6 @@ fun WorkoutListScreen() {
 
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
- * TODO: Need to prevent long strings in list from pushing count out of sight,
- * replace with ellipse if text takes up too much space on smaller screen sizes.
  * TODO: Once the reps get past 1000, should start using K notation, like 1.2K, 50.8K etc.
  * */
 @Composable
