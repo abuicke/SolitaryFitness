@@ -2,6 +2,7 @@ package com.gravitycode.simpletracker.workout_list.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -99,28 +100,35 @@ fun WorkoutListScreen(
                         viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
                     }
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                start = 12.dp,
-                                top = 12.dp,
-                                bottom = 12.dp
-                            )
-                            .weight(0.7f),
-                        text = workout.toPrettyString(),
-                        fontSize = 24.sp
-                    )
-                    Text(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .weight(0.3f),
-                        text = listState[workout].toString(),
-                        textAlign = TextAlign.Right,
-                        fontSize = 24.sp
-                    )
+                Box() {
+                    TitleAndCount()
                 }
             }
         }
+    }
+}
+
+@Composable
+fun TitleAndCount() {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            modifier = Modifier
+                .padding(
+                    start = 12.dp,
+                    top = 12.dp,
+                    bottom = 12.dp
+                )
+                .weight(0.7f),
+            text = workout.toPrettyString(),
+            fontSize = 24.sp
+        )
+        Text(
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .weight(0.3f),
+            text = listState[workout].toString(),
+            textAlign = TextAlign.Right,
+            fontSize = 24.sp
+        )
     }
 }
