@@ -11,7 +11,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,15 +68,16 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
  * */
 @Composable
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true)//, widthDp = 250)
 fun WorkoutListScreen() {
-    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel())
+    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(10000))
 }
 
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * TODO: Need to prevent long strings in list from pushing count out of sight,
  * replace with ellipse if text takes up too much space on smaller screen sizes.
+ * TODO: Once the reps get past 1000, should start using K notation, like 1.2K, 50.8K etc.
  * */
 @Composable
 fun WorkoutListScreen(
@@ -98,16 +101,24 @@ fun WorkoutListScreen(
                         viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
                     }
             ) {
-                Row() {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier
+                            .padding(
+                                start = 12.dp,
+                                top = 12.dp,
+                                bottom = 12.dp
+                            )
+                            .weight(0.7f),
                         text = workout.toPrettyString(),
                         fontSize = 24.sp
                     )
-                    Spacer(Modifier.weight(1f))
                     Text(
-                        modifier = Modifier.padding(12.dp),
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .weight(0.3f),
                         text = listState[workout].toString(),
+                        textAlign = TextAlign.Right,
                         fontSize = 24.sp
                     )
                 }

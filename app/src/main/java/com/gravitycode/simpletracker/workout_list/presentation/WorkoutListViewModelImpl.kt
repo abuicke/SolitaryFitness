@@ -59,6 +59,9 @@ class WorkoutListViewModelImpl constructor(
             workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
                 workoutHistory[workout] += quantity
                 val result = workoutHistoryRepo.writeWorkoutHistory(workoutHistory)
+                /**
+                 * TODO: Need to show error Toast or Snackbar when this fails!!
+                 * */
                 if (result.isFailure) {
                     // TODO: Test
                     updateListState(workout, -quantity)
