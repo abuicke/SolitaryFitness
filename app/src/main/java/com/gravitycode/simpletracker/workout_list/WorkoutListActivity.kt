@@ -28,6 +28,8 @@ import javax.inject.Inject
  * TODO: Need to sync data to cloud or somewhere else, Firebase? To make sure the record is never lost.
  *
  * TODO: Have UI options to switch between lifetime, day, month, week, calendar for different time periods.
+ *
+ * TODO: Should use string resources for Workout enum and in composables?
  * */
 class WorkoutListActivity : ComponentActivity() {
 

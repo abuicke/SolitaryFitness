@@ -13,6 +13,7 @@ data class WorkoutListState(
     val stepUps: Int = 0
 ) {
 
+    // TODO: Test
     constructor(map: Map<Workout, Int>) : this(
         handstandPressUps = map[Workout.HANDSTAND_PRESS_UP]!!,
         pressUps = map[Workout.PRESS_UP]!!,
@@ -24,6 +25,7 @@ data class WorkoutListState(
         stepUps = map[Workout.STEP_UP]!!
     )
 
+    // TODO: Test
     operator fun get(workout: Workout): Int {
         return when (workout) {
             Workout.HANDSTAND_PRESS_UP -> handstandPressUps
@@ -37,6 +39,7 @@ data class WorkoutListState(
         }
     }
 
+    // TODO: Test
     fun copy(workout: Workout, reps: Int): WorkoutListState {
         return when (workout) {
             Workout.HANDSTAND_PRESS_UP -> copy(handstandPressUps = reps)
