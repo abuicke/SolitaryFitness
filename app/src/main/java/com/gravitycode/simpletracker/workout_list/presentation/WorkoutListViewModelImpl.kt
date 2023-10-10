@@ -40,17 +40,15 @@ class WorkoutListViewModelImpl constructor(
     private fun updateListState(workout: Workout, quantity: Int) {
         /**
          * TODO: Can this be replaced by
-         *
-         * `state.value = state.value.copy(workout, state.value[workout] + quantity)`
-         *
-         * and remove the `_state` backing variable
+         *  `state.value = state.value.copy(workout, state.value[workout] + quantity)`
+         *  and remove the `_state` backing variable
          * */
         _state.value = state.value.copy(workout, state.value[workout] + quantity)
     }
 
     /**
      * TODO: What should be done when the button is pressed many times over.
-     * Should I delay for 100ms before writing to file?
+     *  Should I delay for 100ms before writing to file?
      * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         updateListState(workout, quantity)

@@ -19,7 +19,7 @@ import javax.inject.Inject
  * TODO: Run ProGuard on app for build
  *
  * TODO: There's a multiple DataStore instances exception on first install.
- * When you run again after that it launches without issue.
+ *  When you run again after that it launches without issue.
  *
  * TODO: Add Google Fit integration
  *

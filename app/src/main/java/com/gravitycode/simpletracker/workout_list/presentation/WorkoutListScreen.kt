@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -85,7 +86,7 @@ fun WorkoutListScreen(
     viewModel: WorkoutListViewModel
 ) {
     val listState = viewModel.state.value
-    val workouts = Workout.values()
+    val workouts = remember { Workout.values() }
 
     LazyColumn(
         modifier,
@@ -101,15 +102,19 @@ fun WorkoutListScreen(
                     }
             ) {
                 Box() {
-                    TitleAndCount()
+                    TitleAndCount(workout, listState)
                 }
             }
         }
     }
 }
 
+/**
+ * TODO: Is it correct to pass [androidx.compose.runtime.State]
+ *  and remembered object into a nested composable like this?
+ * */
 @Composable
-fun TitleAndCount() {
+fun TitleAndCount(workout: Workout, listState: WorkoutListState) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             modifier = Modifier
