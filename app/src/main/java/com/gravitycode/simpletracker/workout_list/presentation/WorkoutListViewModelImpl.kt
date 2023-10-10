@@ -9,7 +9,6 @@ import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @ActivityScope
 class WorkoutListViewModelImpl constructor(
@@ -38,11 +37,6 @@ class WorkoutListViewModelImpl constructor(
     }
 
     private fun updateListState(workout: Workout, quantity: Int) {
-        /**
-         * TODO: Can this be replaced by
-         *  `state.value = state.value.copy(workout, state.value[workout] + quantity)`
-         *  and remove the `_state` backing variable
-         * */
         _state.value = state.value.copy(workout, state.value[workout] + quantity)
     }
 
