@@ -1,6 +1,5 @@
 package com.gravitycode.simpletracker.workout_list.presentation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -18,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,34 +100,34 @@ fun WorkoutListScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         itemsIndexed(workouts) { i, workout ->
+
+            val isShowingRepButtons = remember { mutableStateOf(false) }
+
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
                     .clickable {
-                        viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
+                        if (isShowingRepButtons.value) {
+                            isShowingRepButtons.value = false
+                            /**
+                             * TODO: How do I know which one was clicked?
+                             * */
+                            viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
+                        } else {
+                            isShowingRepButtons.value = true
+                        }
                     }
             ) {
                 Box {
-                    AddRepsButtons()
-//                    TitleAndCount(
-//                        workout = workout,
-//                        listState = listState
-//                    )
-//                    // LANGUAGE BUG: https://stackoverflow.com/a/69669445/4596649
-//                    androidx.compose.animation.AnimatedVisibility(
-//                        visible = false,
-//                        enter = fadeIn(
-//                            // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
-//                            initialAlpha = 0.4f
-//                        ),
-//                        exit = fadeOut(
-//                            // Overwrites the default animation with tween
-//                            animationSpec = tween(durationMillis = 250)
-//                        )
-//                    ) {
-//
-//                    }
+                    if (isShowingRepButtons.value) {
+                        AddRepsButtons()
+                    } else {
+                        TitleAndCount(
+                            workout = workout,
+                            listState = listState
+                        )
+                    }
                 }
             }
         }
