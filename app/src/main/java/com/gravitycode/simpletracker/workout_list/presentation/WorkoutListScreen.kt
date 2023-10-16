@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -108,38 +109,51 @@ fun WorkoutListScreen(
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
                     .fillMaxSize()
                     .clickable {
-                        if (isShowingRepButtons.value) {
-                            isShowingRepButtons.value = false
-                            /**
-                             * TODO: How do I know which one was clicked?
-                             * */
-                            viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
-                        } else {
-                            isShowingRepButtons.value = true
-                        }
+//                        if (isShowingRepButtons.value) {
+//                            isShowingRepButtons.value = false
+//                            /**
+//                             * TODO: How do I know which one was clicked?
+//                             * */
+//                            viewModel.onEvent(WorkoutListEvent.Increment(workouts[i], 1))
+//                        } else {
+//                            isShowingRepButtons.value = true
+//                        }
                     }
             ) {
                 Box {
-                    if (isShowingRepButtons.value) {
-                        AddRepsButtons()
-                    } else {
-                        TitleAndCount(
-                            workout = workout,
-                            listState = listState
-                        )
-                    }
+                    TitleAndCount(
+                        workout = workout,
+                        listState = listState
+                    )
                 }
             }
         }
     }
 }
 
+
+/**
+ *
+ *
+ * TODO: Had to just abandon mid-work. Hopefully head will be clear tomorrow.
+ *
+ *
+ * */
+
+
+
 /**
  * TODO: Is it correct to pass [androidx.compose.runtime.State]
  *  and remembered object into a nested composable like this?
  * */
 @Composable
-fun TitleAndCount(modifier: Modifier = Modifier, workout: Workout, listState: WorkoutListState) {
+fun TitleAndCount(
+    modifier: Modifier = Modifier,
+    workout: Workout,
+    listState: WorkoutListState,
+    isShowingRepButtons: Boolean,
+    content: @Composable RowScope.() -> Unit = {}
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
