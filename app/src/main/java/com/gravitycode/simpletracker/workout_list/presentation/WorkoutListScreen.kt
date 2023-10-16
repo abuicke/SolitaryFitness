@@ -44,7 +44,7 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * */
 
 private val TITLE_AND_COUNT_BTN_COLOUR = Color(140, 177, 189)
-private val ADD_REPS_BTN_COLOUR = Color(81, 207, 135)
+private val ADD_REPS_BTN_COLOUR = TITLE_AND_COUNT_BTN_COLOUR
 private val ADD_REPS_BTN_COLOUR_PRESSED = Color(81, 207, 135)
 
 @Composable
