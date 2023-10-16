@@ -107,7 +107,6 @@ fun WorkoutListScreen(
             Card(
                 modifier = Modifier
                     .padding(12.dp, 6.dp, 12.dp, 6.dp)
-                    .fillMaxSize()
                     .clickable {
 //                        if (isShowingRepButtons.value) {
 //                            isShowingRepButtons.value = false
@@ -120,27 +119,17 @@ fun WorkoutListScreen(
 //                        }
                     }
             ) {
-                Box {
+                Box() {
                     TitleAndCount(
                         workout = workout,
                         listState = listState
                     )
+                    AddRepsButtons()
                 }
             }
         }
     }
 }
-
-
-/**
- *
- *
- * TODO: Had to just abandon mid-work. Hopefully head will be clear tomorrow.
- *
- *
- * */
-
-
 
 /**
  * TODO: Is it correct to pass [androidx.compose.runtime.State]
@@ -150,9 +139,7 @@ fun WorkoutListScreen(
 fun TitleAndCount(
     modifier: Modifier = Modifier,
     workout: Workout,
-    listState: WorkoutListState,
-    isShowingRepButtons: Boolean,
-    content: @Composable RowScope.() -> Unit = {}
+    listState: WorkoutListState
 ) {
     Row(
         modifier = modifier,
@@ -166,6 +153,7 @@ fun TitleAndCount(
                     bottom = 12.dp
                 )
                 .weight(0.7f),
+            // TODO: Should just pass in the result of `workout.toPrettyString()` here
             text = workout.toPrettyString(),
             fontSize = 24.sp
         )
@@ -173,6 +161,7 @@ fun TitleAndCount(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .weight(0.3f),
+            // TODO: Should just pass in the result of `listState[workout].toString()` here
             text = listState[workout].toString(),
             textAlign = TextAlign.Right,
             fontSize = 24.sp
