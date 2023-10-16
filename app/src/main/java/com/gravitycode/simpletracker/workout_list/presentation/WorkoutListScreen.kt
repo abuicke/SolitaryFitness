@@ -158,62 +158,49 @@ fun TitleAndCount(
 @Composable
 fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int) -> Unit) {
     Row(
+        // TODO: Is this necessary?
         modifier.background(ADD_REPS_BTN_COLOUR),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        val interactionSource = remember { MutableInteractionSource() }
-        val isPressed by interactionSource.collectIsPressedAsState()
-
-        TextButton(
-            modifier = Modifier.weight(1f),
-            onClick = { onClickReps(1) }
-        ) {
-            Text(
-                text = "+1",
-                color = ADD_REPS_BTN_TXT_COLOUR,
-                textAlign = TextAlign.Center,
-                fontSize = ADD_REPS_BTN_TXT_SIZE,
-            )
-        }
+        AddRepsButton(Modifier.weight(1f), 1, onClickReps)
         Divider(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
         )
-        TextButton(
-            modifier = Modifier.weight(1f),
-            onClick = { onClickReps(5) }
-        ) {
-            Text(
-                text = "+5",
-                color = ADD_REPS_BTN_TXT_COLOUR,
-                textAlign = TextAlign.Center,
-                fontSize = ADD_REPS_BTN_TXT_SIZE
-            )
-        }
+        AddRepsButton(Modifier.weight(1f), 5, onClickReps)
         Divider(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
         )
-        TextButton(
-            modifier = Modifier.weight(1f),
-            onClick = { onClickReps(10) }
-        ) {
-            Text(
-                text = "+10",
-                color = ADD_REPS_BTN_TXT_COLOUR,
-                textAlign = TextAlign.Center,
-                fontSize = ADD_REPS_BTN_TXT_SIZE
-            )
-        }
+        AddRepsButton(Modifier.weight(1f), 10, onClickReps)
     }
 }
 
 @Composable
-fun AddRepsButton() {
+fun AddRepsButton(modifier: Modifier, reps: Int, onClickReps: (Int) -> Unit) {
 
+    /**
+     * TODO: Pressed colour never gets seen
+     * */
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val bgColour = if (isPressed) ADD_REPS_BTN_COLOUR_PRESSED else ADD_REPS_BTN_COLOUR
+
+    TextButton(
+        modifier = modifier.background(bgColour),
+        onClick = { onClickReps(reps) },
+        interactionSource = interactionSource
+    ) {
+        Text(
+            text = "+$reps",
+            color = ADD_REPS_BTN_TXT_COLOUR,
+            textAlign = TextAlign.Center,
+            fontSize = ADD_REPS_BTN_TXT_SIZE
+        )
+    }
 }
