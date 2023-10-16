@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,9 +44,20 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
  * */
 
+/*
+* Colours
+* */
 private val TITLE_AND_COUNT_BTN_COLOUR = Color(140, 177, 189)
+private val TITLE_AND_COUNT_TXT_COLOUR = Color(77, 77, 77)
 private val ADD_REPS_BTN_COLOUR = TITLE_AND_COUNT_BTN_COLOUR
-private val ADD_REPS_BTN_COLOUR_PRESSED = Color(81, 207, 135)
+private val ADD_REPS_BTN_COLOUR_PRESSED = Color(125, 163, 176)
+private val ADD_REPS_BTN_TXT_COLOUR = TITLE_AND_COUNT_TXT_COLOUR
+
+/*
+* Text sizes and fonts
+* */
+private val TITLE_AND_COUNT_TXT_SIZE = 24.sp
+private val ADD_REPS_BTN_TXT_SIZE = TITLE_AND_COUNT_TXT_SIZE
 
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
@@ -102,6 +114,9 @@ fun WorkoutListScreen(
     }
 }
 
+/**
+ * TODO: Use thinner font for title [https://developer.android.com/jetpack/compose/text/fonts]
+ * */
 @Composable
 fun TitleAndCount(
     modifier: Modifier = Modifier,
@@ -121,21 +136,24 @@ fun TitleAndCount(
                 )
                 .weight(0.7f),
             text = title,
-            fontSize = 24.sp
+            color = TITLE_AND_COUNT_TXT_COLOUR,
+            fontSize = TITLE_AND_COUNT_TXT_SIZE
         )
         Text(
             modifier = Modifier
                 .padding(end = 16.dp)
                 .weight(0.3f),
             text = count.toString(),
+            color = TITLE_AND_COUNT_TXT_COLOUR,
             textAlign = TextAlign.Right,
-            fontSize = 24.sp
+            fontSize = TITLE_AND_COUNT_TXT_SIZE
         )
     }
 }
 
 /**
  * TODO: Buttons should change to a lighter colour while pressed.
+ * TODO: Add 'X' to exit from adding reps
  * */
 @Composable
 fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int) -> Unit) {
@@ -146,47 +164,52 @@ fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int) -> Unit) 
 
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
-        val pressedColour =
 
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onClickReps(1)
-                },
-            text = "+1",
-            textAlign = TextAlign.Center
-        )
+        TextButton(
+            modifier = Modifier.weight(1f),
+            onClick = { onClickReps(1) }
+        ) {
+            Text(
+                text = "+1",
+                color = ADD_REPS_BTN_TXT_COLOUR,
+                textAlign = TextAlign.Center,
+                fontSize = ADD_REPS_BTN_TXT_SIZE,
+            )
+        }
         Divider(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
         )
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onClickReps(5)
-                },
-            text = "+5",
-            textAlign = TextAlign.Center
-        )
+        TextButton(
+            modifier = Modifier.weight(1f),
+            onClick = { onClickReps(5) }
+        ) {
+            Text(
+                text = "+5",
+                color = ADD_REPS_BTN_TXT_COLOUR,
+                textAlign = TextAlign.Center,
+                fontSize = ADD_REPS_BTN_TXT_SIZE
+            )
+        }
         Divider(
             color = Color.Black,
             modifier = Modifier
                 .fillMaxHeight()
                 .width(1.dp)
         )
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onClickReps(10)
-                },
-            text = "+10",
-            textAlign = TextAlign.Center
-        )
+        TextButton(
+            modifier = Modifier.weight(1f),
+            onClick = { onClickReps(10) }
+        ) {
+            Text(
+                text = "+10",
+                color = ADD_REPS_BTN_TXT_COLOUR,
+                textAlign = TextAlign.Center,
+                fontSize = ADD_REPS_BTN_TXT_SIZE
+            )
+        }
     }
 }
 
