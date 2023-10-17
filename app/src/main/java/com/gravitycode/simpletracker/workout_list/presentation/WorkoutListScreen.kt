@@ -67,7 +67,7 @@ fun WorkoutListScreen() {
 
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
- * TODO: Once the reps get past 1000, should start using K notation, like 1.2K, 50.8K etc.
+ * TODO: Need to account for when number becomes very long. Push title more and more to the left?
  * */
 @Composable
 fun WorkoutListScreen(
@@ -103,9 +103,11 @@ fun WorkoutListScreen(
                         count = listState[workout]
                     )
                     if (isShowingRepButtons.value) {
-                        AddRepsButtonRow(Modifier.fillMaxSize()) { reps ->
+                        AddRepsButtonRow(Modifier.fillMaxSize()) { reps: Int? ->
                             isShowingRepButtons.value = false
-                            viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                            if (reps != null) {
+                                viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                            }
                         }
                     }
                 }
@@ -156,13 +158,12 @@ fun TitleAndCount(
  * TODO: Add 'X' to exit from adding reps
  * */
 @Composable
-fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int) -> Unit) {
+fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int?) -> Unit) {
     Row(
         // TODO: Is this necessary?
         modifier.background(ADD_REPS_BTN_COLOUR),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         AddRepsButton(Modifier.weight(1f), 1, onClickReps)
         Divider(
             color = Color.Black,
@@ -178,6 +179,23 @@ fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int) -> Unit) 
                 .width(1.dp)
         )
         AddRepsButton(Modifier.weight(1f), 10, onClickReps)
+        Divider(
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+        )
+        TextButton(
+            modifier = Modifier.weight(1f),
+            onClick = { onClickReps(null) }
+        ) {
+            Text(
+                text = "X",
+                color = ADD_REPS_BTN_TXT_COLOUR,
+                textAlign = TextAlign.Center,
+                fontSize = ADD_REPS_BTN_TXT_SIZE
+            )
+        }
     }
 }
 
