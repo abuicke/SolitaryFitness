@@ -46,6 +46,7 @@ class WorkoutListActivity : ComponentActivity() {
             // TODO: If I remove this how does the WorkoutList appear?
             SimpleTrackerTheme {
                 // A surface container using the 'background' color from the theme
+                // TODO: And this? What does this do?
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
