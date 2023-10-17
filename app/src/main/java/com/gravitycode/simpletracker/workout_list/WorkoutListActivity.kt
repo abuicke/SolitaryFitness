@@ -14,6 +14,11 @@ import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewMo
 import javax.inject.Inject
 
 /**
+ * TODO: Sync data to Firebase (or somewhere) and also support calendar functionality. Probably want
+ *  to do the calendar functionality first as I'm going to need to decide how to structure the data.
+ *  Multiple DataStore files? Or move over to ProtocolBuffers?
+ *
+ *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
  * TODO: Test UI. Make sure reps values read correctly based on the add reps button pressed.

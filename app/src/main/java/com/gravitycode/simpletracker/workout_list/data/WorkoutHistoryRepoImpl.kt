@@ -1,6 +1,5 @@
 package com.gravitycode.simpletracker.workout_list.data
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -38,7 +37,6 @@ class WorkoutHistoryRepoImpl(
                 for (workout in workouts) {
                     val reps = history[workout]
                     preference[intPreferencesKey(workout)] = reps
-                    Log.i("workout_history", "set $workout to $reps")
                 }
             }
 
