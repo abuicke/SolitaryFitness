@@ -160,7 +160,6 @@ fun TitleAndCount(
 @Composable
 fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int?) -> Unit) {
     Row(
-        // TODO: Is this necessary?
         modifier.background(ADD_REPS_BTN_COLOUR),
         verticalAlignment = Alignment.CenterVertically
     ) {
