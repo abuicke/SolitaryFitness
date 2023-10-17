@@ -43,6 +43,7 @@ class WorkoutListActivity : ComponentActivity() {
         workoutListComponent.inject(this)
 
         setContent {
+            // TODO: If I remove this how does the WorkoutList appear?
             SimpleTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
