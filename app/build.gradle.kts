@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.gravitycode.simpletracker"
-        minSdk = 24
+        minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 33
         versionCode = 1
