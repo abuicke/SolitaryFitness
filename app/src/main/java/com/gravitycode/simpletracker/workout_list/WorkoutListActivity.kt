@@ -16,6 +16,8 @@ import javax.inject.Inject
 /**
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
+ * TODO: Test UI. Make sure reps values read correctly based on the add reps button pressed.
+ *
  * TODO: Run ProGuard on app for build
  *
  * TODO: There's a multiple DataStore instances exception on first install.

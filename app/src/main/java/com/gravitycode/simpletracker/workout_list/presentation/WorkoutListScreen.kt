@@ -155,7 +155,6 @@ fun TitleAndCount(
 
 /**
  * TODO: Buttons should change to a lighter colour while pressed.
- * TODO: Add 'X' to exit from adding reps
  * */
 @Composable
 fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int?) -> Unit) {
