@@ -25,8 +25,6 @@ import javax.inject.Inject
  *
  * TODO: Add Google Fit integration
  *
- * TODO: Write tests for as much app functionality as can be managed.
- *
  * TODO: Need to sync data to cloud or somewhere else, Firebase? To make sure the record is never lost.
  *
  * TODO: Have UI options to switch between lifetime, day, month, week, calendar for different time periods.
