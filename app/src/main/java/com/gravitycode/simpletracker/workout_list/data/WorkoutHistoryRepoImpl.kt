@@ -15,16 +15,13 @@ class WorkoutHistoryRepoImpl(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 
-    /**
-     * TODO: Need to implement date logic
-     * */
     override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutHistory> {
         return preferencesStore.data.take(1).map { preferences ->
             val workoutHistory = WorkoutHistory()
             val workouts = Workout.values()
 
             for (workout in workouts) {
-                val reps = preferences[intPreferencesKey(workout)]
+                val reps = preferences[intPreferencesKey(date, workout)]
                 if (reps != null) {
                     workoutHistory[workout] = reps
                 }
@@ -34,13 +31,16 @@ class WorkoutHistoryRepoImpl(
         }
     }
 
-    override suspend fun writeWorkoutHistory(history: WorkoutHistory): Result<Unit> {
+    override suspend fun writeWorkoutHistory(
+        date: LocalDate,
+        history: WorkoutHistory
+    ): Result<Unit> {
         val workouts = Workout.values()
         return try {
             preferencesStore.edit { preference ->
                 for (workout in workouts) {
                     val reps = history[workout]
-                    preference[intPreferencesKey(workout)] = reps
+                    preference[intPreferencesKey(date, workout)] = reps
                 }
             }
 

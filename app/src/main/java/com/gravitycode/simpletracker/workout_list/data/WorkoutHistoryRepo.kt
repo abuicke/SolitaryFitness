@@ -8,5 +8,5 @@ interface WorkoutHistoryRepo {
 
     suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutHistory>
 
-    suspend fun writeWorkoutHistory(history: WorkoutHistory): Result<Unit>
+    suspend fun writeWorkoutHistory(date: LocalDate, history: WorkoutHistory): Result<Unit>
 }

@@ -20,12 +20,23 @@ class WorkoutListViewModelImpl constructor(
         private val TAG = WorkoutListViewModelImpl::class.java.simpleName
     }
 
-    private val currentDate: LocalDate = LocalDate.now()
+    private var currentDate: LocalDate = LocalDate.now()
 
     private val _state = mutableStateOf(WorkoutListState(currentDate))//, neverEqualPolicy())
     override val state: State<WorkoutListState> = _state
 
     init {
+        loadWorkoutHistory()
+    }
+
+    override fun onEvent(event: WorkoutListEvent) {
+        when (event) {
+            is WorkoutListEvent.DateSelected -> changeDate(event.date)
+            is WorkoutListEvent.Increment -> incrementWorkout(event.workout, event.quantity)
+        }
+    }
+
+    private fun loadWorkoutHistory() {
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
                 _state.value = WorkoutListState(currentDate, workoutHistory.toMap())
@@ -33,14 +44,9 @@ class WorkoutListViewModelImpl constructor(
         }
     }
 
-    override fun onEvent(event: WorkoutListEvent) {
-        when (event) {
-            is WorkoutListEvent.Increment -> incrementWorkout(event.workout, event.quantity)
-        }
-    }
-
-    private fun updateListState(workout: Workout, quantity: Int) {
-        _state.value = state.value.copy(workout, state.value[workout] + quantity)
+    private fun changeDate(date: LocalDate) {
+        currentDate = date
+        loadWorkoutHistory()
     }
 
     /**
@@ -48,18 +54,18 @@ class WorkoutListViewModelImpl constructor(
      *  Should I delay for 100ms before writing to file?
      * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
-        updateListState(workout, quantity)
+        _state.value = state.value.copy(workout, state.value[workout] + quantity)
 
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
                 workoutHistory[workout] += quantity
-                val result = workoutHistoryRepo.writeWorkoutHistory(workoutHistory)
+                val result = workoutHistoryRepo.writeWorkoutHistory(currentDate, workoutHistory)
                 /**
                  * TODO: Need to show error Toast or Snackbar when this fails!!
                  * */
                 if (result.isFailure) {
                     // TODO: Test
-                    updateListState(workout, -quantity)
+                    _state.value = state.value.copy(workout, state.value[workout] - quantity)
                     val throwable = result.exceptionOrNull()
                     Log.e(TAG, "Failed to write workout history to repository", throwable)
                 }

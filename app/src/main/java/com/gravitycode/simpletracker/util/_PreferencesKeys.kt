@@ -1,22 +1,34 @@
 package com.gravitycode.simpletracker.util
 
-fun intPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.intPreferencesKey(name.toString())
+fun intPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.intPreferencesKey(toString(name, *names))
 
-fun doublePreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.doublePreferencesKey(name.toString())
+fun doublePreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.doublePreferencesKey(toString(name, *names))
 
-fun stringPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.stringPreferencesKey(name.toString())
+fun stringPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.stringPreferencesKey(toString(name, *names))
 
-fun booleanPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.booleanPreferencesKey(name.toString())
+fun booleanPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.booleanPreferencesKey(toString(name, *names))
 
-fun floatPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.floatPreferencesKey(name.toString())
+fun floatPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.floatPreferencesKey(toString(name, *names))
 
-fun longPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.longPreferencesKey(name.toString())
+fun longPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.longPreferencesKey(toString(name, *names))
 
-fun stringSetPreferencesKey(name: Any) =
-    androidx.datastore.preferences.core.stringSetPreferencesKey(name.toString())
+fun stringSetPreferencesKey(name: Any, vararg names: Any) =
+    androidx.datastore.preferences.core.stringSetPreferencesKey(toString(name, *names))
+
+/**
+ * TODO: Test
+ * */
+fun toString(any: Any, vararg anys: Any): String {
+    val strBldr = StringBuilder(any.toString())
+    for (a in anys) {
+        strBldr.append(a.toString())
+    }
+
+    return strBldr.toString()
+}

@@ -1,8 +1,10 @@
 package com.gravitycode.simpletracker.workout_list.presentation
 
 import com.gravitycode.simpletracker.workout_list.util.Workout
+import java.time.LocalDate
 
-sealed class WorkoutListEvent(val workout: Workout) {
+sealed class WorkoutListEvent {
 
-    class Increment(wO: Workout, val quantity: Int) : WorkoutListEvent(wO)
+    class DateSelected(val date: LocalDate) : WorkoutListEvent()
+    class Increment(val workout: Workout, val quantity: Int) : WorkoutListEvent()
 }

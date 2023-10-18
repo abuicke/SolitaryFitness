@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.commandiron.wheel_picker_compose.WheelDatePicker
+import com.commandiron.wheel_picker_compose.WheelTimePicker
 import com.gravitycode.simpletracker.workout_list.presentation.preview.PreviewWorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
@@ -68,6 +71,10 @@ fun WorkoutListScreen() {
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * TODO: Need to account for when number becomes very long. Push title more and more to the left?
+ * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
+ *  count up from the current reps to +10.
+ * TODO: Replace list with a 2x4 non-scrollable grid. Have the number in the center, offset up by
+ *  the name in small print (8sp) at the bottom Colours are black and white.
  * */
 @Composable
 fun WorkoutListScreen(
@@ -77,38 +84,56 @@ fun WorkoutListScreen(
 ) {
     val listState = viewModel.state.value
 
-    LazyColumn(modifier) {
-        val workouts = Workout.values()
-        items(workouts) { workout: Workout ->
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        /**
+         * TODO: Need to move this into it's onw function called `WorkoutList`
+         *  but not sure hoe to pass the view model state in correctly.
+         * */
+        LazyColumn(
+            modifier.weight(1f)
+        ) {
+            val workouts = Workout.values()
+            items(workouts) { workout: Workout ->
 
-            val isShowingRepButtons = remember { mutableStateOf(false) }
+                val isShowingRepButtons = remember { mutableStateOf(false) }
 
-            Card(
-                modifier = Modifier
-                    .padding(12.dp, 6.dp, 12.dp, 6.dp)
-                    .clickable {
-                        if (!isShowingRepButtons.value) {
-                            isShowingRepButtons.value = true
+                Card(
+                    modifier = Modifier
+                        .padding(12.dp, 6.dp, 12.dp, 6.dp)
+                        .clickable {
+                            if (!isShowingRepButtons.value) {
+                                isShowingRepButtons.value = true
+                            }
                         }
-                    }
-            ) {
-                // TODO: Min and Max do the same thing.
-                //  Don't know what the difference is.
-                Box(modifier.height(IntrinsicSize.Min)) {
-                    TitleAndCount(
-                        title = workout.toPrettyString(),
-                        count = listState[workout]
-                    )
-                    if (isShowingRepButtons.value) {
-                        AddRepsButtonRow(Modifier.fillMaxSize()) { reps: Int? ->
-                            isShowingRepButtons.value = false
-                            if (reps != null) {
-                                viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                ) {
+                    // TODO: Min and Max do the same thing.
+                    //  Don't know what the difference is.
+                    Box(modifier.height(IntrinsicSize.Min)) {
+                        TitleAndCount(
+                            title = workout.toPrettyString(),
+                            count = listState[workout]
+                        )
+                        if (isShowingRepButtons.value) {
+                            AddRepsButtonRow(Modifier.fillMaxSize()) { reps: Int? ->
+                                isShowingRepButtons.value = false
+                                if (reps != null) {
+                                    viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+
+        /**
+         * TODO: Need to push list up.
+         * */
+        WheelDatePicker { snappedDate ->
+            viewModel.onEvent(WorkoutListEvent.DateSelected(snappedDate))
         }
     }
 }

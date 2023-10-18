@@ -97,6 +97,9 @@ dependencies {
     // Guava
     implementation("com.google.guava:guava:32.1.2-android")
 
+    // WheelPickerCompose - https://github.com/commandiron/WheelPickerCompose
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
