@@ -62,7 +62,7 @@ private val ADD_REPS_BTN_TXT_SIZE = TITLE_AND_COUNT_TXT_SIZE
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
 fun WorkoutListScreen() {
-    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(10000))
+    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(allReps = 10000))
 }
 
 /**
@@ -77,10 +77,7 @@ fun WorkoutListScreen(
 ) {
     val listState = viewModel.state.value
 
-    LazyColumn(
-        modifier,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    LazyColumn(modifier) {
         val workouts = Workout.values()
         items(workouts) { workout: Workout ->
 

@@ -9,6 +9,7 @@ import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @ActivityScope
 class WorkoutListViewModelImpl constructor(
@@ -19,13 +20,15 @@ class WorkoutListViewModelImpl constructor(
         private val TAG = WorkoutListViewModelImpl::class.java.simpleName
     }
 
-    private val _state = mutableStateOf(WorkoutListState())//, neverEqualPolicy())
+    private val currentDate: LocalDate = LocalDate.now()
+
+    private val _state = mutableStateOf(WorkoutListState(currentDate))//, neverEqualPolicy())
     override val state: State<WorkoutListState> = _state
 
     init {
         viewModelScope.launch {
-            workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
-                _state.value = WorkoutListState(workoutHistory.toMap())
+            workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
+                _state.value = WorkoutListState(currentDate, workoutHistory.toMap())
             }
         }
     }
@@ -48,7 +51,7 @@ class WorkoutListViewModelImpl constructor(
         updateListState(workout, quantity)
 
         viewModelScope.launch {
-            workoutHistoryRepo.readWorkoutHistory().collect { workoutHistory ->
+            workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
                 workoutHistory[workout] += quantity
                 val result = workoutHistoryRepo.writeWorkoutHistory(workoutHistory)
                 /**

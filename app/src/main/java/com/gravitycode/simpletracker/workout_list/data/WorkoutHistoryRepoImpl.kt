@@ -9,12 +9,16 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
+import java.time.LocalDate
 
 class WorkoutHistoryRepoImpl(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 
-    override suspend fun readWorkoutHistory(): Flow<WorkoutHistory> {
+    /**
+     * TODO: Need to implement date logic
+     * */
+    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutHistory> {
         return preferencesStore.data.take(1).map { preferences ->
             val workoutHistory = WorkoutHistory()
             val workouts = Workout.values()

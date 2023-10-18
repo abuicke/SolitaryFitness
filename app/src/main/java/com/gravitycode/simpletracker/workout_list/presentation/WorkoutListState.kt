@@ -1,8 +1,10 @@
 package com.gravitycode.simpletracker.workout_list.presentation
 
 import com.gravitycode.simpletracker.workout_list.util.Workout
+import java.time.LocalDate
 
 data class WorkoutListState(
+    val date: LocalDate,
     val handstandPressUps: Int = 0,
     val pressUps: Int = 0,
     val sitUps: Int = 0,
@@ -14,7 +16,8 @@ data class WorkoutListState(
 ) {
 
     // TODO: Test
-    constructor(map: Map<Workout, Int>) : this(
+    constructor(date: LocalDate, map: Map<Workout, Int>) : this(
+        date = date,
         handstandPressUps = map[Workout.HANDSTAND_PRESS_UP]!!,
         pressUps = map[Workout.PRESS_UP]!!,
         sitUps = map[Workout.SIT_UP]!!,
