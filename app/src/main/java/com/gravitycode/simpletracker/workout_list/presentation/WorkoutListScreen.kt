@@ -43,6 +43,8 @@ fun WorkoutListScreen() {
  * TODO: Need to account for when number becomes very long. Push title more and more to the left?
  * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
  *  count up from the current reps to +10.
+ * TODO: The date on the date picker should be set from the view model. The view shouldn't take it
+ *  for granted that the view model initial date is set to today.
  * */
 @Composable
 fun WorkoutListScreen(
@@ -57,7 +59,6 @@ fun WorkoutListScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Column(modifier.weight(1f)) {
             for (i in workouts.indices step 2) {
                 val firstWorkout = workouts[i]
@@ -92,7 +93,6 @@ fun WorkoutListScreen(
                 Divider()
             }
         }
-
         WheelDatePicker { snappedDate ->
             viewModel.onEvent(WorkoutListEvent.DateSelected(snappedDate))
         }
