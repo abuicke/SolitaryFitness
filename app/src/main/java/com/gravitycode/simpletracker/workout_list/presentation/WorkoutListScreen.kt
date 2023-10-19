@@ -88,50 +88,139 @@ fun WorkoutListScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        /**
-         * TODO: Need to move this into it's onw function called `WorkoutList`
-         *  but not sure hoe to pass the view model state in correctly.
-         * */
-        LazyColumn(
-            modifier.weight(1f)
-        ) {
-            val workouts = Workout.values()
-            items(workouts) { workout: Workout ->
 
-                val isShowingRepButtons = remember { mutableStateOf(false) }
-
-                Card(
-                    modifier = Modifier
-                        .padding(12.dp, 6.dp, 12.dp, 6.dp)
-                        .clickable {
-                            if (!isShowingRepButtons.value) {
-                                isShowingRepButtons.value = true
-                            }
-                        }
-                ) {
-                    // TODO: Min and Max do the same thing.
-                    //  Don't know what the difference is.
-                    Box(modifier.height(IntrinsicSize.Min)) {
-                        TitleAndCount(
-                            title = workout.toPrettyString(),
-                            count = listState[workout]
+        Column(modifier.weight(1f)) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(Modifier.weight(1f)) {
+                    /**
+                     * TODO: I want to find a way for the number not
+                     *  to be pushed up even when the text is present.
+                     * */
+                    TextButton(
+                        modifier = Modifier.fillMaxSize(),
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(
+                            text = "0",
+                            fontSize = 30.sp
                         )
-                        if (isShowingRepButtons.value) {
-                            AddRepsButtonRow(Modifier.fillMaxSize()) { reps: Int? ->
-                                isShowingRepButtons.value = false
-                                if (reps != null) {
-                                    viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
-                                }
-                            }
-                        }
                     }
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 12.dp),
+                        text = "Handstand Press-Up",
+                        fontSize = 12.sp
+                    )
+                }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                )
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
                 }
             }
+            Divider()
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                )
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+            }
+            Divider()
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                )
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+            }
+            Divider()
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp)
+                )
+                TextButton(
+                    modifier = Modifier.weight(1f),
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "0",
+                        fontSize = 30.sp
+                    )
+                }
+            }
+            Divider()
         }
 
-        /**
-         * TODO: Need to push list up.
-         * */
         WheelDatePicker { snappedDate ->
             viewModel.onEvent(WorkoutListEvent.DateSelected(snappedDate))
         }
