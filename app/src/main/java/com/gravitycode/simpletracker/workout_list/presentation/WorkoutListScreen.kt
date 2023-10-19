@@ -1,37 +1,25 @@
 package com.gravitycode.simpletracker.workout_list.presentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.commandiron.wheel_picker_compose.WheelTimePicker
 import com.gravitycode.simpletracker.workout_list.presentation.preview.PreviewWorkoutListViewModel
 import com.gravitycode.simpletracker.workout_list.util.Workout
 
@@ -44,83 +32,10 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  *
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
  * */
-
-/*
-* Colours
-* */
-private val TITLE_AND_COUNT_BTN_COLOUR = Color(140, 177, 189)
-private val TITLE_AND_COUNT_TXT_COLOUR = Color(77, 77, 77)
-private val ADD_REPS_BTN_COLOUR = TITLE_AND_COUNT_BTN_COLOUR
-private val ADD_REPS_BTN_COLOUR_PRESSED = Color(125, 163, 176)
-private val ADD_REPS_BTN_TXT_COLOUR = TITLE_AND_COUNT_TXT_COLOUR
-
-/*
-* Text sizes and fonts
-* */
-private val TITLE_AND_COUNT_TXT_SIZE = 24.sp
-private val ADD_REPS_BTN_TXT_SIZE = TITLE_AND_COUNT_TXT_SIZE
-
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
 fun WorkoutListScreen() {
     WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(allReps = 10000))
-}
-
-@Composable
-fun WorkoutButton(
-    modifier: Modifier,
-    workout: Workout,
-    onClickReps: (Int) -> Unit
-) {
-    Box(modifier) {
-        TextButton(
-            modifier = Modifier.fillMaxSize(),
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "0",
-                fontSize = 30.sp
-            )
-        }
-        Text(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 12.dp),
-            text = workout.toPrettyString(),
-            fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-fun WorkoutButtonsRow(
-    modifier: Modifier,
-    vararg workouts: Workout,
-    onClickReps: (Workout, Int) -> Unit
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        /**
-         * TODO: Make number of buttons dynamic
-         * */
-        WorkoutButton(
-            modifier = Modifier.weight(1f),
-            workout = workouts[0],
-            onClickReps = { TODO() }
-        )
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-        )
-        WorkoutButton(
-            modifier = Modifier.weight(1f),
-            workout = workouts[1],
-            onClickReps = { TODO() }
-        )
-    }
 }
 
 /**
@@ -128,8 +43,6 @@ fun WorkoutButtonsRow(
  * TODO: Need to account for when number becomes very long. Push title more and more to the left?
  * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
  *  count up from the current reps to +10.
- * TODO: Replace list with a 2x4 non-scrollable grid. Have the number in the center, offset up by
- *  the name in small print (8sp) at the bottom Colours are black and white.
  * */
 @Composable
 fun WorkoutListScreen(
@@ -146,99 +59,38 @@ fun WorkoutListScreen(
     ) {
 
         Column(modifier.weight(1f)) {
-            WorkoutButtonsRow(
-                modifier = Modifier.weight(1f),
-                workouts[0], workouts[1],
-                onClickReps = {_, _ -> }
-            )
-            Divider()
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
+            for (i in workouts.indices step 2) {
+                val firstWorkout = workouts[i]
+                val secondWorkout = workouts[i + 1]
+
+                Row(
                     modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
+                    WorkoutButton(
+                        modifier = Modifier.weight(1f),
+                        workout = firstWorkout,
+                        reps = listState[firstWorkout],
+                        onClickReps = { workout, reps ->
+                            viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                        }
+                    )
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(1.dp)
+                    )
+                    WorkoutButton(
+                        modifier = Modifier.weight(1f),
+                        workout = secondWorkout,
+                        reps = listState[secondWorkout],
+                        onClickReps = { workout, reps ->
+                            viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                        }
                     )
                 }
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp)
-                )
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
+                Divider()
             }
-            Divider()
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp)
-                )
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
-            }
-            Divider()
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp)
-                )
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
-            }
-            Divider()
         }
 
         WheelDatePicker { snappedDate ->
@@ -247,107 +99,41 @@ fun WorkoutListScreen(
     }
 }
 
-/**
- * TODO: Use thinner font for title [https://developer.android.com/jetpack/compose/text/fonts]
- * */
 @Composable
-fun TitleAndCount(
-    modifier: Modifier = Modifier,
-    title: String,
-    count: Int
+fun WorkoutButton(
+    modifier: Modifier,
+    workout: Workout,
+    reps: Int,
+    onClickReps: (Workout, Int) -> Unit
 ) {
-    Row(
-        modifier = modifier.background(TITLE_AND_COUNT_BTN_COLOUR),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(
-                    start = 12.dp,
-                    top = 12.dp,
-                    bottom = 12.dp
+    Box(modifier) {
+        val isShowingAddRepsGrid = remember { mutableStateOf(false) }
+
+        if (!isShowingAddRepsGrid.value) {
+            TextButton(
+                modifier = Modifier.fillMaxSize(),
+                onClick = {
+                    if (!isShowingAddRepsGrid.value) {
+                        isShowingAddRepsGrid.value = true
+                    }
+                }
+            ) {
+                Text(
+                    text = reps.toString(),
+                    fontSize = 30.sp
                 )
-                .weight(0.7f),
-            text = title,
-            color = TITLE_AND_COUNT_TXT_COLOUR,
-            fontSize = TITLE_AND_COUNT_TXT_SIZE
-        )
-        Text(
-            modifier = Modifier
-                .padding(end = 16.dp)
-                .weight(0.3f),
-            text = count.toString(),
-            color = TITLE_AND_COUNT_TXT_COLOUR,
-            textAlign = TextAlign.Right,
-            fontSize = TITLE_AND_COUNT_TXT_SIZE
-        )
-    }
-}
-
-/**
- * TODO: Buttons should change to a lighter colour while pressed.
- * */
-@Composable
-fun AddRepsButtonRow(modifier: Modifier = Modifier, onClickReps: (Int?) -> Unit) {
-    Row(
-        modifier.background(ADD_REPS_BTN_COLOUR),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AddRepsButton(Modifier.weight(1f), 1, onClickReps)
-        Divider(
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-        )
-        AddRepsButton(Modifier.weight(1f), 5, onClickReps)
-        Divider(
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-        )
-        AddRepsButton(Modifier.weight(1f), 10, onClickReps)
-        Divider(
-            color = Color.Black,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-        )
-        TextButton(
-            modifier = Modifier.weight(1f),
-            onClick = { onClickReps(null) }
-        ) {
+            }
             Text(
-                text = "X",
-                color = ADD_REPS_BTN_TXT_COLOUR,
-                textAlign = TextAlign.Center,
-                fontSize = ADD_REPS_BTN_TXT_SIZE
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp),
+                text = workout.toPrettyString(),
+                fontSize = 12.sp
             )
+        } else {
+            /**
+             * TODO: Grid should show 1, 5, 10 and X
+             * */
         }
-    }
-}
-
-@Composable
-fun AddRepsButton(modifier: Modifier, reps: Int, onClickReps: (Int) -> Unit) {
-
-    /**
-     * TODO: Pressed colour never gets seen
-     * */
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val bgColour = if (isPressed) ADD_REPS_BTN_COLOUR_PRESSED else ADD_REPS_BTN_COLOUR
-
-    TextButton(
-        modifier = modifier.background(bgColour),
-        onClick = { onClickReps(reps) },
-        interactionSource = interactionSource
-    ) {
-        Text(
-            text = "+$reps",
-            color = ADD_REPS_BTN_TXT_COLOUR,
-            textAlign = TextAlign.Center,
-            fontSize = ADD_REPS_BTN_TXT_SIZE
-        )
     }
 }

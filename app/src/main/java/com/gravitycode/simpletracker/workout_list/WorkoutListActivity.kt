@@ -1,7 +1,6 @@
 package com.gravitycode.simpletracker.workout_list
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +11,6 @@ import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
 import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
-import com.gravitycode.simpletracker.workout_list.util.Workout
-import java.time.LocalDate
 import javax.inject.Inject
 
 /**
