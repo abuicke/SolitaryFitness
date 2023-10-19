@@ -1,10 +1,8 @@
 package com.gravitycode.simpletracker.workout_list.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -68,6 +66,63 @@ fun WorkoutListScreen() {
     WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(allReps = 10000))
 }
 
+@Composable
+fun WorkoutButton(
+    modifier: Modifier,
+    workout: Workout,
+    onClickReps: (Int) -> Unit
+) {
+    Box(modifier) {
+        TextButton(
+            modifier = Modifier.fillMaxSize(),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(
+                text = "0",
+                fontSize = 30.sp
+            )
+        }
+        Text(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 12.dp),
+            text = workout.toPrettyString(),
+            fontSize = 12.sp
+        )
+    }
+}
+
+@Composable
+fun WorkoutButtonsRow(
+    modifier: Modifier,
+    vararg workouts: Workout,
+    onClickReps: (Workout, Int) -> Unit
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        /**
+         * TODO: Make number of buttons dynamic
+         * */
+        WorkoutButton(
+            modifier = Modifier.weight(1f),
+            workout = workouts[0],
+            onClickReps = { TODO() }
+        )
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(1.dp)
+        )
+        WorkoutButton(
+            modifier = Modifier.weight(1f),
+            workout = workouts[1],
+            onClickReps = { TODO() }
+        )
+    }
+}
+
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * TODO: Need to account for when number becomes very long. Push title more and more to the left?
@@ -83,6 +138,7 @@ fun WorkoutListScreen(
     viewModel: WorkoutListViewModel
 ) {
     val listState = viewModel.state.value
+    val workouts = Workout.values()
 
     Column(
         modifier,
@@ -90,47 +146,11 @@ fun WorkoutListScreen(
     ) {
 
         Column(modifier.weight(1f)) {
-            Row(
+            WorkoutButtonsRow(
                 modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(Modifier.weight(1f)) {
-                    /**
-                     * TODO: I want to find a way for the number not
-                     *  to be pushed up even when the text is present.
-                     * */
-                    TextButton(
-                        modifier = Modifier.fillMaxSize(),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(
-                            text = "0",
-                            fontSize = 30.sp
-                        )
-                    }
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 12.dp),
-                        text = "Handstand Press-Up",
-                        fontSize = 12.sp
-                    )
-                }
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp)
-                )
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = { /*TODO*/ }
-                ) {
-                    Text(
-                        text = "0",
-                        fontSize = 30.sp
-                    )
-                }
-            }
+                workouts[0], workouts[1],
+                onClickReps = {_, _ -> }
+            )
             Divider()
             Row(
                 modifier = Modifier.weight(1f),
