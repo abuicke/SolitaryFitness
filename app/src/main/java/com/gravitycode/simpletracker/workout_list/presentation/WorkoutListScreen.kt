@@ -11,10 +11,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -100,6 +102,11 @@ fun WorkoutListScreen(
 }
 
 @Composable
+fun Grid(modifier: Modifier, rows: Int, columns: Int) {
+
+}
+
+@Composable
 fun WorkoutButton(
     modifier: Modifier,
     workout: Workout,
@@ -107,7 +114,7 @@ fun WorkoutButton(
     onClickReps: (Workout, Int) -> Unit
 ) {
     Box(modifier) {
-        val isShowingAddRepsGrid = remember { mutableStateOf(false) }
+        val isShowingAddRepsGrid = remember { mutableStateOf(true) }
 
         if (!isShowingAddRepsGrid.value) {
             TextButton(
@@ -131,9 +138,54 @@ fun WorkoutButton(
                 fontSize = 12.sp
             )
         } else {
-            /**
-             * TODO: Grid should show 1, 5, 10 and X
-             * */
+            Column {
+                Row(
+                    Modifier.weight(1f),
+                ) {
+                    TextButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                        onClick = { onClickReps(workout, 1) }
+                    ) {
+                        Text(
+                            text = "1",
+                        )
+                    }
+                    TextButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                        onClick = { onClickReps(workout, 1) }
+                    ) {
+                        Text(
+                            text = "5",
+                        )
+                    }
+                }
+                Row(Modifier.weight(1f)) {
+                    TextButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                        onClick = { onClickReps(workout, 1) }
+                    ) {
+                        Text(
+                            text = "10",
+                        )
+                    }
+                    TextButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f),
+                        onClick = { onClickReps(workout, 1) }
+                    ) {
+                        Text(
+                            text = "X",
+                        )
+                    }
+                }
+            }
         }
     }
 }

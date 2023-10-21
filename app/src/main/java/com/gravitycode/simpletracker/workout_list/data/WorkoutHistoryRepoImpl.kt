@@ -3,7 +3,7 @@ package com.gravitycode.simpletracker.workout_list.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.simpletracker.util.intPreferencesKey
+import com.gravitycode.simpletracker.util.data.intPreferencesKey
 import com.gravitycode.simpletracker.workout_list.domain.WorkoutHistory
 import com.gravitycode.simpletracker.workout_list.util.Workout
 import kotlinx.coroutines.flow.Flow
