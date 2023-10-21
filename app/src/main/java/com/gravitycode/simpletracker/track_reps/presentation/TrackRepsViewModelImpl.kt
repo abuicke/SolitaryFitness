@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.presentation
+package com.gravitycode.simpletracker.track_reps.presentation
 
 import android.util.Log
 import androidx.compose.runtime.State
@@ -6,40 +6,40 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.simpletracker.app.ActivityScope
-import com.gravitycode.simpletracker.workout_list.data.WorkoutHistoryRepo
-import com.gravitycode.simpletracker.workout_list.util.Workout
+import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepo
+import com.gravitycode.simpletracker.track_reps.util.Workout
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @ActivityScope
-class WorkoutListViewModelImpl constructor(
+class TrackRepsViewModelImpl constructor(
     private val workoutHistoryRepo: WorkoutHistoryRepo
-) : ViewModel(), WorkoutListViewModel {
+) : ViewModel(), TrackRepsViewModel {
 
     companion object {
-        private val TAG = WorkoutListViewModelImpl::class.java.simpleName
+        private val TAG = TrackRepsViewModelImpl::class.java.simpleName
     }
 
     private var currentDate: LocalDate = LocalDate.now()
 
-    private val _state = mutableStateOf(WorkoutListState(currentDate))//, neverEqualPolicy())
-    override val state: State<WorkoutListState> = _state
+    private val _state = mutableStateOf(TrackRepsState(currentDate))//, neverEqualPolicy())
+    override val state: State<TrackRepsState> = _state
 
     init {
         loadWorkoutHistory()
     }
 
-    override fun onEvent(event: WorkoutListEvent) {
+    override fun onEvent(event: TrackRepsEvent) {
         when (event) {
-            is WorkoutListEvent.DateSelected -> changeDate(event.date)
-            is WorkoutListEvent.Increment -> incrementWorkout(event.workout, event.quantity)
+            is TrackRepsEvent.DateSelected -> changeDate(event.date)
+            is TrackRepsEvent.Increment -> incrementWorkout(event.workout, event.quantity)
         }
     }
 
     private fun loadWorkoutHistory() {
         viewModelScope.launch {
             workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
-                _state.value = WorkoutListState(currentDate, workoutHistory.toMap())
+                _state.value = TrackRepsState(currentDate, workoutHistory.toMap())
             }
         }
     }

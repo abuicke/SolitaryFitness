@@ -1,6 +1,6 @@
-package com.gravitycode.simpletracker.workout_list.data
+package com.gravitycode.simpletracker.track_reps.data
 
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutHistory
+import com.gravitycode.simpletracker.track_reps.domain.WorkoutHistory
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

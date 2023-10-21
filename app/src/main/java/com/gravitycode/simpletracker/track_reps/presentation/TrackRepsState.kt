@@ -1,9 +1,9 @@
-package com.gravitycode.simpletracker.workout_list.presentation
+package com.gravitycode.simpletracker.track_reps.presentation
 
-import com.gravitycode.simpletracker.workout_list.util.Workout
+import com.gravitycode.simpletracker.track_reps.util.Workout
 import java.time.LocalDate
 
-data class WorkoutListState(
+data class TrackRepsState(
     val date: LocalDate,
     val handstandPressUps: Int = 0,
     val pressUps: Int = 0,
@@ -43,7 +43,7 @@ data class WorkoutListState(
     }
 
     // TODO: Test
-    fun copy(workout: Workout, reps: Int): WorkoutListState {
+    fun copy(workout: Workout, reps: Int): TrackRepsState {
         return when (workout) {
             Workout.HANDSTAND_PRESS_UP -> copy(handstandPressUps = reps)
             Workout.PRESS_UP -> copy(pressUps = reps)

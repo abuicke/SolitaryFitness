@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.presentation
+package com.gravitycode.simpletracker.track_reps.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,25 +7,22 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.gravitycode.simpletracker.workout_list.presentation.preview.PreviewWorkoutListViewModel
-import com.gravitycode.simpletracker.workout_list.util.Workout
+import com.gravitycode.simpletracker.track_reps.presentation.preview.PreviewTrackRepsViewModel
+import com.gravitycode.simpletracker.track_reps.util.Workout
 
 /**
  * Composable functions should be idempotent, and free of side-effects:
@@ -38,8 +35,8 @@ import com.gravitycode.simpletracker.workout_list.util.Workout
  * */
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
-fun WorkoutListScreen() {
-    WorkoutListScreen(viewModel = PreviewWorkoutListViewModel(allReps = 10000))
+fun TrackRepsScreen() {
+    TrackRepsScreen(viewModel = PreviewTrackRepsViewModel(allReps = 10000))
 }
 
 /**
@@ -51,10 +48,10 @@ fun WorkoutListScreen() {
  *  for granted that the view model initial date is set to today.
  * */
 @Composable
-fun WorkoutListScreen(
+fun TrackRepsScreen(
     modifier: Modifier = Modifier,
 //    navController: NavController,
-    viewModel: WorkoutListViewModel
+    viewModel: TrackRepsViewModel
 ) {
     val listState = viewModel.state.value
     val workouts = Workout.values()
@@ -77,7 +74,7 @@ fun WorkoutListScreen(
                         workout = firstWorkout,
                         reps = listState[firstWorkout],
                         onClickReps = { workout, reps ->
-                            viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
                         }
                     )
                     Divider(
@@ -91,7 +88,7 @@ fun WorkoutListScreen(
                         workout = secondWorkout,
                         reps = listState[secondWorkout],
                         onClickReps = { workout, reps ->
-                            viewModel.onEvent(WorkoutListEvent.Increment(workout, reps))
+                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
                         }
                     )
                 }
@@ -101,7 +98,7 @@ fun WorkoutListScreen(
             }
         }
         WheelDatePicker { snappedDate ->
-            viewModel.onEvent(WorkoutListEvent.DateSelected(snappedDate))
+            viewModel.onEvent(TrackRepsEvent.DateSelected(snappedDate))
         }
     }
 }

@@ -1,11 +1,11 @@
-package com.gravitycode.simpletracker.workout_list.data
+package com.gravitycode.simpletracker.track_reps.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.gravitycode.simpletracker.util.data.intPreferencesKey
-import com.gravitycode.simpletracker.workout_list.domain.WorkoutHistory
-import com.gravitycode.simpletracker.workout_list.util.Workout
+import com.gravitycode.simpletracker.track_reps.domain.WorkoutHistory
+import com.gravitycode.simpletracker.track_reps.util.Workout
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
