@@ -14,7 +14,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class TrackRepsModule {
+object TrackRepsModule {
 
     @Provides
     @ActivityScope

@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module(subcomponents = [TrackRepsComponent::class])
-class AppModule {
+object AppModule {
 
     @Provides fun providesApplicationContext(app: Application): Context = app.applicationContext
 }
