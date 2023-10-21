@@ -18,6 +18,9 @@ import javax.inject.Inject
  *  to do the calendar functionality first as I'm going to need to decide how to structure the data.
  *  Multiple DataStore files? Or move over to ProtocolBuffers?
  *
+ * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the
+ *  add reps buttons. Technically the number of buttons available could also be customised but I
+ *  don't know if there would be enough space on the screen.
  *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
