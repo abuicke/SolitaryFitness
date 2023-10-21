@@ -22,6 +22,9 @@ import javax.inject.Inject
  *  add reps buttons. Technically the number of buttons available could also be customised but I
  *  don't know if there would be enough space on the screen.
  *
+ *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
+ *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`
+ *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
  * TODO: Test UI. Make sure reps values read correctly based on the add reps button pressed.

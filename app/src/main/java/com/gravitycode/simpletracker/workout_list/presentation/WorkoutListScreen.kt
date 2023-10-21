@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,7 +83,8 @@ fun WorkoutListScreen(
                     Divider(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .width(1.dp)
+                            .width(1.dp),
+                        color = Color.Black
                     )
                     WorkoutButton(
                         modifier = Modifier.weight(1f),
@@ -92,7 +95,9 @@ fun WorkoutListScreen(
                         }
                     )
                 }
-                Divider()
+                Divider(
+                    color = Color.Black
+                )
             }
         }
         WheelDatePicker { snappedDate ->
@@ -101,11 +106,12 @@ fun WorkoutListScreen(
     }
 }
 
-@Composable
-fun Grid(modifier: Modifier, rows: Int, columns: Int) {
-
-}
-
+/**
+ * TODO: Extract the grid into a general purpose `Grid()` composable.
+ *  Too tired to figure out how to do it right now.
+ *  Could find useful examples here: [https://github.com/nesyou01/LazyStaggeredGrid],
+ *  [https://developer.android.com/jetpack/compose/lists]
+ * */
 @Composable
 fun WorkoutButton(
     modifier: Modifier,
@@ -114,7 +120,7 @@ fun WorkoutButton(
     onClickReps: (Workout, Int) -> Unit
 ) {
     Box(modifier) {
-        val isShowingAddRepsGrid = remember { mutableStateOf(true) }
+        val isShowingAddRepsGrid = remember { mutableStateOf(false) }
 
         if (!isShowingAddRepsGrid.value) {
             TextButton(
@@ -146,42 +152,62 @@ fun WorkoutButton(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),
-                        onClick = { onClickReps(workout, 1) }
+                        onClick = {
+                            onClickReps(workout, 1)
+                            isShowingAddRepsGrid.value = false
+                        }
                     ) {
                         Text(
-                            text = "1",
+                            text = "1"
                         )
                     }
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(1.dp)
+                    )
                     TextButton(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),
-                        onClick = { onClickReps(workout, 1) }
+                        onClick = {
+                            onClickReps(workout, 5)
+                            isShowingAddRepsGrid.value = false
+                        }
                     ) {
                         Text(
-                            text = "5",
+                            text = "5"
                         )
                     }
                 }
+                Divider()
                 Row(Modifier.weight(1f)) {
                     TextButton(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),
-                        onClick = { onClickReps(workout, 1) }
+                        onClick = {
+                            onClickReps(workout, 10)
+                            isShowingAddRepsGrid.value = false
+                        }
                     ) {
                         Text(
-                            text = "10",
+                            text = "10"
                         )
                     }
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(1.dp)
+                    )
                     TextButton(
                         modifier = Modifier
                             .fillMaxSize()
                             .weight(1f),
-                        onClick = { onClickReps(workout, 1) }
+                        onClick = { isShowingAddRepsGrid.value = false }
                     ) {
                         Text(
-                            text = "X",
+                            text = "X"
                         )
                     }
                 }
