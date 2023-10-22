@@ -80,6 +80,9 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        /**
+         * TODO: Apply Grid() abstraction here too
+         * */
         Column(modifier.weight(1f)) {
             for (i in workouts.indices step 2) {
                 val firstWorkout = workouts[i]
