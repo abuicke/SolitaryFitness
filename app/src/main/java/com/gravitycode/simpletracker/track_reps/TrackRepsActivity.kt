@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list
+package com.gravitycode.simpletracker.track_reps
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,8 +9,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.gravitycode.simpletracker.app.SimpleTrackerApp
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListScreen
-import com.gravitycode.simpletracker.workout_list.presentation.WorkoutListViewModel
+import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsScreen
+import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
 import javax.inject.Inject
 
 /**
@@ -18,6 +18,12 @@ import javax.inject.Inject
  *  to do the calendar functionality first as I'm going to need to decide how to structure the data.
  *  Multiple DataStore files? Or move over to ProtocolBuffers?
  *
+ * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the
+ *  add reps buttons. Technically the number of buttons available could also be customised but I
+ *  don't know if there would be enough space on the screen.
+ *
+ *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
+ *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`
  *
  * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
  *
@@ -36,19 +42,20 @@ import javax.inject.Inject
  *
  * TODO: Should use string resources for Workout enum and in composables?
  * */
-class WorkoutListActivity : ComponentActivity() {
+class TrackRepsActivity : ComponentActivity() {
 
-    private lateinit var workoutListComponent: WorkoutListComponent
-    @Inject lateinit var workoutListViewModelImpl: WorkoutListViewModel
+    private lateinit var trackRepsComponent: TrackRepsComponent
+    @Inject lateinit var trackRepsViewModelImpl: TrackRepsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val appComponent = (applicationContext as SimpleTrackerApp).appComponent
-        workoutListComponent = appComponent.workoutListComponent().create()
-        workoutListComponent.inject(this)
+        trackRepsComponent = appComponent.trackRepsComponent().create()
+        trackRepsComponent.inject(this)
 
         setContent {
-            // TODO: If I remove this how does the WorkoutList appear?
+            // TODO: If I remove this how does the [TrackRepsScreen] appear?
             SimpleTrackerTheme {
                 // A surface container using the 'background' color from the theme
                 // TODO: And this? What does this do?
@@ -56,7 +63,7 @@ class WorkoutListActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WorkoutListScreen(viewModel = workoutListViewModelImpl)
+                    TrackRepsScreen(viewModel = trackRepsViewModelImpl)
                 }
             }
         }

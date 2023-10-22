@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.gravitycode.simpletracker"
-        minSdk = 24
+        minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 33
         versionCode = 1
@@ -96,6 +96,9 @@ dependencies {
 
     // Guava
     implementation("com.google.guava:guava:32.1.2-android")
+
+    // WheelPickerCompose - https://github.com/commandiron/WheelPickerCompose
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
 
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")

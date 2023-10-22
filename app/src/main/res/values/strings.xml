@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Simple Tracker</string>
+    <string name="track_reps_topbar_text">Track Workouts</string>
 </resources>

@@ -1,9 +1,9 @@
-package com.gravitycode.simpletracker.workout_list.domain
+package com.gravitycode.simpletracker.track_reps.domain
 
 import androidx.annotation.IntRange
 import com.google.common.base.Preconditions.checkArgument
 import com.google.common.collect.ImmutableMap
-import com.gravitycode.simpletracker.workout_list.util.Workout
+import com.gravitycode.simpletracker.track_reps.util.Workout
 import java.util.EnumMap
 
 class WorkoutHistory(

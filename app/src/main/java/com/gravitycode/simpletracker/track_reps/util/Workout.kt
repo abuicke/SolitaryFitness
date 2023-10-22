@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.workout_list.util
+package com.gravitycode.simpletracker.track_reps.util
 
 /**
  * @param[prettyString] a string which is returned by
