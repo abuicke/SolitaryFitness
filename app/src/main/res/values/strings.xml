@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Simple Tracker</string>
     <string name="track_reps_topbar_text">Track Workouts</string>
+    <string name="ic_menu_overflow_content_description">Overflow menu button</string>
 </resources>
