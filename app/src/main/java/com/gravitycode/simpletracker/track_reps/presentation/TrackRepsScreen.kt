@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.simpletracker.R
+import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.track_reps.presentation.preview.PreviewTrackRepsViewModel
 import com.gravitycode.simpletracker.track_reps.util.Workout
 
@@ -42,6 +43,11 @@ import com.gravitycode.simpletracker.track_reps.util.Workout
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
 fun TrackRepsScreen() {
+    /**
+     * TODO: The [SimpleTrackerTheme] and [androidx.compose.material3.Surface] should be wrapped
+     *  around the preview the same way they are in [com.gravitycode.simpletracker.track_reps.TrackRepsActivity]
+     *  once I find out what those functions do.
+     * */
     TrackRepsScreen(viewModel = PreviewTrackRepsViewModel(allReps = 10000))
 }
 
@@ -54,7 +60,6 @@ fun TrackRepsScreen() {
  *  for granted that the view model initial date is set to today.
  * */
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
 //    navController: NavController,
@@ -63,67 +68,49 @@ fun TrackRepsScreen(
     val listState = viewModel.state.value
     val workouts = Workout.values()
 
-    /**
-     * TODO: No idea why setting the colours is so restricted. I want the TopAppBar to have the same
-     *  background colour as the very top of the screen above it. What is that called and where can
-     *  I get that colour and how can I set it?
-     * */
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(modifier.weight(1f)) {
+            for (i in workouts.indices step 2) {
+                val firstWorkout = workouts[i]
+                val secondWorkout = workouts[i + 1]
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.track_reps_topbar_text)
-                    )
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier.padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Column(modifier.weight(1f)) {
-                for (i in workouts.indices step 2) {
-                    val firstWorkout = workouts[i]
-                    val secondWorkout = workouts[i + 1]
-
-                    Row(
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    WorkoutButton(
                         modifier = Modifier.weight(1f),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        WorkoutButton(
-                            modifier = Modifier.weight(1f),
-                            workout = firstWorkout,
-                            reps = listState[firstWorkout],
-                            onClickReps = { workout, reps ->
-                                viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
-                            }
-                        )
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(1.dp),
-                            color = Color.Black
-                        )
-                        WorkoutButton(
-                            modifier = Modifier.weight(1f),
-                            workout = secondWorkout,
-                            reps = listState[secondWorkout],
-                            onClickReps = { workout, reps ->
-                                viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
-                            }
-                        )
-                    }
+                        workout = firstWorkout,
+                        reps = listState[firstWorkout],
+                        onClickReps = { workout, reps ->
+                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
+                        }
+                    )
                     Divider(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(1.dp),
                         color = Color.Black
                     )
+                    WorkoutButton(
+                        modifier = Modifier.weight(1f),
+                        workout = secondWorkout,
+                        reps = listState[secondWorkout],
+                        onClickReps = { workout, reps ->
+                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
+                        }
+                    )
                 }
+                Divider(
+                    color = Color.Black
+                )
             }
-            WheelDatePicker { snappedDate ->
-                viewModel.onEvent(TrackRepsEvent.DateSelected(snappedDate))
-            }
+        }
+        WheelDatePicker { snappedDate ->
+            viewModel.onEvent(TrackRepsEvent.DateSelected(snappedDate))
         }
     }
 }
