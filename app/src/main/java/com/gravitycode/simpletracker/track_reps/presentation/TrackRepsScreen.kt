@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.track_reps.presentation.preview.PreviewTrackRepsViewModel
 import com.gravitycode.simpletracker.track_reps.util.Workout
+import java.time.LocalDate
 
 /**
  * Composable functions should be idempotent, and free of side-effects:
@@ -36,13 +36,27 @@ import com.gravitycode.simpletracker.track_reps.util.Workout
  * */
 @Composable
 @Preview(showSystemUi = true)//, widthDp = 250)
-fun TrackRepsScreen() {
+private fun TrackRepsScreen() {
     /**
      * TODO: The [SimpleTrackerTheme] and [androidx.compose.material3.Surface] should be wrapped
      *  around the preview the same way they are in [com.gravitycode.simpletracker.track_reps.TrackRepsActivity]
      *  once I find out what those functions do.
      * */
-    TrackRepsScreen(viewModel = PreviewTrackRepsViewModel(allReps = 10000))
+    TrackRepsScreen(
+        Modifier.fillMaxSize(),
+        trackRepsState = TrackRepsState(
+            LocalDate.now(),
+            273750000,
+            547500000,
+            54750000,
+            27375000,
+            5475000,
+            136875000,
+            246375000,
+            438000000
+        ),
+        onEvent = { _ -> }
+    )
 }
 
 /**
@@ -57,9 +71,9 @@ fun TrackRepsScreen() {
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
 //    navController: NavController,
-    viewModel: TrackRepsViewModel
+    trackRepsState: TrackRepsState,
+    onEvent: (TrackRepsEvent) -> Unit
 ) {
-    val listState = viewModel.state.value
     val workouts = Workout.values()
 
     Column(
@@ -78,9 +92,9 @@ fun TrackRepsScreen(
                     WorkoutButton(
                         modifier = Modifier.weight(1f),
                         workout = firstWorkout,
-                        reps = listState[firstWorkout],
+                        reps = trackRepsState[firstWorkout],
                         onClickReps = { workout, reps ->
-                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
+                            onEvent(TrackRepsEvent.Increment(workout, reps))
                         }
                     )
                     Divider(
@@ -92,9 +106,9 @@ fun TrackRepsScreen(
                     WorkoutButton(
                         modifier = Modifier.weight(1f),
                         workout = secondWorkout,
-                        reps = listState[secondWorkout],
+                        reps = trackRepsState[secondWorkout],
                         onClickReps = { workout, reps ->
-                            viewModel.onEvent(TrackRepsEvent.Increment(workout, reps))
+                            onEvent(TrackRepsEvent.Increment(workout, reps))
                         }
                     )
                 }
@@ -104,7 +118,7 @@ fun TrackRepsScreen(
             }
         }
         WheelDatePicker { snappedDate ->
-            viewModel.onEvent(TrackRepsEvent.DateSelected(snappedDate))
+            onEvent(TrackRepsEvent.DateSelected(snappedDate))
         }
     }
 }

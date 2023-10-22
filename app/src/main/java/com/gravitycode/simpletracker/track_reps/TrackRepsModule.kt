@@ -9,7 +9,6 @@ import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepoImpl
 import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
-import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModelImpl
 import dagger.Module
 import dagger.Provides
 
@@ -33,5 +32,5 @@ object TrackRepsModule {
     @Provides
     @ActivityScope
     fun provideTrackRepsViewModel(repo: WorkoutHistoryRepo): TrackRepsViewModel =
-        TrackRepsViewModelImpl(repo)
+        TrackRepsViewModel(repo)
 }

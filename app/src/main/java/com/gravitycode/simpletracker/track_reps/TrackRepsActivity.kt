@@ -45,7 +45,7 @@ import javax.inject.Inject
 class TrackRepsActivity : ComponentActivity() {
 
     private lateinit var trackRepsComponent: TrackRepsComponent
-    @Inject lateinit var trackRepsViewModelImpl: TrackRepsViewModel
+    @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,10 @@ class TrackRepsActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TrackRepsScreen(viewModel = trackRepsViewModelImpl)
+                    TrackRepsScreen(
+                        trackRepsState = trackRepsViewModel.state.value,
+                        onEvent = trackRepsViewModel::onEvent
+                    )
                 }
             }
         }
