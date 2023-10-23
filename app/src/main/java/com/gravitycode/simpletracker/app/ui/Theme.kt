@@ -2,6 +2,7 @@ package com.gravitycode.simpletracker.app.ui
 
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -61,6 +62,10 @@ fun SimpleTrackerTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
+
+    Log.i("colour-scheme", "primary colour: #${colorScheme.primary}")
+    Log.i("colour-scheme", "secondary colour: #${colorScheme.secondary}")
+    Log.i("colour-scheme", "background colour: #${colorScheme.background}")
 
     MaterialTheme(
             colorScheme = colorScheme,
