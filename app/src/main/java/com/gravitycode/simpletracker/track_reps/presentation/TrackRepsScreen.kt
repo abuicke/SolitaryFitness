@@ -7,20 +7,30 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
+import com.gravitycode.simpletracker.R
 import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.track_reps.util.Workout
 import java.time.LocalDate
@@ -68,6 +78,7 @@ private fun TrackRepsScreen() {
  *  for granted that the view model initial date is set to today.
  * */
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
 //    navController: NavController,
@@ -80,6 +91,33 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        /**
+         * TODO: Get background colour from [SimpleTrackerTheme]
+         *  [https://codelabs.developers.google.com/jetpack-compose-theming#4]
+         * */
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(R.string.track_reps_topbar_text),
+                    color = MaterialTheme.colorScheme.background
+                )
+            },
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            actions = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = stringResource(R.string.overflow_icon_content_description),
+                        tint = MaterialTheme.colorScheme.background
+                    )
+                }
+            }
+        )
+        /**
+         * TODO: Apply Grid() abstraction here too
+         * */
         Column(modifier.weight(1f)) {
             for (i in workouts.indices step 2) {
                 val firstWorkout = workouts[i]
