@@ -34,6 +34,11 @@ import javax.inject.Inject
  * TODO: Add Google Fit integration
  *
  * TODO: Should use string resources for Workout enum and in composables?
+ *
+ * TODO: [TrackRepsScreen] crashes and doesn't display correctly on rotation.
+ *
+ * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
+ *  count up from the current reps to +10.
  * */
 class TrackRepsActivity : ComponentActivity() {
 

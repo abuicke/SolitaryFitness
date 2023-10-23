@@ -45,13 +45,8 @@ import java.time.LocalDate
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
  * */
 @Composable
-@Preview(showSystemUi = true)//, widthDp = 250)
+@Preview(showSystemUi = true)
 private fun TrackRepsScreen() {
-    /**
-     * TODO: The [SimpleTrackerTheme] and [androidx.compose.material3.Surface] should be wrapped
-     *  around the preview the same way they are in [com.gravitycode.simpletracker.track_reps.TrackRepsActivity]
-     *  once I find out what those functions do.
-     * */
     TrackRepsScreen(
         Modifier.fillMaxSize(),
         trackRepsState = TrackRepsState(
@@ -71,9 +66,6 @@ private fun TrackRepsScreen() {
 
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
- * TODO: Need to account for when number becomes very long. Push title more and more to the left?
- * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
- *  count up from the current reps to +10.
  * TODO: The date on the date picker should be set from the view model. The view shouldn't take it
  *  for granted that the view model initial date is set to today.
  * */
