@@ -1,6 +1,7 @@
 package com.gravitycode.simpletracker.track_reps.presentation
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,11 +9,18 @@ import androidx.lifecycle.viewModelScope
 import com.gravitycode.simpletracker.app.ActivityScope
 import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.simpletracker.track_reps.util.Workout
+import com.gravitycode.simpletracker.util.ui.ToastDuration
+import com.gravitycode.simpletracker.util.ui.Toaster
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @ActivityScope
-class TrackRepsViewModel(private val workoutHistoryRepo: WorkoutHistoryRepo) : ViewModel() {
+class TrackRepsViewModel(
+    private val toaster: Toaster,
+    private val workoutHistoryRepo: WorkoutHistoryRepo,
+) : ViewModel() {
 
     companion object {
         private val TAG = TrackRepsViewModel::class.java.simpleName
@@ -20,7 +28,7 @@ class TrackRepsViewModel(private val workoutHistoryRepo: WorkoutHistoryRepo) : V
 
     private var currentDate: LocalDate = LocalDate.now()
 
-    private val _state = mutableStateOf(TrackRepsState(currentDate))//, neverEqualPolicy())
+    private val _state = mutableStateOf(TrackRepsState(currentDate))
     val state: State<TrackRepsState> = _state
 
     init {
@@ -47,10 +55,6 @@ class TrackRepsViewModel(private val workoutHistoryRepo: WorkoutHistoryRepo) : V
         loadWorkoutHistory()
     }
 
-    /**
-     * TODO: What should be done when the button is pressed many times over.
-     *  Should I delay for 100ms before writing to file?
-     * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         _state.value = state.value.copy(workout, state.value[workout] + quantity)
 
@@ -58,14 +62,13 @@ class TrackRepsViewModel(private val workoutHistoryRepo: WorkoutHistoryRepo) : V
             workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
                 workoutHistory[workout] += quantity
                 val result = workoutHistoryRepo.writeWorkoutHistory(currentDate, workoutHistory)
-                /**
-                 * TODO: Need to show error Toast or Snackbar when this fails!!
-                 * */
                 if (result.isFailure) {
                     // TODO: Test
                     _state.value = state.value.copy(workout, state.value[workout] - quantity)
+                    val errorMessage = "Failed to write workout history to repository"
+                    toaster(errorMessage, ToastDuration.SHORT)
                     val throwable = result.exceptionOrNull()
-                    Log.e(TAG, "Failed to write workout history to repository", throwable)
+                    Log.e(TAG, errorMessage, throwable)
                 }
             }
         }

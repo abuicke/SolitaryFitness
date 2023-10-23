@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.simpletracker.R
-import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
 import com.gravitycode.simpletracker.track_reps.util.Workout
 import java.time.LocalDate
 
@@ -66,8 +65,6 @@ private fun TrackRepsScreen() {
 
 /**
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
- * TODO: The date on the date picker should be set from the view model. The view shouldn't take it
- *  for granted that the view model initial date is set to today.
  * */
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,12 +135,13 @@ fun TrackRepsScreen(
                         }
                     )
                 }
-                Divider(
-                    color = Color.Black
-                )
+                Divider(color = Color.Black)
             }
         }
-        WheelDatePicker { snappedDate ->
+        // Setting startDate is only necessary on initialization, after that the date picker
+        // updates itself and then also gets that date sent back to it from the event trigger,
+        // but no recompose happens as the value is the same.
+        WheelDatePicker(startDate = trackRepsState.date) { snappedDate ->
             onEvent(TrackRepsEvent.DateSelected(snappedDate))
         }
     }
@@ -200,9 +198,7 @@ fun WorkoutButton(
                             isShowingAddRepsGrid.value = false
                         }
                     ) {
-                        Text(
-                            text = "1"
-                        )
+                        Text(text = "1")
                     }
                     Divider(
                         modifier = Modifier
@@ -218,9 +214,7 @@ fun WorkoutButton(
                             isShowingAddRepsGrid.value = false
                         }
                     ) {
-                        Text(
-                            text = "5"
-                        )
+                        Text(text = "5")
                     }
                 }
                 Divider()
@@ -234,9 +228,7 @@ fun WorkoutButton(
                             isShowingAddRepsGrid.value = false
                         }
                     ) {
-                        Text(
-                            text = "10"
-                        )
+                        Text(text = "10")
                     }
                     Divider(
                         modifier = Modifier
@@ -249,9 +241,7 @@ fun WorkoutButton(
                             .weight(1f),
                         onClick = { isShowingAddRepsGrid.value = false }
                     ) {
-                        Text(
-                            text = "X"
-                        )
+                        Text(text = "X")
                     }
                 }
             }

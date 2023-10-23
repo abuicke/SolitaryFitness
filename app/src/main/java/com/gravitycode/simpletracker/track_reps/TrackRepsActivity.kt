@@ -39,6 +39,12 @@ import javax.inject.Inject
  *
  * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
  *  count up from the current reps to +10.
+ *
+ * TODO: Settings:
+ *      1) Set custom values for rep buttons
+ *      2) Boolean option: close rep buttons grid after adding reps true/false
+ *
+ * TODO: Set app icon to flex emoji
  * */
 class TrackRepsActivity : ComponentActivity() {
 
