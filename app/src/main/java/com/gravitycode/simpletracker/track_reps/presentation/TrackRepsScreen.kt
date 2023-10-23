@@ -91,10 +91,6 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        /**
-         * TODO: Get background colour from [SimpleTrackerTheme]
-         *  [https://codelabs.developers.google.com/jetpack-compose-theming#4]
-         * */
         TopAppBar(
             title = {
                 Text(
