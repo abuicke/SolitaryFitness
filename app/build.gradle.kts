@@ -15,11 +15,7 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-        /**
-         * TODO: Does this to be enabled if I use ProGuard?
-         *  I needed to enable it after adding Guava to the project.
-         * */
-        multiDexEnabled = true
+        multiDexEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
