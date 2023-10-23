@@ -14,13 +14,10 @@ import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
 import javax.inject.Inject
 
 /**
- * TODO: Sync data to Firebase (or somewhere) and also support calendar functionality. Probably want
- *  to do the calendar functionality first as I'm going to need to decide how to structure the data.
- *  Multiple DataStore files? Or move over to ProtocolBuffers?
+ * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  *
  * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the
- *  add reps buttons. Technically the number of buttons available could also be customised but I
- *  don't know if there would be enough space on the screen.
+ *  add reps buttons.
  *
  *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
  *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`
@@ -35,10 +32,6 @@ import javax.inject.Inject
  *  When you run again after that it launches without issue.
  *
  * TODO: Add Google Fit integration
- *
- * TODO: Need to sync data to cloud or somewhere else, Firebase? To make sure the record is never lost.
- *
- * TODO: Have UI options to switch between lifetime, day, month, week, calendar for different time periods.
  *
  * TODO: Should use string resources for Workout enum and in composables?
  * */
@@ -55,10 +48,7 @@ class TrackRepsActivity : ComponentActivity() {
         trackRepsComponent.inject(this)
 
         setContent {
-            // TODO: If I remove this how does the [TrackRepsScreen] appear?
             SimpleTrackerTheme {
-                // A surface container using the 'background' color from the theme
-                // TODO: And this? What does this do?
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
