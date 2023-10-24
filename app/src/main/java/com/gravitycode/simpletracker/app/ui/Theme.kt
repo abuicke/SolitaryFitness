@@ -63,10 +63,6 @@ fun SimpleTrackerTheme(
         }
     }
 
-    Log.i("colour-scheme", "primary colour: #${colorScheme.primary}")
-    Log.i("colour-scheme", "secondary colour: #${colorScheme.secondary}")
-    Log.i("colour-scheme", "background colour: #${colorScheme.background}")
-
     MaterialTheme(
             colorScheme = colorScheme,
             typography = Typography,

@@ -14,6 +14,8 @@ import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
 import javax.inject.Inject
 
 /**
+ * "When you repeat yourself 3 times, then refactor..."
+ *
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  *
  * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the

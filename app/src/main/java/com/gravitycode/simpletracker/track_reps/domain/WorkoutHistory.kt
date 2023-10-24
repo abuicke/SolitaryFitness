@@ -7,16 +7,16 @@ import com.gravitycode.simpletracker.track_reps.util.Workout
 import java.util.EnumMap
 
 class WorkoutHistory(
-    private val history: EnumMap<Workout, Int> = EnumMap<Workout, Int>(Workout::class.java)
+    history: Map<Workout, Int> = EnumMap(Workout::class.java)
 ) {
 
-    constructor(map: Map<Workout, Int>) : this(EnumMap<Workout, Int>(map))
+    private val history: EnumMap<Workout, Int> = EnumMap(history)
 
     init {
         for (workout in Workout.values()) {
-            val reps = history[workout]
+            val reps = this.history[workout]
             if (reps == null) {
-                history[workout] = 0
+                this.history[workout] = 0
             } else if (reps < 0) {
                 throw IllegalArgumentException(
                     "cannot assign negative reps value: $workout = $reps"
@@ -25,7 +25,7 @@ class WorkoutHistory(
         }
     }
 
-    @IntRange(from = 0) operator fun get(workout: Workout): Int {
+    operator fun get(workout: Workout): Int {
         return history[workout]!!
     }
 
