@@ -24,7 +24,7 @@ fun stringSetPreferencesKey(name: Any, vararg names: Any) =
 /**
  * TODO: Test
  * */
-fun toString(any: Any, vararg anys: Any): String {
+private fun toString(any: Any, vararg anys: Any): String {
     val strBldr = StringBuilder(any.toString())
     for (a in anys) {
         strBldr.append(a.toString())
