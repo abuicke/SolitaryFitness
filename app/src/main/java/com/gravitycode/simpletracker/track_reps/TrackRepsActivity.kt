@@ -16,7 +16,11 @@ import javax.inject.Inject
 /**
  * "When you repeat yourself 3 times, then refactor..."
  *
- * TODO: Create production build of app to test UI speed and ProGuard, then create release version 2.1 and attach binary.
+ * TODO: Set app icon to flex emoji
+ *
+ * TODO: Release v0.2.1 to Play Store
+ *
+ * TODO: Create production build of app to test UI speed and ProGuard, then create release version 0.2.1 and attach binary.
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
