@@ -16,6 +16,8 @@ import javax.inject.Inject
 /**
  * "When you repeat yourself 3 times, then refactor..."
  *
+ * TODO: Create production build of app to test UI speed and ProGuard.
+ *
  * TODO: Once `Grid()` is implemented in [TrackRepsScreen] then add UI tests to verify all the usual
  *  behavior I test manually.
  *
@@ -50,7 +52,7 @@ import javax.inject.Inject
  *
  * TODO: Settings:
  *      1) Set custom values for rep buttons
- *      2) Boolean option: close rep buttons grid after adding reps true/false
+ *      2) Boolean option: keep reps grid open until X is selected
  *
  * TODO: Set app icon to flex emoji
  * */
