@@ -16,6 +16,12 @@ import javax.inject.Inject
 /**
  * "When you repeat yourself 3 times, then refactor..."
  *
+ * TODO: Once `Grid()` is implemented in [TrackRepsScreen] then add UI tests to verify all the usual
+ *  behavior I test manually.
+ *
+ *
+ *
+ *
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  *
  * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the

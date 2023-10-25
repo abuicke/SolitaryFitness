@@ -67,7 +67,6 @@ private fun TrackRepsScreen() {
  * TODO: Need to learn more about [NavController] and if it's even a good solution.
  * */
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
 //    navController: NavController,
@@ -80,69 +79,90 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(R.string.track_reps_topbar_text),
-                    color = MaterialTheme.colorScheme.background
-                )
-            },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            ),
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.overflow_icon_content_description),
-                        tint = MaterialTheme.colorScheme.background
-                    )
-                }
-            }
+        TopBar()
+        TrackRepsGrid(
+            modifier = Modifier.weight(1f),
+            workouts = workouts,
+            trackRepsState = trackRepsState,
+            onEvent = onEvent
         )
-        /**
-         * TODO: Apply Grid() abstraction here too
-         * */
-        Column(modifier.weight(1f)) {
-            for (i in workouts.indices step 2) {
-                val firstWorkout = workouts[i]
-                val secondWorkout = workouts[i + 1]
-
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    WorkoutButton(
-                        modifier = Modifier.weight(1f),
-                        workout = firstWorkout,
-                        reps = trackRepsState[firstWorkout],
-                        onClickReps = { workout, reps ->
-                            onEvent(TrackRepsEvent.Increment(workout, reps))
-                        }
-                    )
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(1.dp),
-                        color = Color.Black
-                    )
-                    WorkoutButton(
-                        modifier = Modifier.weight(1f),
-                        workout = secondWorkout,
-                        reps = trackRepsState[secondWorkout],
-                        onClickReps = { workout, reps ->
-                            onEvent(TrackRepsEvent.Increment(workout, reps))
-                        }
-                    )
-                }
-                Divider(color = Color.Black)
-            }
-        }
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
         WheelDatePicker(startDate = trackRepsState.date) { snappedDate ->
             onEvent(TrackRepsEvent.DateSelected(snappedDate))
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun TopBar() {
+    TopAppBar(
+        title = {
+            Text(
+                text = stringResource(R.string.track_reps_topbar_text),
+                color = MaterialTheme.colorScheme.background
+            )
+        },
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        actions = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.overflow_icon_content_description),
+                    tint = MaterialTheme.colorScheme.background
+                )
+            }
+        }
+    )
+}
+
+/**
+ * TODO: Grid should size dynamically based on the array past in
+ * */
+@Composable
+fun TrackRepsGrid(
+    modifier: Modifier = Modifier,
+    workouts: Array<Workout>,
+    trackRepsState: TrackRepsState,
+    onEvent: (TrackRepsEvent) -> Unit
+) {
+    Column(modifier) {
+        for (i in workouts.indices step 2) {
+            val firstWorkout = workouts[i]
+            val secondWorkout = workouts[i + 1]
+
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                WorkoutButton(
+                    modifier = Modifier.weight(1f),
+                    workout = firstWorkout,
+                    reps = trackRepsState[firstWorkout],
+                    onClickReps = { workout, reps ->
+                        onEvent(TrackRepsEvent.Increment(workout, reps))
+                    }
+                )
+                Divider(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(1.dp),
+                    color = Color.Black
+                )
+                WorkoutButton(
+                    modifier = Modifier.weight(1f),
+                    workout = secondWorkout,
+                    reps = trackRepsState[secondWorkout],
+                    onClickReps = { workout, reps ->
+                        onEvent(TrackRepsEvent.Increment(workout, reps))
+                    }
+                )
+            }
+            Divider(color = Color.Black)
         }
     }
 }
@@ -160,90 +180,121 @@ fun WorkoutButton(
     reps: Int,
     onClickReps: (Workout, Int) -> Unit
 ) {
-    Box(modifier) {
-        val isShowingAddRepsGrid = remember { mutableStateOf(false) }
+    val isShowingAddRepsGrid = remember { mutableStateOf(false) }
 
-        if (!isShowingAddRepsGrid.value) {
+    if (!isShowingAddRepsGrid.value) {
+        RepsCount(
+            modifier = modifier,
+            workout = workout,
+            reps = reps,
+            onClick = {
+                if (!isShowingAddRepsGrid.value) {
+                    isShowingAddRepsGrid.value = true
+                }
+            }
+        )
+    } else {
+        AddRepsGrid(modifier) { reps: Int? ->
+            if (reps != null) onClickReps(workout, reps)
+            isShowingAddRepsGrid.value = false
+        }
+    }
+}
+
+@Composable
+private fun RepsCount(
+    modifier: Modifier = Modifier,
+    workout: Workout,
+    reps: Int,
+    onClick: () -> Unit,
+) {
+    Box(modifier) {
+        TextButton(
+            modifier = Modifier.fillMaxSize(),
+            onClick = onClick
+        ) {
+            Text(
+                text = reps.toString(),
+                fontSize = 30.sp
+            )
+        }
+        Text(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 12.dp),
+            text = workout.toPrettyString(),
+            fontSize = 12.sp
+        )
+    }
+}
+
+/**
+ * TODO: Should be able to have an items() function
+ *  that produces 4 versions of the one [TextButton]
+ *
+ *  TODO: IMPLEMENT GRID()
+ * */
+@Composable
+private fun AddRepsGrid(
+    modifier: Modifier,
+    onClick: (Int?) -> Unit
+) {
+    Column(modifier) {
+        Row(
+            Modifier.weight(1f),
+        ) {
             TextButton(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
                 onClick = {
-                    if (!isShowingAddRepsGrid.value) {
-                        isShowingAddRepsGrid.value = true
-                    }
+                    onClick(1)
                 }
             ) {
-                Text(
-                    text = reps.toString(),
-                    fontSize = 30.sp
-                )
+                Text(text = "1")
             }
-            Text(
+            Divider(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 12.dp),
-                text = workout.toPrettyString(),
-                fontSize = 12.sp
+                    .fillMaxHeight()
+                    .width(1.dp)
             )
-        } else {
-            Column {
-                Row(
-                    Modifier.weight(1f),
-                ) {
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        onClick = {
-                            onClickReps(workout, 1)
-                            isShowingAddRepsGrid.value = false
-                        }
-                    ) {
-                        Text(text = "1")
-                    }
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(1.dp)
-                    )
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        onClick = {
-                            onClickReps(workout, 5)
-                            isShowingAddRepsGrid.value = false
-                        }
-                    ) {
-                        Text(text = "5")
-                    }
+            TextButton(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                onClick = {
+                    onClick(5)
                 }
-                Divider()
-                Row(Modifier.weight(1f)) {
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        onClick = {
-                            onClickReps(workout, 10)
-                            isShowingAddRepsGrid.value = false
-                        }
-                    ) {
-                        Text(text = "10")
-                    }
-                    Divider(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .width(1.dp)
-                    )
-                    TextButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        onClick = { isShowingAddRepsGrid.value = false }
-                    ) {
-                        Text(text = "X")
-                    }
+            ) {
+                Text(text = "5")
+            }
+        }
+        Divider()
+        Row(Modifier.weight(1f)) {
+            TextButton(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                onClick = {
+                    onClick(10)
                 }
+            ) {
+                Text(text = "10")
+            }
+            Divider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(1.dp)
+            )
+            TextButton(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                onClick = {
+                    onClick(null)
+                }
+            ) {
+                Text(text = "X")
             }
         }
     }
