@@ -16,10 +16,9 @@ import javax.inject.Inject
 /**
  * "When you repeat yourself 3 times, then refactor..."
  *
- * TODO: Create production build of app to test UI speed and ProGuard.
+ * TODO: Create production build of app to test UI speed and ProGuard, then create release version 2.1 and attach binary.
  *
- * TODO: Once `Grid()` is implemented in [TrackRepsScreen] then add UI tests to verify all the usual
- *  behavior I test manually.
+ * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
  *
  *
