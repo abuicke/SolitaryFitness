@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.simpletracker.R
 import com.gravitycode.simpletracker.track_reps.util.Workout
+import com.gravitycode.simpletracker.util.ui.compose.Grid
 import java.time.LocalDate
 
 /**
@@ -97,7 +98,7 @@ fun TrackRepsScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar() {
+private fun TopBar() {
     TopAppBar(
         title = {
             Text(
@@ -124,69 +125,44 @@ fun TopBar() {
  * TODO: Grid should size dynamically based on the array past in
  * */
 @Composable
-fun TrackRepsGrid(
+private fun TrackRepsGrid(
     modifier: Modifier = Modifier,
     workouts: Array<Workout>,
     trackRepsState: TrackRepsState,
     onEvent: (TrackRepsEvent) -> Unit
 ) {
-    Column(modifier) {
-        for (i in workouts.indices step 2) {
-            val firstWorkout = workouts[i]
-            val secondWorkout = workouts[i + 1]
+    Grid(
+        modifier = modifier,
+        columns = 2,
+        items = workouts.size,
+        dividerColour = Color.Black
+    ) { index ->
+        val workout = workouts[index]
 
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                WorkoutButton(
-                    modifier = Modifier.weight(1f),
-                    workout = firstWorkout,
-                    reps = trackRepsState[firstWorkout],
-                    onClickReps = { workout, reps ->
-                        onEvent(TrackRepsEvent.Increment(workout, reps))
-                    }
-                )
-                Divider(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(1.dp),
-                    color = Color.Black
-                )
-                WorkoutButton(
-                    modifier = Modifier.weight(1f),
-                    workout = secondWorkout,
-                    reps = trackRepsState[secondWorkout],
-                    onClickReps = { workout, reps ->
-                        onEvent(TrackRepsEvent.Increment(workout, reps))
-                    }
-                )
+        WorkoutButton(
+            workoutName = workout.toPrettyString(),
+            currentReps = trackRepsState[workout],
+            onClickAddReps = { reps ->
+                onEvent(TrackRepsEvent.Increment(workout, reps))
             }
-            Divider(color = Color.Black)
-        }
+        )
     }
 }
 
-/**
- * TODO: Extract the grid into a general purpose `Grid()` composable.
- *  Too tired to figure out how to do it right now.
- *  Could find useful examples here: [https://github.com/nesyou01/LazyStaggeredGrid],
- *  [https://developer.android.com/jetpack/compose/lists]
- * */
 @Composable
-fun WorkoutButton(
-    modifier: Modifier,
-    workout: Workout,
-    reps: Int,
-    onClickReps: (Workout, Int) -> Unit
+private fun WorkoutButton(
+    modifier: Modifier = Modifier,
+    workoutName: String,
+    currentReps: Int,
+    onClickAddReps: (Int) -> Unit
 ) {
     val isShowingAddRepsGrid = remember { mutableStateOf(false) }
 
     if (!isShowingAddRepsGrid.value) {
         RepsCount(
             modifier = modifier,
-            workout = workout,
-            reps = reps,
+            workoutName = workoutName,
+            reps = currentReps,
             onClick = {
                 if (!isShowingAddRepsGrid.value) {
                     isShowingAddRepsGrid.value = true
@@ -195,7 +171,7 @@ fun WorkoutButton(
         )
     } else {
         AddRepsGrid(modifier) { reps: Int? ->
-            if (reps != null) onClickReps(workout, reps)
+            if (reps != null) onClickAddReps(reps)
             isShowingAddRepsGrid.value = false
         }
     }
@@ -204,7 +180,7 @@ fun WorkoutButton(
 @Composable
 private fun RepsCount(
     modifier: Modifier = Modifier,
-    workout: Workout,
+    workoutName: String,
     reps: Int,
     onClick: () -> Unit,
 ) {
@@ -222,80 +198,43 @@ private fun RepsCount(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 12.dp),
-            text = workout.toPrettyString(),
+            text = workoutName,
             fontSize = 12.sp
         )
     }
 }
 
-/**
- * TODO: Should be able to have an items() function
- *  that produces 4 versions of the one [TextButton]
- *
- *  TODO: IMPLEMENT GRID()
- * */
 @Composable
 private fun AddRepsGrid(
     modifier: Modifier,
-    onClick: (Int?) -> Unit
+    onClickAddReps: (Int?) -> Unit
 ) {
-    Column(modifier) {
-        Row(
-            Modifier.weight(1f),
+    Grid(
+        modifier = modifier,
+        columns = 2,
+        items = 4,
+    ) { cell ->
+        TextButton(
+            modifier = Modifier.fillMaxSize(),
+            onClick = {
+                when (cell) {
+                    0 -> onClickAddReps(1)
+                    1 -> onClickAddReps(5)
+                    2 -> onClickAddReps(10)
+                    3 -> onClickAddReps(null)
+                    else -> error("invalid cell")
+                }
+            }
         ) {
-            TextButton(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                onClick = {
-                    onClick(1)
+            Text(
+                text = when (cell) {
+                    0 -> "1"
+                    1 -> "5"
+                    2 -> "10"
+                    3 -> "X"
+                    else -> error("invalid cell")
                 }
-            ) {
-                Text(text = "1")
-            }
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
             )
-            TextButton(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                onClick = {
-                    onClick(5)
-                }
-            ) {
-                Text(text = "5")
-            }
-        }
-        Divider()
-        Row(Modifier.weight(1f)) {
-            TextButton(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                onClick = {
-                    onClick(10)
-                }
-            ) {
-                Text(text = "10")
-            }
-            Divider(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(1.dp)
-            )
-            TextButton(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                onClick = {
-                    onClick(null)
-                }
-            ) {
-                Text(text = "X")
-            }
         }
     }
 }
