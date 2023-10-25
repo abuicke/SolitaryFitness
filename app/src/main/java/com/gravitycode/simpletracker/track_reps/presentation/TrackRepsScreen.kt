@@ -97,7 +97,7 @@ fun TrackRepsScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TopBar() {
+private fun TopBar() {
     TopAppBar(
         title = {
             Text(
@@ -124,7 +124,7 @@ fun TopBar() {
  * TODO: Grid should size dynamically based on the array past in
  * */
 @Composable
-fun TrackRepsGrid(
+private fun TrackRepsGrid(
     modifier: Modifier = Modifier,
     workouts: Array<Workout>,
     trackRepsState: TrackRepsState,
@@ -174,7 +174,7 @@ fun TrackRepsGrid(
  *  [https://developer.android.com/jetpack/compose/lists]
  * */
 @Composable
-fun WorkoutButton(
+private fun WorkoutButton(
     modifier: Modifier,
     workout: Workout,
     reps: Int,
