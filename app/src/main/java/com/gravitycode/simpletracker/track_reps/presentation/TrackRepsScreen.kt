@@ -228,12 +228,6 @@ private fun RepsCount(
     }
 }
 
-/**
- * TODO: Should be able to have an items() function
- *  that produces 4 versions of the one [TextButton]
- *
- *  TODO: IMPLEMENT GRID()
- * */
 @Composable
 private fun AddRepsGrid(
     modifier: Modifier,
