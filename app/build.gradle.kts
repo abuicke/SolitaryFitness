@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.gravitycode.simpletracker"
+    namespace = "com.gravitycode.solitaryfitness"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.gravitycode.simpletracker"
+        applicationId = "com.gravitycode.solitaryfitness"
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 33

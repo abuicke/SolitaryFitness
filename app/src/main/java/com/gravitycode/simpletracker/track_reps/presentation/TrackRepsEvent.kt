@@ -1,6 +1,6 @@
-package com.gravitycode.simpletracker.track_reps.presentation
+package com.gravitycode.solitaryfitness.track_reps.presentation
 
-import com.gravitycode.simpletracker.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import java.time.LocalDate
 
 sealed class TrackRepsEvent {

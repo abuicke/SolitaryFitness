@@ -1,6 +1,6 @@
-package com.gravitycode.simpletracker
+package com.gravitycode.solitaryfitness
 
-import com.gravitycode.simpletracker.util.ui.compose.calculateGridRows
+import com.gravitycode.solitaryfitness.util.ui.compose.calculateGridRows
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import org.junit.Assert.assertThrows

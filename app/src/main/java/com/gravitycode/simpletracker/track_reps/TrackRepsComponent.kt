@@ -1,6 +1,6 @@
-package com.gravitycode.simpletracker.track_reps
+package com.gravitycode.solitaryfitness.track_reps
 
-import com.gravitycode.simpletracker.app.ActivityScope
+import com.gravitycode.solitaryfitness.app.ActivityScope
 import dagger.Subcomponent
 
 @ActivityScope

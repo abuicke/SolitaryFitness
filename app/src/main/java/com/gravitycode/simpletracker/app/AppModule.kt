@@ -1,9 +1,9 @@
-package com.gravitycode.simpletracker.app
+package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
 import android.content.Context
-import com.gravitycode.simpletracker.track_reps.TrackRepsComponent
-import com.gravitycode.simpletracker.util.ui.Toaster
+import com.gravitycode.solitaryfitness.track_reps.TrackRepsComponent
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Module
 import dagger.Provides
 

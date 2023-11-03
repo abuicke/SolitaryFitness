@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.track_reps
+package com.gravitycode.solitaryfitness.track_reps
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.gravitycode.simpletracker.app.SimpleTrackerApp
-import com.gravitycode.simpletracker.app.ui.SimpleTrackerTheme
-import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsScreen
-import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
+import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
+import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
+import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
 import javax.inject.Inject
 
 /**
@@ -65,12 +65,12 @@ class TrackRepsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appComponent = (applicationContext as SimpleTrackerApp).appComponent
+        val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
         trackRepsComponent = appComponent.trackRepsComponent().create()
         trackRepsComponent.inject(this)
 
         setContent {
-            SimpleTrackerTheme {
+            SolitaryFitnessTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

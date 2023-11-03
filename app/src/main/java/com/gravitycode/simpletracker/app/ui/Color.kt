@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.app.ui
+package com.gravitycode.solitaryfitness.app.ui
 
 import androidx.compose.ui.graphics.Color
 

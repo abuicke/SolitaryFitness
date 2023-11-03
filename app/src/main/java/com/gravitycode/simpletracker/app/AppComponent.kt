@@ -1,7 +1,7 @@
-package com.gravitycode.simpletracker.app
+package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
-import com.gravitycode.simpletracker.track_reps.TrackRepsComponent
+import com.gravitycode.solitaryfitness.track_reps.TrackRepsComponent
 import dagger.BindsInstance
 import dagger.Component
 

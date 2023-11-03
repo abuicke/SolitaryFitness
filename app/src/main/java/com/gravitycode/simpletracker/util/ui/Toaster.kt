@@ -1,9 +1,9 @@
-package com.gravitycode.simpletracker.util.ui
+package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import com.gravitycode.simpletracker.app.ApplicationScope
+import com.gravitycode.solitaryfitness.app.ApplicationScope
 
 /**
  * TODO: This should be implementing an interface for testing, but then I lose the nice, neat

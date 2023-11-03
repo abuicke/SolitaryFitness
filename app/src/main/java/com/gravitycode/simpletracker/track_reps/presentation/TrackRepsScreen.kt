@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.track_reps.presentation
+package com.gravitycode.solitaryfitness.track_reps.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.gravitycode.simpletracker.R
-import com.gravitycode.simpletracker.track_reps.util.Workout
-import com.gravitycode.simpletracker.util.ui.compose.Grid
+import com.gravitycode.solitaryfitness.R
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import java.time.LocalDate
 
 /**

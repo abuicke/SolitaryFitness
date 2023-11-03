@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.track_reps.presentation
+package com.gravitycode.solitaryfitness.track_reps.presentation
 
 import android.util.Log
 import android.widget.Toast
@@ -6,11 +6,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gravitycode.simpletracker.app.ActivityScope
-import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepo
-import com.gravitycode.simpletracker.track_reps.util.Workout
-import com.gravitycode.simpletracker.util.ui.ToastDuration
-import com.gravitycode.simpletracker.util.ui.Toaster
+import com.gravitycode.solitaryfitness.app.ActivityScope
+import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.util.ui.ToastDuration
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch

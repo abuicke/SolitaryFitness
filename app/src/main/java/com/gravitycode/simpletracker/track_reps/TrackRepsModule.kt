@@ -1,15 +1,15 @@
-package com.gravitycode.simpletracker.track_reps
+package com.gravitycode.solitaryfitness.track_reps
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.gravitycode.simpletracker.app.ActivityScope
-import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepo
-import com.gravitycode.simpletracker.track_reps.data.WorkoutHistoryRepoImpl
-import com.gravitycode.simpletracker.track_reps.presentation.TrackRepsViewModel
-import com.gravitycode.simpletracker.util.ui.Toaster
+import com.gravitycode.solitaryfitness.app.ActivityScope
+import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
+import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepoImpl
+import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Module
 import dagger.Provides
 

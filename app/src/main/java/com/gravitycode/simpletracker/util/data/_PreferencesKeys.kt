@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.util.data
+package com.gravitycode.solitaryfitness.util.data
 
 fun intPreferencesKey(name: Any, vararg names: Any) =
     androidx.datastore.preferences.core.intPreferencesKey(toString(name, *names))

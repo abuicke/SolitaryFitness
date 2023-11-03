@@ -1,7 +1,7 @@
-package com.gravitycode.simpletracker
+package com.gravitycode.solitaryfitness
 
-import com.gravitycode.simpletracker.track_reps.domain.WorkoutHistory
-import com.gravitycode.simpletracker.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutHistory
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

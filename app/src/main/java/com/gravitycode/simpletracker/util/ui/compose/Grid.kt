@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.util.ui.compose
+package com.gravitycode.solitaryfitness.util.ui.compose
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement

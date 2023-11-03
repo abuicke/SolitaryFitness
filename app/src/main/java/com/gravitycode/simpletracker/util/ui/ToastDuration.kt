@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.util.ui
+package com.gravitycode.solitaryfitness.util.ui
 
 import android.widget.Toast
 

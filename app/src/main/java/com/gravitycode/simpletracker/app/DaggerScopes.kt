@@ -1,4 +1,4 @@
-package com.gravitycode.simpletracker.app
+package com.gravitycode.solitaryfitness.app
 
 import javax.inject.Scope
 

@@ -1,8 +1,8 @@
-package com.gravitycode.simpletracker.app
+package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
 
-class SimpleTrackerApp : Application() {
+class SolitaryFitnessApp : Application() {
 
     val appComponent: AppComponent = DaggerAppComponent.builder().application(this).build()
 }
