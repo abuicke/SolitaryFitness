@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "703007876114",
+    "project_id": "solitaryfitness-65dc2",
+    "storage_bucket": "solitaryfitness-65dc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703007876114:android:481fce6e9f62925ed324cb",
+        "android_client_info": {
+          "package_name": "com.gravitycode.solitaryfitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUBWgzq_3g2lPWMVu29nWFym52-D6iO8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

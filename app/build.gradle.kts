@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -71,7 +72,7 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
 
     // Dagger 2
     implementation("com.google.dagger:dagger:2.48")
@@ -83,6 +84,9 @@ dependencies {
 
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Firebase
+    implementation("com.google.firebase:firebase-firestore:24.9.1")
 
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")
