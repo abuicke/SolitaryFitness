@@ -16,46 +16,32 @@ import javax.inject.Inject
 /**
  * "When you repeat yourself 3 times, then refactor..."
  *
- * TODO: Release v0.2.1 to Play Store
- *
- * TODO: Create production build of app to test UI speed and ProGuard, then create release version 0.2.1 and attach binary.
- *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
- *
- *
- *
  *
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  *
- * TODO: Have a setting accessible from an overflow menu in the toolbar to set custom values for the
- *  add reps buttons.
+ * TODO: Overflow:
+ *          Reset
+ *          Edit Reps - Adjust rep counts in each cell.
+ *          Settings:
+ *              1) Set custom values for rep buttons
+ *              2) Boolean option: keep reps grid open until X is selected
+ *
+ *
  *
  *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
  *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`
- *
- * TODO: Write instrumented tests to ensure events work correctly. Test independently of UI.
- *
- * TODO: Test UI. Make sure reps values read correctly based on the add reps button pressed.
  *
  * TODO: Run ProGuard on app for build
  *
  * TODO: There's a multiple DataStore instances exception on first install.
  *  When you run again after that it launches without issue.
+ *  This doesn't seem to a problem in the release build or when it's downloaded from the PlayStore.
  *
  * TODO: Add Google Fit integration
  *
- * TODO: Should use string resources for Workout enum and in composables?
- *
- * TODO: [TrackRepsScreen] crashes and doesn't display correctly on rotation.
- *
  * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
  *  count up from the current reps to +10.
- *
- * TODO: Settings:
- *      1) Set custom values for rep buttons
- *      2) Boolean option: keep reps grid open until X is selected
- *
- * TODO: Set app icon to flex emoji
  * */
 class TrackRepsActivity : ComponentActivity() {
 
