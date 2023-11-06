@@ -10,7 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepoImpl
+import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutHistory
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class TrackRepsStorageInstrumentedTest {
         private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
             applicationContext.preferencesDataStoreFile(TEST_DATA_STORE)
         }
-        private val repository: WorkoutHistoryRepo = WorkoutHistoryRepoImpl(dataStore)
+        private val repository: WorkoutHistoryRepo = PreferencesWorkoutHistoryRepo(dataStore)
 
         @AfterClass
         @JvmStatic

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import java.time.LocalDate
 
-class WorkoutHistoryRepoImpl(
+class PreferencesWorkoutHistoryRepo(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 

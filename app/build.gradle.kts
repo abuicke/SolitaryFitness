@@ -87,6 +87,8 @@ dependencies {
 
     // Firebase
     implementation("com.google.firebase:firebase-firestore:24.9.1")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
+    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
 
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")

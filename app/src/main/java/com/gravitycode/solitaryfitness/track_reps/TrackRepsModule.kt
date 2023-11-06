@@ -5,9 +5,11 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.gravitycode.solitaryfitness.app.ActivityScope
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepoImpl
+import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Module
@@ -28,7 +30,7 @@ object TrackRepsModule {
     @ActivityScope
     fun provideWorkoutHistoryRepo(
         preferencesStore: DataStore<Preferences>
-    ): WorkoutHistoryRepo = WorkoutHistoryRepoImpl(preferencesStore)
+    ): WorkoutHistoryRepo = PreferencesWorkoutHistoryRepo(preferencesStore)
 
     @Provides
     @ActivityScope

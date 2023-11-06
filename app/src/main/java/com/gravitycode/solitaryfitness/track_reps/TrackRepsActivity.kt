@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
@@ -24,7 +25,8 @@ import javax.inject.Inject
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  *
  * TODO: Overflow:
- *          Reset
+ *          Sign In
+ *          Reset Reps
  *          Edit Reps - Adjust rep counts in each cell.
  *          Settings:
  *              1) Set custom values for rep buttons
@@ -50,6 +52,8 @@ class TrackRepsActivity : ComponentActivity() {
 
     private lateinit var trackRepsComponent: TrackRepsComponent
     @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
+
+    @Inject lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
