@@ -1,5 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Solitary Fitness</string>
     <string name="track_reps_topbar_text">Track Workouts</string>
     <string name="overflow_icon_content_description">Overflow icon</string>
+    <!-- See: https://firebase.google.com/docs/auth/android/google-signin#authenticate_with_firebase -->
+    <string name="google_cloud_platform_web_client_id" tools:ignore="TypographyDashes">
+        703007876114-0d8slr7u48lb3gtfkoohaak8bji9985s.apps.googleusercontent.com
+    </string>
 </resources>
