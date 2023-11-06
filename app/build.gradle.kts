@@ -86,9 +86,15 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // Firebase
-    implementation("com.google.firebase:firebase-firestore:24.9.1")
-    implementation("com.google.firebase:firebase-firestore-ktx:24.9.1")
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    // Use the BoM (Bill-of-Materials) so that only compatible versions of the Firebase libraries are
+    // used, provided no explicit version is set on the libraries (https://reflectoring.io/maven-bom/)
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    // Not part of the BoM, so requires an explicit version
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")
