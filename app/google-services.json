@@ -12,7 +12,20 @@
           "package_name": "com.gravitycode.solitaryfitness"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "703007876114-jbgac1opsg4foj2s9ei5biudsmfoe5c7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gravitycode.solitaryfitness",
+            "certificate_hash": "eae9c433a55b628302fae9d29f31bc0e4f969f4c"
+          }
+        },
+        {
+          "client_id": "703007876114-0d8slr7u48lb3gtfkoohaak8bji9985s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCUBWgzq_3g2lPWMVu29nWFym52-D6iO8g"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703007876114-0d8slr7u48lb3gtfkoohaak8bji9985s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
