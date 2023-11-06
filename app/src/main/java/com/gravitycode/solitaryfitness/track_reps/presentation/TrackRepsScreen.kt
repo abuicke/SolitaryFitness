@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
+import com.gravitycode.solitaryfitness.track_reps.TrackRepsActivity
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import java.time.LocalDate
@@ -64,13 +66,9 @@ private fun TrackRepsScreen() {
     )
 }
 
-/**
- * TODO: Need to learn more about [NavController] and if it's even a good solution.
- * */
 @Composable
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
-//    navController: NavController,
     trackRepsState: TrackRepsState,
     onEvent: (TrackRepsEvent) -> Unit
 ) {
@@ -99,6 +97,8 @@ fun TrackRepsScreen(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun TopBar() {
+    val trackRepsActivity = LocalContext.current as TrackRepsActivity
+
     TopAppBar(
         title = {
             Text(
@@ -110,7 +110,11 @@ private fun TopBar() {
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {
+                // TODO: Need to show dialog of options
+                // https://developer.android.com/develop/ui/views/components/menus
+                trackRepsActivity.signIn()
+            }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.overflow_icon_content_description),

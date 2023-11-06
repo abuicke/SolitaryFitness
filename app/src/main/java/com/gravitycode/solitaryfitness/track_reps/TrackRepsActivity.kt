@@ -1,6 +1,5 @@
 package com.gravitycode.solitaryfitness.track_reps
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,13 +11,8 @@ import androidx.compose.ui.Modifier
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.IdpResponse
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
@@ -85,7 +79,7 @@ class TrackRepsActivity : ComponentActivity() {
     ) { result ->
         if (result.idpResponse != null) {
             val idpResponse: IdpResponse = result.idpResponse!!
-            if(idpResponse.error != null) {
+            if (idpResponse.error != null) {
                 debugError("Sign in failed", idpResponse.error)
             }
         }
@@ -108,6 +102,10 @@ class TrackRepsActivity : ComponentActivity() {
         }
     }
 
+    fun signIn() {
+        signInLauncher.launch(signInIntent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -115,20 +113,20 @@ class TrackRepsActivity : ComponentActivity() {
         trackRepsComponent = appComponent.trackRepsComponent().create()
         trackRepsComponent.inject(this)
 
-        signInLauncher.launch(signInIntent)
+//        signInLauncher.launch(signInIntent)
 
-//        setContent {
-//            SolitaryFitnessTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    TrackRepsScreen(
-//                        trackRepsState = trackRepsViewModel.state.value,
-//                        onEvent = trackRepsViewModel::onEvent
-//                    )
-//                }
-//            }
-//        }
+        setContent {
+            SolitaryFitnessTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    TrackRepsScreen(
+                        trackRepsState = trackRepsViewModel.state.value,
+                        onEvent = trackRepsViewModel::onEvent
+                    )
+                }
+            }
+        }
     }
 }
