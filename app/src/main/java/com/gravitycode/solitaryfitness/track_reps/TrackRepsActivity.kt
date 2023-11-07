@@ -1,5 +1,6 @@
 package com.gravitycode.solitaryfitness.track_reps
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,13 +12,16 @@ import androidx.compose.ui.Modifier
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.util.data.GetActivityResult
 import com.gravitycode.solitaryfitness.util.debugError
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 /**
@@ -74,9 +78,7 @@ class TrackRepsActivity : ComponentActivity() {
         .setAvailableProviders(providers)
         .build()
 
-    private val signInLauncher = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract(),
-    ) { result ->
+    private val getActivityResult = GetActivityResult(this, FirebaseAuthUIActivityResultContract()) { result ->
         if (result.idpResponse != null) {
             val idpResponse: IdpResponse = result.idpResponse!!
             if (idpResponse.error != null) {
@@ -102,9 +104,9 @@ class TrackRepsActivity : ComponentActivity() {
         }
     }
 
-    fun signIn() {
-        signInLauncher.launch(signInIntent)
-    }
+//    fun signIn() {
+//        signInLauncher.launch(signInIntent)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +115,7 @@ class TrackRepsActivity : ComponentActivity() {
         trackRepsComponent = appComponent.trackRepsComponent().create()
         trackRepsComponent.inject(this)
 
-//        signInLauncher.launch(signInIntent)
+        getActivityResult(signInIntent)
 
         setContent {
             SolitaryFitnessTheme {

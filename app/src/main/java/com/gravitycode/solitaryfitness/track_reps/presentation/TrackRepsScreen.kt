@@ -113,7 +113,7 @@ private fun TopBar() {
             IconButton(onClick = {
                 // TODO: Need to show dialog of options
                 // https://developer.android.com/develop/ui/views/components/menus
-                trackRepsActivity.signIn()
+//                trackRepsActivity.signIn()
             }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
