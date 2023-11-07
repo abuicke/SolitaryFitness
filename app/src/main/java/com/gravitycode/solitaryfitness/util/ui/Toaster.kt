@@ -14,7 +14,7 @@ import com.gravitycode.solitaryfitness.app.ApplicationScope
 @ApplicationScope
 class Toaster(private val context: Context) {
 
-    operator fun invoke(text: String, duration: ToastDuration) {
+    operator fun invoke(text: String, duration: ToastDuration = ToastDuration.SHORT) {
         Toast.makeText(context, text, duration.toInt()).show()
     }
 }
