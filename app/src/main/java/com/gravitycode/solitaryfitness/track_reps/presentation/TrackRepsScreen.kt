@@ -9,6 +9,7 @@
  * */
 package com.gravitycode.solitaryfitness.track_reps.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,17 +69,19 @@ fun TrackRepsScreen(
 ) {
     val workouts = Workout.values()
 
+    val context = LocalContext.current
+
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TopBar(isUserSignedIn) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> onEvent(AppEvent.SignIn)
-                MenuItem.SIGN_OUT -> onEvent(AppEvent.SignOut)
-                MenuItem.RESET_REPS -> TODO()
-                MenuItem.EDIT_REPS -> TODO()
-                MenuItem.SETTINGS -> TODO()
+                MenuItem.SIGN_IN -> Toast.makeText(context, "Sign In", Toast.LENGTH_SHORT).show()//onEvent(AppEvent.SignIn)
+                MenuItem.SIGN_OUT -> Toast.makeText(context, "Sign Out", Toast.LENGTH_SHORT).show()//onEvent(AppEvent.SignOut)
+                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT).show()
+                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT).show()
+                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
             }
         }
         TrackRepsGrid(

@@ -14,12 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.gravitycode.solitaryfitness.R
 
 /**
- *
- * TODO: Menu not disappearing on click
- *
- *
- * */
-/**
  * @see [https://stackoverflow.com/a/68354402/4596649]
  * */
 @Composable

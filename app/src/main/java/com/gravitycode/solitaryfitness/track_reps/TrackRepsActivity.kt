@@ -82,6 +82,16 @@ class TrackRepsActivity : ComponentActivity() {
 
         val authenticator: Authenticator = FirebaseAuthenticator(this, toaster)
 
+
+        /**
+         *
+         *
+         * TODO: Should just have an onAppEvent() I pass into [TrackRepsScreen] that is implemented
+         *  by the activity with an AppEventHandler interface.
+         *
+         *
+         * */
+
         setContent {
             SolitaryFitnessTheme {
                 Surface(
