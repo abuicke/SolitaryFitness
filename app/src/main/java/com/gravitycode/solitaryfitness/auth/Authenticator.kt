@@ -5,4 +5,8 @@ interface Authenticator {
     fun signIn()
 
     fun signOut()
+
+    fun isUserSignedIn(): Boolean
+
+    fun getSignedInUser(): User?
 }

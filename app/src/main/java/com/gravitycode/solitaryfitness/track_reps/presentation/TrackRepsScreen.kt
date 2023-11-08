@@ -1,15 +1,21 @@
+/**
+ * Composable functions should be idempotent, and free of side-effects:
+ *
+ * The rememberSaveable API behaves similarly to remember because it retains state across
+ * recompositions, and also across activity or process recreation using the saved instance
+ * state mechanism. For example, this happens, when the screen is rotated.
+ *
+ * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
+ * */
 package com.gravitycode.solitaryfitness.track_reps.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,39 +35,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
+import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.track_reps.TrackRepsActivity
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
+import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
 
-/**
- * Composable functions should be idempotent, and free of side-effects:
- *
- * The rememberSaveable API behaves similarly to remember because it retains state across
- * recompositions, and also across activity or process recreation using the saved instance
- * state mechanism. For example, this happens, when the screen is rotated.
- *
- * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
- * */
+private enum class MenuItem {
+    SIGN_IN, SIGN_OUT, RESET_REPS, EDIT_REPS, SETTINGS
+}
+
 @Composable
 @Preview(showSystemUi = true)
 private fun TrackRepsScreen() {
     TrackRepsScreen(
-        Modifier.fillMaxSize(),
-        trackRepsState = TrackRepsState(
-            LocalDate.now(),
-            273750000,
-            547500000,
-            54750000,
-            27375000,
-            5475000,
-            136875000,
-            246375000,
-            438000000
-        ),
+        modifier = Modifier.fillMaxSize(),
+        isUserSignedIn = true,
+        trackRepsState = TrackRepsState(LocalDate.now(), 0, 15, 30, 20, 9, 0, 45, 40),
         onEvent = { _ -> }
     )
 }
@@ -69,8 +62,9 @@ private fun TrackRepsScreen() {
 @Composable
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
+    isUserSignedIn: Boolean,
     trackRepsState: TrackRepsState,
-    onEvent: (TrackRepsEvent) -> Unit
+    onEvent: (AppEvent<out TrackRepsEvent>) -> Unit
 ) {
     val workouts = Workout.values()
 
@@ -78,7 +72,15 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar()
+        TopBar(isUserSignedIn) { item ->
+            when (item) {
+                MenuItem.SIGN_IN -> onEvent(AppEvent.SignIn)
+                MenuItem.SIGN_OUT -> onEvent(AppEvent.SignOut)
+                MenuItem.RESET_REPS -> TODO()
+                MenuItem.EDIT_REPS -> TODO()
+                MenuItem.SETTINGS -> TODO()
+            }
+        }
         TrackRepsGrid(
             modifier = Modifier.weight(1f),
             workouts = workouts,
@@ -96,9 +98,7 @@ fun TrackRepsScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun TopBar() {
-    val trackRepsActivity = LocalContext.current as TrackRepsActivity
-
+private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Unit) {
     TopAppBar(
         title = {
             Text(
@@ -110,16 +110,15 @@ private fun TopBar() {
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
-            IconButton(onClick = {
-                // TODO: Need to show dialog of options
-                // https://developer.android.com/develop/ui/views/components/menus
-//                trackRepsActivity.signIn()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.overflow_icon_content_description),
-                    tint = MaterialTheme.colorScheme.background
-                )
+            OverflowMenu {
+                if (isUserSignedIn) {
+                    DropdownMenuItem({ Text("Sign Out") }, { onMenuItemClicked(MenuItem.SIGN_OUT) })
+                } else {
+                    DropdownMenuItem({ Text("Sign In") }, { onMenuItemClicked(MenuItem.SIGN_IN) })
+                }
+                DropdownMenuItem({ Text("Reset Reps") }, { onMenuItemClicked(MenuItem.RESET_REPS) })
+                DropdownMenuItem({ Text("Edit Reps") }, { onMenuItemClicked(MenuItem.EDIT_REPS) })
+                DropdownMenuItem({ Text("Settings") }, { onMenuItemClicked(MenuItem.SETTINGS) })
             }
         }
     )

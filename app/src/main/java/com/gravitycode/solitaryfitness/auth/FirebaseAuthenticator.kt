@@ -15,6 +15,10 @@ class FirebaseAuthenticator(
     private val toaster: Toaster
 ) : Authenticator {
 
+    companion object {
+        private const val TAG = "FirebaseAuthenticator"
+    }
+
     /**
      * Authentication providers
      * */
@@ -35,37 +39,51 @@ class FirebaseAuthenticator(
         activity,
         FirebaseAuthUIActivityResultContract()
     ) { result ->
-        if (result.idpResponse != null) {
-            val idpResponse: IdpResponse = result.idpResponse!!
-            if (idpResponse.error != null) {
-                toaster("Failed to login")
-                debugError("Sign in failed", idpResponse.error)
-            }
-        }
-
         val response = result.idpResponse
-        Log.i("mo", "response = $response")
+        Log.i(TAG, "identity provider response = $response")
 
         if (result.resultCode == ComponentActivity.RESULT_OK) {
-            // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
-            Log.i("mo", "current user = $user")
-
-            signOut()
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser != null) {
+                user = User(firebaseUser)
+            }
+            Log.i(TAG, "current user = $user")
         } else {
-            Log.e("mo", "sign in failed, result code = ${result.resultCode}")
+            Log.e(TAG, "sign in failed, result code = ${result.resultCode}")
+            if (result.idpResponse != null) {
+                val idpResponse: IdpResponse = result.idpResponse!!
+                if (idpResponse.error != null) {
+                    toaster("Failed to login")
+                    debugError("Sign in failed", idpResponse.error)
+                }
+            }
         }
     }
+
+    private var user: User? = null
 
     override fun signIn() {
         getActivityResult(signInIntent)
     }
 
+    /**
+     * TODO: Need a way of knowing if sign out was successful. Should probably return
+     *  result in which case it will probably have to be a suspend function. Can I create
+     *  a Flow<Result> from the multiple possible listeners, i.e. [com.google.android.gms.tasks.OnCanceledListener],
+     *  [com.google.android.gms.tasks.OnCompleteListener], [com.google.android.gms.tasks.OnFailureListener],
+     *  [com.google.android.gms.tasks.OnSuccessListener]. Are all the listeners necessary? Does the
+     *  onComplete listener combine all of them?
+     * */
     override fun signOut() {
         AuthUI.getInstance()
             .signOut(activity)
             .addOnCompleteListener {
-                Log.i("mo", "signed out")
+                Log.i(TAG, "signed out user $user")
+                user = null
             }
     }
+
+    override fun isUserSignedIn() = user != null
+
+    override fun getSignedInUser() = user
 }

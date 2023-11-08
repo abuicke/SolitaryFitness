@@ -11,6 +11,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
+import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
@@ -18,6 +19,19 @@ import com.gravitycode.solitaryfitness.util.ui.Toaster
 import javax.inject.Inject
 
 /**
+ *
+ *
+ * TODO: After completing sign in from TopBar, add Menu https://developer.android.com/develop/ui/views/components/menus
+ *  the Sign In option should be replaced with Sign Out if the user is signed in. Will need a way of
+ *  telling [TrackRepsScreen] whether the user is signed in or not. Is there a better way of doing this
+ *  than just putting it in the ViewModel?
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * "When you repeat yourself 3 times, then refactor..."
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
@@ -57,18 +71,16 @@ class TrackRepsActivity : ComponentActivity() {
     private lateinit var trackRepsComponent: TrackRepsComponent
     @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
 
-    @Inject lateinit var firestore: FirebaseFirestore
     @Inject lateinit var toaster: Toaster
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
-        trackRepsComponent = appComponent.trackRepsComponent().create()
+        trackRepsComponent = appComponent.trackRepsComponent().componentActivity(this).build()
         trackRepsComponent.inject(this)
 
-        val auth = FirebaseAuthenticator(this, toaster)
-        auth.signIn()
+        val authenticator: Authenticator = FirebaseAuthenticator(this, toaster)
 
         setContent {
             SolitaryFitnessTheme {
@@ -77,6 +89,7 @@ class TrackRepsActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TrackRepsScreen(
+                        isUserSignedIn = authenticator.isUserSignedIn(),
                         trackRepsState = trackRepsViewModel.state.value,
                         onEvent = trackRepsViewModel::onEvent
                     )

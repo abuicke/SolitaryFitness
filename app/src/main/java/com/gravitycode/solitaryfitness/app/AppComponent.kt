@@ -31,5 +31,5 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
-    fun trackRepsComponent(): TrackRepsComponent.Factory
+    fun trackRepsComponent(): TrackRepsComponent.Builder
 }

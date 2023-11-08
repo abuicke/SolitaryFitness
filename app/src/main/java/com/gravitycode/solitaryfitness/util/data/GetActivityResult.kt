@@ -5,6 +5,9 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContract
 import java.util.concurrent.atomic.AtomicInteger
 
+/**
+ * @see [https://developer.android.com/training/basics/intents/result#separate]
+ * */
 class GetActivityResult<I, O>(
     activity: ComponentActivity,
     contract: ActivityResultContract<I, O>,

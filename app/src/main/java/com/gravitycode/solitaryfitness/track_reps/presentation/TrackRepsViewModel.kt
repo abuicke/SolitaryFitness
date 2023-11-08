@@ -1,29 +1,29 @@
 package com.gravitycode.solitaryfitness.track_reps.presentation
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.ActivityScope
+import com.gravitycode.solitaryfitness.app.AppEvent
+import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.ui.ToastDuration
 import com.gravitycode.solitaryfitness.util.ui.Toaster
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @ActivityScope
 class TrackRepsViewModel(
     private val toaster: Toaster,
-    private val workoutHistoryRepo: WorkoutHistoryRepo,
+    private val authenticator: Authenticator,
+    private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
 
     companion object {
-        private val TAG = TrackRepsViewModel::class.java.simpleName
+        private const val TAG = "TrackRepsViewModel"
     }
 
     private var currentDate: LocalDate = LocalDate.now()
@@ -35,10 +35,12 @@ class TrackRepsViewModel(
         loadWorkoutHistory()
     }
 
-    fun onEvent(event: TrackRepsEvent) {
+    fun onEvent(event: AppEvent<out TrackRepsEvent>) {
         when (event) {
             is TrackRepsEvent.DateSelected -> changeDate(event.date)
             is TrackRepsEvent.Increment -> incrementWorkout(event.workout, event.quantity)
+            is AppEvent.SignIn -> authenticator.signIn()
+            is AppEvent.SignOut -> authenticator.signOut()
         }
     }
 
