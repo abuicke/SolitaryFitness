@@ -76,7 +76,7 @@ class FirebaseAuthenticator(
                 continuation.resume(result)
             }
             .addOnSuccessListener {
-                Log.d(TAG, "signed out user $user")
+                Log.d(TAG, "signed out user: $user")
                 user = null
                 val result = Result.success(Unit)
                 continuation.resume(result)

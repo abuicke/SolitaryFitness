@@ -1,7 +1,6 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
-import com.gravitycode.solitaryfitness.track_reps.TrackRepsComponent
 import dagger.BindsInstance
 import dagger.Component
 
@@ -31,5 +30,5 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
-    fun trackRepsComponent(): TrackRepsComponent.Builder
+    fun activityComponent(): ActivityComponent.Builder
 }

@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.track_reps
+package com.gravitycode.solitaryfitness.app
 
 import android.os.Bundle
 import android.util.Log
@@ -11,9 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.AuthUI
-import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.app.AppState
-import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
@@ -75,16 +72,15 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
 
-    private lateinit var trackRepsComponent: TrackRepsComponent
+    private lateinit var activityComponent: ActivityComponent
     @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
-        // TODO: Authenticator and activity should be in app module
-        trackRepsComponent = appComponent.trackRepsComponent().componentActivity(this).build()
-        trackRepsComponent.inject(this)
+        activityComponent = appComponent.activityComponent().componentActivity(this).build()
+        activityComponent.inject(this)
 
         setContent {
             SolitaryFitnessTheme {
