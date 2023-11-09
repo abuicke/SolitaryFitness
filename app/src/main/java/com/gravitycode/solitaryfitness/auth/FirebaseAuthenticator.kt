@@ -6,6 +6,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.util.data.GetActivityResult
+import com.gravitycode.solitaryfitness.util.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -36,7 +37,16 @@ class FirebaseAuthenticator(
 
     private var user: User? = null
 
+    init {
+        val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+        if(currentFirebaseUser != null) {
+            this.user = User(currentFirebaseUser)
+            Log.d(TAG, "user already signed in as: $user")
+        }
+    }
+
     override suspend fun signIn(): Result<User> {
+        if(user != null) debugError("user already signed in as: $user")
         val result = getFirebaseSignInResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -66,6 +76,7 @@ class FirebaseAuthenticator(
     }
 
     override suspend fun signOut(): Result<Unit> = suspendCoroutine { continuation ->
+        if(user == null) debugError("no user signed in")
         AuthUI.getInstance()
             .signOut(activity)
             .addOnFailureListener {

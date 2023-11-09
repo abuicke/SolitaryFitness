@@ -19,7 +19,6 @@ import com.gravitycode.solitaryfitness.R
 @Composable
 fun OverflowMenu(menuItems: List<String>, onMenuItemClicked: (String) -> Unit) {
     val showMenu = remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     IconButton(onClick = {
         showMenu.value = !showMenu.value
@@ -33,7 +32,6 @@ fun OverflowMenu(menuItems: List<String>, onMenuItemClicked: (String) -> Unit) {
     DropdownMenu(
         expanded = showMenu.value,
         onDismissRequest = {
-            Toast.makeText(context, "onDismissRequest", Toast.LENGTH_SHORT).show()
             showMenu.value = false
         }
     ) {

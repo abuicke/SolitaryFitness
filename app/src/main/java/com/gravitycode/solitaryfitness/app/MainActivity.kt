@@ -7,11 +7,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
+import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
 import com.gravitycode.solitaryfitness.util.debugError
@@ -27,6 +30,7 @@ import javax.inject.Inject
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
  * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
+ * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?
  * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
  *      1) Successful sign in: "Signed in as {email}"
  *      2) Successful sign out: "Signed out"
@@ -63,13 +67,13 @@ class MainActivity : ComponentActivity() {
         const val TAG = "MainActivity"
     }
 
-    private val appState = mutableStateOf(AppState())
-
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
 
     private lateinit var activityComponent: ActivityComponent
     @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
+
+    private lateinit var appState: MutableState<AppState>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +81,9 @@ class MainActivity : ComponentActivity() {
         val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
         activityComponent = appComponent.activityComponent().componentActivity(this).build()
         activityComponent.inject(this)
+
+        val currentUser = authenticator.getSignedInUser()
+        appState = mutableStateOf(AppState(currentUser))
 
         setContent {
             SolitaryFitnessTheme {
