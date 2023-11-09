@@ -46,7 +46,7 @@ class WorkoutHistory(
         builder.append('\n')
         for (workout in Workout.values()) {
             builder.append(
-                "\t${workout.toPrettyString()}: ${history[workout]}\n"
+                "\t${workout.prettyString}: ${history[workout]}\n"
             )
         }
         builder.append('}')

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SolitaryFitness"
         tools:targetApi="31">
         <activity
-            android:name=".track_reps.TrackRepsActivity"
+            android:name=".track_reps.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SolitaryFitness">
             <intent-filter>

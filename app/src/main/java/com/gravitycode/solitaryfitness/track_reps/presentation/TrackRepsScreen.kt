@@ -14,12 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -39,14 +34,40 @@ import androidx.compose.ui.unit.sp
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.track_reps.TrackRepsActivity
+import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
 
-private enum class MenuItem {
-    SIGN_IN, SIGN_OUT, RESET_REPS, EDIT_REPS, SETTINGS
+private enum class MenuItem(val prettyString: String) {
+
+    SIGN_IN("Sign In"),
+
+    SIGN_OUT("Sign Out"),
+
+    RESET_REPS("Reset Reps"),
+
+    EDIT_REPS("Edit Reps"),
+
+    SETTINGS("Settings");
+
+    companion object {
+        /**
+         * Case insensitive way of converting from a string to [MenuItem]
+         * */
+        fun fromString(str: String): MenuItem? {
+            return when (str.lowercase()) {
+                "sign in" -> SIGN_IN
+                "sign out" -> SIGN_OUT
+                "reset reps" -> RESET_REPS
+                "edit reps" -> EDIT_REPS
+                "settings" -> SETTINGS
+                else -> null
+            }
+        }
+    }
 }
 
 @Composable
@@ -54,18 +75,20 @@ private enum class MenuItem {
 private fun TrackRepsScreen() {
     TrackRepsScreen(
         modifier = Modifier.fillMaxSize(),
-        isUserSignedIn = true,
+        appState = AppState(false),
         trackRepsState = TrackRepsState(LocalDate.now(), 0, 15, 30, 20, 9, 0, 45, 40),
-        onEvent = { _ -> }
+        onEvent = { _ -> },
+        onAppEvent = { _ -> }
     )
 }
 
 @Composable
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
-    isUserSignedIn: Boolean,
+    appState: AppState,
     trackRepsState: TrackRepsState,
-    onEvent: (AppEvent<out TrackRepsEvent>) -> Unit
+    onAppEvent: (AppEvent) -> Unit,
+    onEvent: (TrackRepsEvent) -> Unit
 ) {
     val workouts = Workout.values()
 
@@ -75,12 +98,16 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(isUserSignedIn) { item ->
+        TopBar(appState.isUserSignedIn) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> Toast.makeText(context, "Sign In", Toast.LENGTH_SHORT).show()//onEvent(AppEvent.SignIn)
-                MenuItem.SIGN_OUT -> Toast.makeText(context, "Sign Out", Toast.LENGTH_SHORT).show()//onEvent(AppEvent.SignOut)
-                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT).show()
-                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT).show()
+                MenuItem.SIGN_IN -> onAppEvent(AppEvent.SignIn)//Toast.makeText(context, "Sign In", Toast.LENGTH_SHORT).show()
+                MenuItem.SIGN_OUT -> onAppEvent(AppEvent.SignOut)//Toast.makeText(context, "Sign Out", Toast.LENGTH_SHORT).show()
+                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT)
+                    .show()
+
+                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT)
+                    .show()
+
                 MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
             }
         }
@@ -113,15 +140,21 @@ private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Uni
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
-            OverflowMenu {
-                if (isUserSignedIn) {
-                    DropdownMenuItem({ Text("Sign Out") }, { onMenuItemClicked(MenuItem.SIGN_OUT) })
-                } else {
-                    DropdownMenuItem({ Text("Sign In") }, { onMenuItemClicked(MenuItem.SIGN_IN) })
+            val menuItems = MenuItem.values().filter { menuItem ->
+                when (menuItem) {
+                    MenuItem.SIGN_IN -> !isUserSignedIn
+                    MenuItem.SIGN_OUT -> isUserSignedIn
+                    else -> true
                 }
-                DropdownMenuItem({ Text("Reset Reps") }, { onMenuItemClicked(MenuItem.RESET_REPS) })
-                DropdownMenuItem({ Text("Edit Reps") }, { onMenuItemClicked(MenuItem.EDIT_REPS) })
-                DropdownMenuItem({ Text("Settings") }, { onMenuItemClicked(MenuItem.SETTINGS) })
+            }.map { it.prettyString }
+
+            OverflowMenu(menuItems) { string ->
+                val menuItem: MenuItem? = MenuItem.fromString(string)
+                if (menuItem != null) {
+                    onMenuItemClicked(menuItem)
+                } else {
+                    debugError("Couldn't return MenuItem for string '$string'")
+                }
             }
         }
     )
@@ -146,7 +179,7 @@ private fun TrackRepsGrid(
         val workout = workouts[index]
 
         WorkoutButton(
-            workoutName = workout.toPrettyString(),
+            workoutName = workout.prettyString,
             currentReps = trackRepsState[workout],
             onClickAddReps = { reps ->
                 onEvent(TrackRepsEvent.Increment(workout, reps))

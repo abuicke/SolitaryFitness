@@ -1,9 +1,9 @@
 package com.gravitycode.solitaryfitness.app
 
-open class AppEvent<T : AppEvent<T>> {
+sealed class AppEvent {
 
-    object SignIn: AppEvent<Nothing>()
-    object SignOut: AppEvent<Nothing>()
+    object SignIn: AppEvent()
+    object SignOut: AppEvent()
 }
 
 

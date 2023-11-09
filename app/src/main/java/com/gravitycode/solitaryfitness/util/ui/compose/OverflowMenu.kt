@@ -1,24 +1,25 @@
 package com.gravitycode.solitaryfitness.util.ui.compose
 
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.gravitycode.solitaryfitness.R
 
-/**
- * @see [https://stackoverflow.com/a/68354402/4596649]
- * */
 @Composable
-fun OverflowMenu(content: @Composable () -> Unit) {
+fun OverflowMenu(menuItems: List<String>, onMenuItemClicked: (String) -> Unit) {
     val showMenu = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     IconButton(onClick = {
         showMenu.value = !showMenu.value
@@ -32,9 +33,15 @@ fun OverflowMenu(content: @Composable () -> Unit) {
     DropdownMenu(
         expanded = showMenu.value,
         onDismissRequest = {
+            Toast.makeText(context, "onDismissRequest", Toast.LENGTH_SHORT).show()
             showMenu.value = false
         }
     ) {
-        content()
+        for (menuItem in menuItems) {
+            DropdownMenuItem({ Text(menuItem) }, {
+                showMenu.value = false
+                onMenuItemClicked(menuItem)
+            })
+        }
     }
 }

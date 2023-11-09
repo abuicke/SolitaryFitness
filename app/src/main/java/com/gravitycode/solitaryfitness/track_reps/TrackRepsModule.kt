@@ -42,10 +42,6 @@ object TrackRepsModule {
 
     @Provides
     @ActivityScope
-    fun provideTrackRepsViewModel(
-        toaster: Toaster,
-        authenticator: Authenticator,
-        repo: WorkoutHistoryRepo
-    ): TrackRepsViewModel =
-        TrackRepsViewModel(toaster, authenticator, repo)
+    fun provideTrackRepsViewModel(toaster: Toaster, repo: WorkoutHistoryRepo): TrackRepsViewModel =
+        TrackRepsViewModel(toaster, repo)
 }

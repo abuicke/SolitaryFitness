@@ -10,6 +10,7 @@ import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.ToastDuration
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.launch
@@ -18,13 +19,8 @@ import java.time.LocalDate
 @ActivityScope
 class TrackRepsViewModel(
     private val toaster: Toaster,
-    private val authenticator: Authenticator,
     private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
-
-    companion object {
-        private const val TAG = "TrackRepsViewModel"
-    }
 
     private var currentDate: LocalDate = LocalDate.now()
 
@@ -35,12 +31,10 @@ class TrackRepsViewModel(
         loadWorkoutHistory()
     }
 
-    fun onEvent(event: AppEvent<out TrackRepsEvent>) {
+    fun onEvent(event: TrackRepsEvent) {
         when (event) {
             is TrackRepsEvent.DateSelected -> changeDate(event.date)
             is TrackRepsEvent.Increment -> incrementWorkout(event.workout, event.quantity)
-            is AppEvent.SignIn -> authenticator.signIn()
-            is AppEvent.SignOut -> authenticator.signOut()
         }
     }
 
@@ -70,7 +64,7 @@ class TrackRepsViewModel(
                     val errorMessage = "Failed to write workout history to repository"
                     toaster(errorMessage, ToastDuration.SHORT)
                     val throwable = result.exceptionOrNull()
-                    Log.e(TAG, errorMessage, throwable)
+                    debugError(errorMessage, throwable)
                 }
             }
         }

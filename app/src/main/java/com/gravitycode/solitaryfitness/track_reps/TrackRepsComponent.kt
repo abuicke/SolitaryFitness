@@ -17,5 +17,5 @@ interface TrackRepsComponent {
         fun build(): TrackRepsComponent
     }
 
-    fun inject(activity: TrackRepsActivity)
+    fun inject(activity: MainActivity)
 }
