@@ -11,12 +11,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.launch
@@ -75,6 +75,8 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var appState: MutableState<AppState>
 
+    @Inject lateinit var firestore: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -84,6 +86,24 @@ class MainActivity : ComponentActivity() {
 
         val currentUser = authenticator.getSignedInUser()
         appState = mutableStateOf(AppState(currentUser))
+
+        val docRef = firestore.collection("users").document(currentUser!!.id)
+        docRef.set(
+            hashMapOf(
+                Workout.HANDSTAND_PRESS_UP.prettyString to 0,
+                Workout.PRESS_UP.prettyString to 15,
+                Workout.SIT_UP.prettyString to 30,
+                Workout.SQUAT.prettyString to 20,
+                Workout.SQUAT_THRUST.prettyString to 9,
+                Workout.BURPEE.prettyString to 0,
+                Workout.STAR_JUMP.prettyString to 45,
+                Workout.STEP_UP.prettyString to 40,
+            )
+        ).addOnSuccessListener {
+            Log.d(TAG, "DocumentSnapshot successfully written!")
+        }.addOnFailureListener { e ->
+            Log.w(TAG, "Error writing document", e)
+        }
 
         setContent {
             SolitaryFitnessTheme {

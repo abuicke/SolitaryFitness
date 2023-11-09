@@ -9,7 +9,7 @@ class WorkoutHistory(
     history: Map<Workout, Int> = EnumMap(Workout::class.java)
 ) {
 
-    private val history: EnumMap<Workout, Int> = EnumMap(history)
+    val history: EnumMap<Workout, Int> = EnumMap(history)
 
     init {
         for (workout in Workout.values()) {
