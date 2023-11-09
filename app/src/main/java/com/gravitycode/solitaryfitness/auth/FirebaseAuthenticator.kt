@@ -6,6 +6,8 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.util.data.GetActivityResult
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * @see [com.firebase.ui.auth.ErrorCodes] for error code meanings
@@ -54,19 +56,30 @@ class FirebaseAuthenticator(
             val error: Throwable = if (response != null && response.error != null) {
                 response.error!!
             } else {
-                Exception("unspecified firebase ui exception, result code: ${result.resultCode}")
+                AuthenticationException(
+                    "unspecified firebase ui exception, result code: ${result.resultCode}"
+                )
             }
 
             Result.failure(error)
         }
     }
 
-    override fun signOut() {
+    override suspend fun signOut(): Result<Unit> = suspendCoroutine { continuation ->
         AuthUI.getInstance()
             .signOut(activity)
-            .addOnCompleteListener {
-                Log.i(TAG, "signed out user $user")
+            .addOnFailureListener {
+                val errMsg = "failed to sign out user: $user"
+                Log.d(TAG, errMsg)
+                val exception = AuthenticationException(errMsg)
+                val result = Result.failure<Unit>(exception)
+                continuation.resume(result)
+            }
+            .addOnSuccessListener {
+                Log.d(TAG, "signed out user $user")
                 user = null
+                val result = Result.success(Unit)
+                continuation.resume(result)
             }
     }
 

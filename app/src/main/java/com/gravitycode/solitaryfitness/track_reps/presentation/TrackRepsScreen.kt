@@ -100,14 +100,10 @@ fun TrackRepsScreen(
     ) {
         TopBar(appState.isUserSignedIn()) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> onAppEvent(AppEvent.SignIn)//Toast.makeText(context, "Sign In", Toast.LENGTH_SHORT).show()
-                MenuItem.SIGN_OUT -> onAppEvent(AppEvent.SignOut)//Toast.makeText(context, "Sign Out", Toast.LENGTH_SHORT).show()
-                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT)
-                    .show()
-
-                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT)
-                    .show()
-
+                MenuItem.SIGN_IN -> onAppEvent(AppEvent.SignIn)
+                MenuItem.SIGN_OUT -> onAppEvent(AppEvent.SignOut)
+                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT).show()
+                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT).show()
                 MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
             }
         }
@@ -160,9 +156,6 @@ private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Uni
     )
 }
 
-/**
- * TODO: Grid should size dynamically based on the array past in
- * */
 @Composable
 private fun TrackRepsGrid(
     modifier: Modifier = Modifier,

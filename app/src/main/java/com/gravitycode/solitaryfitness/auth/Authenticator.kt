@@ -4,7 +4,7 @@ interface Authenticator {
 
     suspend fun signIn(): Result<User>
 
-    fun signOut()
+    suspend fun signOut(): Result<Unit>
 
     fun isUserSignedIn(): Boolean
 

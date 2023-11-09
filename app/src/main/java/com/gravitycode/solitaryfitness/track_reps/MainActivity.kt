@@ -34,6 +34,11 @@ import javax.inject.Inject
  *  disable SmartLock from ever showing up in [AuthUI.AuthIntentBuilder] if I decide I want the name.
  * TODO: How to make the full FirebaseAuthUI less ugly?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
+ * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
+ *  1) Successful sign in
+ *  2) Successful sign out
+ *  3) Failure sign in
+ *  4) Failure sign out
  *
  * TODO: Overflow:
  *          Sign In
@@ -77,6 +82,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
+        // TODO: Authenticator and activity should be in app module
         trackRepsComponent = appComponent.trackRepsComponent().componentActivity(this).build()
         trackRepsComponent.inject(this)
 
@@ -97,16 +103,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * TODO: Need to implement async and co-routines here
-     * */
     private fun handleAppEvent(appEvent: AppEvent) {
         when (appEvent) {
             AppEvent.SignIn -> signIn()
-            AppEvent.SignOut -> {
-                authenticator.signOut()
-                appState.value = AppState(null)
-            }
+            AppEvent.SignOut -> signOut()
         }
     }
 
@@ -121,6 +121,19 @@ class MainActivity : ComponentActivity() {
                 val exception = result.exceptionOrNull()
                 toaster("Failed to login")
                 debugError("Sign in failed", exception)
+            }
+        }
+    }
+
+    private fun signOut() {
+        lifecycleScope.launch {
+            val result = authenticator.signOut()
+            if (result.isSuccess) {
+                appState.value = AppState(null)
+            } else {
+                val exception = result.exceptionOrNull()
+                toaster("Failed to log out")
+                debugError("Sign out failed", exception)
             }
         }
     }

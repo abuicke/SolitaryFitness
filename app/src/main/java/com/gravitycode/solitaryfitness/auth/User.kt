@@ -2,12 +2,9 @@ package com.gravitycode.solitaryfitness.auth
 
 import com.google.firebase.auth.FirebaseUser
 
-class User(private val firebaseUser: FirebaseUser) {
+data class User(
+    val email: String
+) {
 
-    override fun toString() = firebaseUser.toString()
-
-    override fun equals(other: Any?) =
-        other is User && firebaseUser == other.firebaseUser
-
-    override fun hashCode() = firebaseUser.hashCode()
+    constructor(firebaseUser: FirebaseUser): this(firebaseUser.email!!)
 }
