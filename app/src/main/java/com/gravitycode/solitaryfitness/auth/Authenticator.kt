@@ -2,7 +2,7 @@ package com.gravitycode.solitaryfitness.auth
 
 interface Authenticator {
 
-    fun signIn()
+    suspend fun signIn(): Result<User>
 
     fun signOut()
 

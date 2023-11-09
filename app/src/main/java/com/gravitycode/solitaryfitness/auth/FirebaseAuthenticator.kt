@@ -4,15 +4,14 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.util.data.GetActivityResult
-import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.Toaster
 
+/**
+ * @see [com.firebase.ui.auth.ErrorCodes] for error code meanings
+ * */
 class FirebaseAuthenticator(
-    private val activity: ComponentActivity,
-    private val toaster: Toaster
+    private val activity: ComponentActivity
 ) : Authenticator {
 
     companion object {
@@ -30,50 +29,38 @@ class FirebaseAuthenticator(
         // AuthUI.IdpConfig.TwitterBuilder().build()
     )
 
-    private val signInIntent = AuthUI.getInstance()
-        .createSignInIntentBuilder()
-        .setAvailableProviders(providers)
-        .build()
-
-    private val getActivityResult = GetActivityResult(
-        activity,
-        FirebaseAuthUIActivityResultContract()
-    ) { result ->
-        val response = result.idpResponse
-        Log.i(TAG, "identity provider response = $response")
-
-        if (result.resultCode == ComponentActivity.RESULT_OK) {
-            val firebaseUser = FirebaseAuth.getInstance().currentUser
-            if (firebaseUser != null) {
-                user = User(firebaseUser)
-            }
-            Log.i(TAG, "current user = $user")
-        } else {
-            Log.e(TAG, "sign in failed, result code = ${result.resultCode}")
-            if (result.idpResponse != null) {
-                val idpResponse: IdpResponse = result.idpResponse!!
-                if (idpResponse.error != null) {
-                    toaster("Failed to login")
-                    debugError("Sign in failed", idpResponse.error)
-                }
-            }
-        }
-    }
+    private val contract = FirebaseAuthUIActivityResultContract()
+    private val getFirebaseSignInResult = GetActivityResult(activity, contract)
 
     private var user: User? = null
 
-    override fun signIn() {
-        getActivityResult(signInIntent)
+    override suspend fun signIn(): Result<User> {
+        val result = getFirebaseSignInResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build()
+        )
+
+        val response = result.idpResponse
+
+        return if (result.resultCode == ComponentActivity.RESULT_OK) {
+            Log.d(TAG, "sign in successful\n$response")
+            val firebaseUser = FirebaseAuth.getInstance().currentUser!!
+            val user = User(firebaseUser)
+            this.user = user
+            Result.success(user)
+        } else {
+            val error: Throwable = if (response != null && response.error != null) {
+                response.error!!
+            } else {
+                Exception("unspecified firebase ui exception, result code: ${result.resultCode}")
+            }
+
+            Result.failure(error)
+        }
     }
 
-    /**
-     * TODO: Need a way of knowing if sign out was successful. Should probably return
-     *  result in which case it will probably have to be a suspend function. Can I create
-     *  a Flow<Result> from the multiple possible listeners, i.e. [com.google.android.gms.tasks.OnCanceledListener],
-     *  [com.google.android.gms.tasks.OnCompleteListener], [com.google.android.gms.tasks.OnFailureListener],
-     *  [com.google.android.gms.tasks.OnSuccessListener]. Are all the listeners necessary? Does the
-     *  onComplete listener combine all of them?
-     * */
     override fun signOut() {
         AuthUI.getInstance()
             .signOut(activity)

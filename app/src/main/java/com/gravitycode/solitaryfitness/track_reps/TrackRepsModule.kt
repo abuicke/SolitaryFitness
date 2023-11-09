@@ -6,8 +6,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import com.gravitycode.solitaryfitness.app.ActivityScope
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator
@@ -23,8 +21,8 @@ object TrackRepsModule {
 
     @Provides
     @ActivityScope
-    fun providesAuthenticator(activity: ComponentActivity, toaster: Toaster): Authenticator =
-        FirebaseAuthenticator(activity, toaster)
+    fun providesAuthenticator(activity: ComponentActivity): Authenticator =
+        FirebaseAuthenticator(activity)
 
     @Provides
     @ActivityScope

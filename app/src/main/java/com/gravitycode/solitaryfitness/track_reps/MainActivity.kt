@@ -1,24 +1,26 @@
 package com.gravitycode.solitaryfitness.track_reps
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.AuthUI
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
-import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsState
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.ui.Toaster
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -59,9 +61,14 @@ import javax.inject.Inject
  * */
 class MainActivity : ComponentActivity() {
 
+    companion object {
+        const val TAG = "MainActivity"
+    }
+
     private val appState = mutableStateOf(AppState())
 
     @Inject lateinit var authenticator: Authenticator
+    @Inject lateinit var toaster: Toaster
 
     private lateinit var trackRepsComponent: TrackRepsComponent
     @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
@@ -94,14 +101,26 @@ class MainActivity : ComponentActivity() {
      * TODO: Need to implement async and co-routines here
      * */
     private fun handleAppEvent(appEvent: AppEvent) {
-        when(appEvent) {
-            AppEvent.SignIn -> {
-                authenticator.signIn()
-                appState.value = AppState(true)
-            }
+        when (appEvent) {
+            AppEvent.SignIn -> signIn()
             AppEvent.SignOut -> {
                 authenticator.signOut()
-                appState.value = AppState(false)
+                appState.value = AppState(null)
+            }
+        }
+    }
+
+    private fun signIn() {
+        lifecycleScope.launch {
+            val result = authenticator.signIn()
+            if (result.isSuccess) {
+                val user = result.getOrNull()!!
+                appState.value = AppState(user)
+                Log.d(TAG, "signed in as user: $user")
+            } else {
+                val exception = result.exceptionOrNull()
+                toaster("Failed to login")
+                debugError("Sign in failed", exception)
             }
         }
     }

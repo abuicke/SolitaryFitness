@@ -75,7 +75,7 @@ private enum class MenuItem(val prettyString: String) {
 private fun TrackRepsScreen() {
     TrackRepsScreen(
         modifier = Modifier.fillMaxSize(),
-        appState = AppState(false),
+        appState = AppState(null),
         trackRepsState = TrackRepsState(LocalDate.now(), 0, 15, 30, 20, 9, 0, 45, 40),
         onEvent = { _ -> },
         onAppEvent = { _ -> }
@@ -98,7 +98,7 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(appState.isUserSignedIn) { item ->
+        TopBar(appState.isUserSignedIn()) { item ->
             when (item) {
                 MenuItem.SIGN_IN -> onAppEvent(AppEvent.SignIn)//Toast.makeText(context, "Sign In", Toast.LENGTH_SHORT).show()
                 MenuItem.SIGN_OUT -> onAppEvent(AppEvent.SignOut)//Toast.makeText(context, "Sign Out", Toast.LENGTH_SHORT).show()
