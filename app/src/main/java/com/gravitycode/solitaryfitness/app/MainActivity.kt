@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.firebase.ui.auth.AuthUI
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
@@ -26,16 +25,13 @@ import javax.inject.Inject
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
  * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
- * TODO: Put profile pic in the toolbar when user signs in.
- * TODO: The name is available signing in the long way but not with SmartLock. There might be a way to
- *  disable SmartLock from ever showing up in [AuthUI.AuthIntentBuilder] if I decide I want the name.
- * TODO: How to make the full FirebaseAuthUI less ugly?
+ * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
  * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
- *  1) Successful sign in
- *  2) Successful sign out
- *  3) Failure sign in
- *  4) Failure sign out
+ *      1) Successful sign in: "Signed in as {email}"
+ *      2) Successful sign out: "Signed out"
+ *      3) Failure sign in: "Failed to sign in"
+ *      4) Failure sign out: "Failed to sign out"
  *
  * TODO: Overflow:
  *          Sign In
@@ -115,7 +111,7 @@ class MainActivity : ComponentActivity() {
                 Log.d(TAG, "signed in as user: $user")
             } else {
                 val exception = result.exceptionOrNull()
-                toaster("Failed to login")
+                toaster("Failed to sign in")
                 debugError("Sign in failed", exception)
             }
         }
@@ -128,7 +124,7 @@ class MainActivity : ComponentActivity() {
                 appState.value = AppState(null)
             } else {
                 val exception = result.exceptionOrNull()
-                toaster("Failed to log out")
+                toaster("Failed to sign out")
                 debugError("Sign out failed", exception)
             }
         }
