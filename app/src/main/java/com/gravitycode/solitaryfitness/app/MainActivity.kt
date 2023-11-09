@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                 Workout.SQUAT_THRUST.prettyString to 9,
                 Workout.BURPEE.prettyString to 0,
                 Workout.STAR_JUMP.prettyString to 45,
-                Workout.STEP_UP.prettyString to 40,
+                Workout.STEP_UP.prettyString to 40
             )
         ).addOnSuccessListener {
             Log.d(TAG, "DocumentSnapshot successfully written!")

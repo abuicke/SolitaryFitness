@@ -11,7 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutHistory
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -74,7 +74,7 @@ class TrackRepsStorageInstrumentedTest {
     fun readEmptyRepository() {
         runTest {
             repository.readWorkoutHistory(testDate).collect { workoutHistory ->
-                assertEquals(WorkoutHistory(), workoutHistory)
+                assertEquals(WorkoutLog(), workoutHistory)
             }
         }
     }
@@ -83,7 +83,7 @@ class TrackRepsStorageInstrumentedTest {
     fun writeAndReadRepository() {
         runTest {
 
-            val workoutHistory = WorkoutHistory(
+            val workoutLog = WorkoutLog(
                 mapOf(
                     Workout.PRESS_UP to 15,
                     Workout.HANDSTAND_PRESS_UP to 5,
@@ -91,10 +91,10 @@ class TrackRepsStorageInstrumentedTest {
                 )
             )
 
-            repository.writeWorkoutHistory(testDate, workoutHistory)
+            repository.writeWorkoutHistory(testDate, workoutLog)
 
             repository.readWorkoutHistory(testDate).collect { wH ->
-                assertEquals(workoutHistory, wH)
+                assertEquals(workoutLog, wH)
             }
         }
     }

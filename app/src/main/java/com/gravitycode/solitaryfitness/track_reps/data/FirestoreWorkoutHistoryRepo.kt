@@ -3,7 +3,7 @@ package com.gravitycode.solitaryfitness.track_reps.data
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutHistory
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -15,15 +15,15 @@ class FirestoreWorkoutHistoryRepo(
 ) : WorkoutHistoryRepo {
 
     @OptIn(FlowPreview::class)
-    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutHistory> {
+    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutLog> {
         return firestore.collection("workout_history")
-            .dataObjects<WorkoutHistory>()
+            .dataObjects<WorkoutLog>()
             .flatMapConcat { it.asFlow() }
     }
 
     override suspend fun writeWorkoutHistory(
         date: LocalDate,
-        history: WorkoutHistory
+        history: WorkoutLog
     ): Result<Unit> {
         firestore.collection("workout_history")
             .add(history)

@@ -3,7 +3,7 @@ package com.gravitycode.solitaryfitness.track_reps.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutHistory
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
 import kotlinx.coroutines.flow.Flow
@@ -15,25 +15,25 @@ class PreferencesWorkoutHistoryRepo(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 
-    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutHistory> {
+    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutLog> {
         return preferencesStore.data.take(1).map { preferences ->
-            val workoutHistory = WorkoutHistory()
+            val workoutLog = WorkoutLog()
             val workouts = Workout.values()
 
             for (workout in workouts) {
                 val reps = preferences[intPreferencesKey(date, workout)]
                 if (reps != null) {
-                    workoutHistory[workout] = reps
+                    workoutLog[workout] = reps
                 }
             }
 
-            workoutHistory
+            workoutLog
         }
     }
 
     override suspend fun writeWorkoutHistory(
         date: LocalDate,
-        history: WorkoutHistory
+        history: WorkoutLog
     ): Result<Unit> {
         val workouts = Workout.values()
         return try {

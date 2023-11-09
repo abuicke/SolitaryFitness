@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import java.util.EnumMap
 
-class WorkoutHistory(
+class WorkoutLog(
     history: Map<Workout, Int> = EnumMap(Workout::class.java)
 ) {
 
@@ -36,7 +36,7 @@ class WorkoutHistory(
     fun toMap(): Map<Workout, Int> = ImmutableMap.copyOf(history)
 
     override fun equals(other: Any?) =
-        other is WorkoutHistory && history == other.history
+        other is WorkoutLog && history == other.history
 
     override fun hashCode() = history.hashCode()
 
