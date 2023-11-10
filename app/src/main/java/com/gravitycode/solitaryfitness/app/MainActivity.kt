@@ -11,12 +11,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.launch
@@ -27,7 +25,13 @@ import javax.inject.Inject
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
- * TODO: Sync data to Firebase (or somewhere) to make sure the record is never lost.
+ * TODO: Should retrieve the entire workout history from Firebase with
+ *  `collection("users").document(currentUser.id).collection("workout-logs")` when `FirestoreWorkoutHistoryRepo`
+ *  is first initialized so that a new connection doesn't have to be made for each date.
+ * TODO: `incrementWorkout()` in [TrackRepsViewModel] should be handled by an `update` function in the repositories.
+ * TODO: What happens if a user starts off using [com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo]
+ *  and then switches to [com.gravitycode.solitaryfitness.track_reps.data.FirestoreWorkoutHistoryRepo],
+ *  Copy over the data from preferences to firestore? That's probably the only thing that can be done.
  * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
  * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?
@@ -75,8 +79,6 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var appState: MutableState<AppState>
 
-    @Inject lateinit var firestore: FirebaseFirestore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -86,24 +88,6 @@ class MainActivity : ComponentActivity() {
 
         val currentUser = authenticator.getSignedInUser()
         appState = mutableStateOf(AppState(currentUser))
-
-        val docRef = firestore.collection("users").document(currentUser!!.id)
-        docRef.set(
-            hashMapOf(
-                Workout.HANDSTAND_PRESS_UP.prettyString to 0,
-                Workout.PRESS_UP.prettyString to 15,
-                Workout.SIT_UP.prettyString to 30,
-                Workout.SQUAT.prettyString to 20,
-                Workout.SQUAT_THRUST.prettyString to 9,
-                Workout.BURPEE.prettyString to 0,
-                Workout.STAR_JUMP.prettyString to 45,
-                Workout.STEP_UP.prettyString to 40
-            )
-        ).addOnSuccessListener {
-            Log.d(TAG, "DocumentSnapshot successfully written!")
-        }.addOnFailureListener { e ->
-            Log.w(TAG, "Error writing document", e)
-        }
 
         setContent {
             SolitaryFitnessTheme {
@@ -137,9 +121,8 @@ class MainActivity : ComponentActivity() {
                 appState.value = AppState(user)
                 Log.d(TAG, "signed in as user: $user")
             } else {
-                val exception = result.exceptionOrNull()
                 toaster("Failed to sign in")
-                debugError("Sign in failed", exception)
+                debugError("Sign in failed", result)
             }
         }
     }
@@ -150,9 +133,8 @@ class MainActivity : ComponentActivity() {
             if (result.isSuccess) {
                 appState.value = AppState(null)
             } else {
-                val exception = result.exceptionOrNull()
                 toaster("Failed to sign out")
-                debugError("Sign out failed", exception)
+                debugError("Sign out failed", result)
             }
         }
     }

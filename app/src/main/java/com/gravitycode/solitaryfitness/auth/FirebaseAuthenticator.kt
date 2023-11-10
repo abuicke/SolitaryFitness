@@ -14,7 +14,9 @@ import kotlin.coroutines.suspendCoroutine
  * @see [com.firebase.ui.auth.ErrorCodes] for error code meanings
  * */
 class FirebaseAuthenticator(
-    private val activity: ComponentActivity
+    private val activity: ComponentActivity,
+    private val firebaseAuth: FirebaseAuth,
+    private val firebaseAuthUi: AuthUI
 ) : Authenticator {
 
     companion object {
@@ -38,18 +40,17 @@ class FirebaseAuthenticator(
     private var user: User? = null
 
     init {
-        val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
-        if(currentFirebaseUser != null) {
+        val currentFirebaseUser = firebaseAuth.currentUser
+        if (currentFirebaseUser != null) {
             this.user = User(currentFirebaseUser)
             Log.d(TAG, "user already signed in as: $user")
         }
     }
 
     override suspend fun signIn(): Result<User> {
-        if(user != null) debugError("user already signed in as: $user")
+        if (user != null) debugError("user already signed in as: $user")
         val result = getFirebaseSignInResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
+            firebaseAuthUi.createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build()
         )
@@ -58,7 +59,7 @@ class FirebaseAuthenticator(
 
         return if (result.resultCode == ComponentActivity.RESULT_OK) {
             Log.d(TAG, "sign in successful\n$response")
-            val firebaseUser = FirebaseAuth.getInstance().currentUser!!
+            val firebaseUser = firebaseAuth.currentUser!!
             val user = User(firebaseUser)
             this.user = user
             Result.success(user)
@@ -76,9 +77,8 @@ class FirebaseAuthenticator(
     }
 
     override suspend fun signOut(): Result<Unit> = suspendCoroutine { continuation ->
-        if(user == null) debugError("no user signed in")
-        AuthUI.getInstance()
-            .signOut(activity)
+        if (user == null) debugError("no user signed in")
+        firebaseAuthUi.signOut(activity)
             .addOnFailureListener {
                 val errMsg = "failed to sign out user: $user"
                 Log.d(TAG, errMsg)

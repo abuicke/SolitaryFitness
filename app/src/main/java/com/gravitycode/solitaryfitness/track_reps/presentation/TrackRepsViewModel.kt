@@ -1,13 +1,10 @@
 package com.gravitycode.solitaryfitness.track_reps.presentation
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.ActivityScope
-import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
@@ -40,8 +37,12 @@ class TrackRepsViewModel(
 
     private fun loadWorkoutHistory() {
         viewModelScope.launch {
-            workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
-                _state.value = TrackRepsState(currentDate, workoutHistory.toMap())
+            val result = workoutHistoryRepo.readWorkoutLog(currentDate)
+            if (result.isSuccess) {
+                val workoutLog = result.getOrNull()!!
+                _state.value = TrackRepsState(currentDate, workoutLog.toMap())
+            } else {
+                debugError("failed to read workout log from repository", result)
             }
         }
     }
@@ -55,17 +56,19 @@ class TrackRepsViewModel(
         _state.value = state.value.copy(workout, state.value[workout] + quantity)
 
         viewModelScope.launch {
-            workoutHistoryRepo.readWorkoutHistory(currentDate).collect { workoutHistory ->
-                workoutHistory[workout] += quantity
-                val result = workoutHistoryRepo.writeWorkoutHistory(currentDate, workoutHistory)
-                if (result.isFailure) {
-                    // TODO: Test
+            val result = workoutHistoryRepo.readWorkoutLog(currentDate)
+            if(result.isSuccess) {
+                val workoutLog = result.getOrNull()!!
+                workoutLog[workout] += quantity
+                val result2 = workoutHistoryRepo.writeWorkoutLog(currentDate, workoutLog)
+                if (result2.isFailure) {
                     _state.value = state.value.copy(workout, state.value[workout] - quantity)
                     val errorMessage = "Failed to write workout history to repository"
                     toaster(errorMessage, ToastDuration.SHORT)
-                    val throwable = result.exceptionOrNull()
-                    debugError(errorMessage, throwable)
+                    debugError(errorMessage, result2)
                 }
+            }else {
+                debugError("failed to read workout history repository", result)
             }
         }
     }

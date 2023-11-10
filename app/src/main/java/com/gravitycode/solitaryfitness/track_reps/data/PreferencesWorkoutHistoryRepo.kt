@@ -6,40 +6,35 @@ import androidx.datastore.preferences.core.edit
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 
 class PreferencesWorkoutHistoryRepo(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 
-    override suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutLog> {
-        return preferencesStore.data.take(1).map { preferences ->
-            val workoutLog = WorkoutLog()
-            val workouts = Workout.values()
+    override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog> {
+        val preferences = preferencesStore.data.first()
 
-            for (workout in workouts) {
-                val reps = preferences[intPreferencesKey(date, workout)]
-                if (reps != null) {
-                    workoutLog[workout] = reps
-                }
+        val workoutLog = WorkoutLog()
+        val workouts = Workout.values()
+
+        for (workout in workouts) {
+            val reps = preferences[intPreferencesKey(date, workout)]
+            if (reps != null) {
+                workoutLog[workout] = reps
             }
-
-            workoutLog
         }
+
+        return Result.success(workoutLog)
     }
 
-    override suspend fun writeWorkoutHistory(
-        date: LocalDate,
-        history: WorkoutLog
-    ): Result<Unit> {
+    override suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit> {
         val workouts = Workout.values()
         return try {
             preferencesStore.edit { preference ->
                 for (workout in workouts) {
-                    val reps = history[workout]
+                    val reps = log[workout]
                     preference[intPreferencesKey(date, workout)] = reps
                 }
             }

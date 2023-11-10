@@ -1,12 +1,15 @@
 package com.gravitycode.solitaryfitness.track_reps.data
 
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 interface WorkoutHistoryRepo {
 
-    suspend fun readWorkoutHistory(date: LocalDate): Flow<WorkoutLog>
+    suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog>
 
-    suspend fun writeWorkoutHistory(date: LocalDate, history: WorkoutLog): Result<Unit>
+    suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit>
+
+//    suspend fun readWorkoutHistory(): Result<WorkoutHistory>
+//
+//    suspend fun writeWorkoutHistory(history: WorkoutHistory): Result<Unit>
 }

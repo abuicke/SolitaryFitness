@@ -41,7 +41,7 @@ import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
 
-private enum class MenuItem(val prettyString: String) {
+private enum class MenuItem(val string: String) {
 
     SIGN_IN("Sign In"),
 
@@ -54,18 +54,15 @@ private enum class MenuItem(val prettyString: String) {
     SETTINGS("Settings");
 
     companion object {
-        /**
-         * Case insensitive way of converting from a string to [MenuItem]
-         * */
+
         fun fromString(str: String): MenuItem? {
-            return when (str.lowercase()) {
-                "sign in" -> SIGN_IN
-                "sign out" -> SIGN_OUT
-                "reset reps" -> RESET_REPS
-                "edit reps" -> EDIT_REPS
-                "settings" -> SETTINGS
-                else -> null
+            for(item in values()) {
+                if(item.string == str) {
+                    return item
+                }
             }
+
+            return null
         }
     }
 }
@@ -142,7 +139,7 @@ private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Uni
                     MenuItem.SIGN_OUT -> isUserSignedIn
                     else -> true
                 }
-            }.map { it.prettyString }
+            }.map { it.string }
 
             OverflowMenu(menuItems) { string ->
                 val menuItem: MenuItem? = MenuItem.fromString(string)
@@ -172,7 +169,7 @@ private fun TrackRepsGrid(
         val workout = workouts[index]
 
         WorkoutButton(
-            workoutName = workout.prettyString,
+            workoutName = workout.string,
             currentReps = trackRepsState[workout],
             onClickAddReps = { reps ->
                 onEvent(TrackRepsEvent.Increment(workout, reps))

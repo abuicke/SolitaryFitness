@@ -1,7 +1,6 @@
 package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.gravitycode.solitaryfitness.app.ApplicationScope
 

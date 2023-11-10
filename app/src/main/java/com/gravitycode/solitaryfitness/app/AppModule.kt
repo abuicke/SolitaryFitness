@@ -6,8 +6,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.util.ui.Toaster
@@ -25,6 +26,15 @@ object AppModule {
     fun providesToaster(context: Context) = Toaster(context)
 
     @Provides
+    fun providesFirebaseFirestore() = FirebaseFirestore.getInstance()
+
+    @Provides
+    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+
+    @Provides
+    fun providesFirebaseAuthUi() = AuthUI.getInstance()
+
+    @Provides
     @ApplicationScope
     fun providesWorkoutHistoryPreferencesStore(context: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
@@ -33,11 +43,7 @@ object AppModule {
     }
 
     @Provides
-    fun providesFirebaseFirestore() = Firebase.firestore
-
-    @Provides
     @ApplicationScope
-    fun provideWorkoutHistoryRepo(
-        preferencesStore: DataStore<Preferences>
-    ): WorkoutHistoryRepo = PreferencesWorkoutHistoryRepo(preferencesStore)
+    fun provideWorkoutHistoryRepo(preferencesStore: DataStore<Preferences>): WorkoutHistoryRepo =
+        PreferencesWorkoutHistoryRepo(preferencesStore)
 }

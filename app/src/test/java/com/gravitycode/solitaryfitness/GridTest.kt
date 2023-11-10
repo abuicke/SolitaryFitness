@@ -2,8 +2,8 @@ package com.gravitycode.solitaryfitness
 
 import com.gravitycode.solitaryfitness.util.ui.compose.calculateGridRows
 import junit.framework.TestCase.assertEquals
-import org.junit.Test
 import org.junit.Assert.assertThrows
+import org.junit.Test
 
 class GridTest {
 

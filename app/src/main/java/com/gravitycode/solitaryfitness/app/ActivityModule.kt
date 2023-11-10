@@ -1,7 +1,8 @@
 package com.gravitycode.solitaryfitness.app
 
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.app.ActivityScope
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
@@ -15,14 +16,15 @@ object ActivityModule {
 
     @Provides
     @ActivityScope
-    fun providesAuthenticator(activity: ComponentActivity): Authenticator =
-        FirebaseAuthenticator(activity)
+    fun providesAuthenticator(
+        activity: ComponentActivity,
+        auth: FirebaseAuth,
+        authUI: AuthUI
+    ): Authenticator =
+        FirebaseAuthenticator(activity, auth, authUI)
 
-    /**
-     * TODO: Should be replaced by a factory?
-     * */
     @Provides
     @ActivityScope
-    fun provideTrackRepsViewModel(toaster: Toaster, repo: WorkoutHistoryRepo): TrackRepsViewModel =
+    fun provideTrackRepsViewModel(toaster: Toaster, repo: WorkoutHistoryRepo) =
         TrackRepsViewModel(toaster, repo)
 }

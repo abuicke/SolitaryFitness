@@ -1,9 +1,6 @@
 package com.gravitycode.solitaryfitness.track_reps.util
 
-/**
- * @param[prettyString] a string for rendering on UI
- * */
-enum class Workout(val prettyString: String) {
+enum class Workout(val string: String) {
 
     HANDSTAND_PRESS_UP("Handstand Press-Up"),
     PRESS_UP("Press-Up"),
@@ -13,4 +10,17 @@ enum class Workout(val prettyString: String) {
     BURPEE("Burpee"),
     STAR_JUMP("Star Jump"),
     STEP_UP("Step-Up");
+
+    companion object {
+
+        fun fromString(str: String): Workout? {
+            for (item in values()) {
+                if (item.string == str) {
+                    return item
+                }
+            }
+
+            return null
+        }
+    }
 }

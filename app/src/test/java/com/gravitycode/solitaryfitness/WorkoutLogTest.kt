@@ -24,7 +24,7 @@ import org.junit.Test
 class WorkoutLogTest {
 
     @Test
-    fun `empty WorkoutHistory returns zero for all values`() {
+    fun `empty WorkoutLog returns zero for all values`() {
         val workoutLog = WorkoutLog()
         for (workout in Workout.values()) {
             assertEquals(0, workoutLog[workout])
@@ -34,7 +34,7 @@ class WorkoutLogTest {
     @Test
     fun `assigning negative values in constructor throws IllegalArgumentException`() {
         assertThrows(
-            "WorkoutHistory should not accept negative values",
+            "WorkoutLog should not accept negative values",
             IllegalArgumentException::class.java
         ) {
             WorkoutLog(
@@ -50,13 +50,13 @@ class WorkoutLogTest {
     @Test
     fun `assigning negative values in setter throws IllegalArgumentException`() {
         assertThrows(
-            "WorkoutHistory should not accept negative values",
+            "WorkoutLog should not accept negative values",
             IllegalArgumentException::class.java
         ) {
-            val history = WorkoutLog()
-            history[Workout.SIT_UP] = -50
-            history[Workout.STAR_JUMP] = 12
-            history[Workout.HANDSTAND_PRESS_UP] = -15
+            val log = WorkoutLog()
+            log[Workout.SIT_UP] = -50
+            log[Workout.STAR_JUMP] = 12
+            log[Workout.HANDSTAND_PRESS_UP] = -15
         }
     }
 
@@ -74,16 +74,16 @@ class WorkoutLogTest {
     }
 
     @Test
-    fun `does empty WorkoutHistory equal empty WorkoutHistory`() {
+    fun `does empty WorkoutLog equal empty WorkoutLog`() {
         assertEquals(
-            "empty WorkoutHistory objects should be equal",
+            "empty WorkoutLog objects should be equal",
             WorkoutLog(),
             WorkoutLog()
         )
     }
 
     @Test
-    fun `does partial WorkoutHistory equal partial WorkoutHistory with the same values`() {
+    fun `does partial WorkoutLog equal partial WorkoutLog with the same values`() {
         val workoutLog_1 = WorkoutLog(
             mapOf(
                 Workout.HANDSTAND_PRESS_UP to 15,
@@ -100,14 +100,14 @@ class WorkoutLogTest {
         workoutLog_2[Workout.STEP_UP] = 100
 
         assertEquals(
-            "WorkoutHistory objects with the same values should be equal",
+            "WorkoutLog objects with the same values should be equal",
             workoutLog_1,
             workoutLog_2
         )
     }
 
     @Test
-    fun `does hashCode() return the same value for equal WorkoutHistory objects`() {
+    fun `does hashCode() return the same value for equal WorkoutLog objects`() {
         val workoutLog_1 = WorkoutLog(
             mapOf(
                 Workout.STAR_JUMP to 15,
