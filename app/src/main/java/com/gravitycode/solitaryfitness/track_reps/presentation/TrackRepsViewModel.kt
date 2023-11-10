@@ -1,5 +1,6 @@
 package com.gravitycode.solitaryfitness.track_reps.presentation
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,10 @@ class TrackRepsViewModel(
     private val toaster: Toaster,
     private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
+
+    companion object {
+        const val TAG = "TrackRepsViewModel"
+    }
 
     private var currentDate: LocalDate = LocalDate.now()
 
@@ -48,27 +53,23 @@ class TrackRepsViewModel(
     }
 
     private fun changeDate(date: LocalDate) {
-        currentDate = date
-        loadWorkoutHistory()
+        if (currentDate != date) {
+            loadWorkoutHistory()
+        }
     }
 
     private fun incrementWorkout(workout: Workout, quantity: Int) {
-        _state.value = state.value.copy(workout, state.value[workout] + quantity)
+        val newReps = state.value[workout] + quantity
+        _state.value = state.value.copy(workout, newReps)
 
         viewModelScope.launch {
-            val result = workoutHistoryRepo.readWorkoutLog(currentDate)
-            if(result.isSuccess) {
-                val workoutLog = result.getOrNull()!!
-                workoutLog[workout] += quantity
-                val result2 = workoutHistoryRepo.writeWorkoutLog(currentDate, workoutLog)
-                if (result2.isFailure) {
-                    _state.value = state.value.copy(workout, state.value[workout] - quantity)
-                    val errorMessage = "Failed to write workout history to repository"
-                    toaster(errorMessage, ToastDuration.SHORT)
-                    debugError(errorMessage, result2)
-                }
-            }else {
-                debugError("failed to read workout history repository", result)
+            val result = workoutHistoryRepo.updateWorkoutLog(currentDate, workout, newReps)
+            if (result.isSuccess) {
+                _state.value = state.value.copy(workout, state.value[workout] - quantity)
+                toaster("Couldn't save reps", ToastDuration.SHORT)
+                debugError("Failed to write workout history to repository", result)
+            } else {
+                Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
             }
         }
     }

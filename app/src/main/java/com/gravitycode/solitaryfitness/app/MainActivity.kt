@@ -25,13 +25,10 @@ import javax.inject.Inject
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
- * TODO: Should retrieve the entire workout history from Firebase with
- *  `collection("users").document(currentUser.id).collection("workout-logs")` when `FirestoreWorkoutHistoryRepo`
- *  is first initialized so that a new connection doesn't have to be made for each date.
- * TODO: `incrementWorkout()` in [TrackRepsViewModel] should be handled by an `update` function in the repositories.
- * TODO: What happens if a user starts off using [com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo]
- *  and then switches to [com.gravitycode.solitaryfitness.track_reps.data.FirestoreWorkoutHistoryRepo],
- *  Copy over the data from preferences to firestore? That's probably the only thing that can be done.
+ * TODO: Enable Firebase to work offline.
+ * TODO: Need to use `PreferencesWorkoutHistoryRepo` when the user is logged out. Just maintain two independent records?
+ *  It doesn't make sense to expect records that are recorded when you're logged in to be available when you
+ *  log out, but I should upload all records stored in preferences to Firestore when the user logs in.
  * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
  * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?

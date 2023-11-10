@@ -113,7 +113,10 @@ fun TrackRepsScreen(
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
-        WheelDatePicker(startDate = trackRepsState.date) { snappedDate ->
+        WheelDatePicker(
+            startDate = trackRepsState.date,
+            maxDate = LocalDate.now()
+        ) { snappedDate ->
             onEvent(TrackRepsEvent.DateSelected(snappedDate))
         }
     }

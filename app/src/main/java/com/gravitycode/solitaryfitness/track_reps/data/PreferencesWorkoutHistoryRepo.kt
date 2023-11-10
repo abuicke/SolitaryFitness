@@ -30,12 +30,41 @@ class PreferencesWorkoutHistoryRepo(
     }
 
     override suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit> {
-        val workouts = Workout.values()
         return try {
+            val workouts = Workout.values()
             preferencesStore.edit { preference ->
                 for (workout in workouts) {
                     val reps = log[workout]
                     preference[intPreferencesKey(date, workout)] = reps
+                }
+            }
+
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun updateWorkoutLog(date: LocalDate, workout: Workout, reps: Int): Result<Unit> {
+        require(reps >= 0) { "reps cannot be less than zero, reps provided: $reps" }
+        return try {
+            preferencesStore.edit { preference ->
+                preference[intPreferencesKey(date, workout)] = reps
+            }
+
+            Result.success(Unit)
+        } catch (t: Throwable) {
+            Result.failure(t)
+        }
+    }
+
+    override suspend fun deleteWorkoutLog(date: LocalDate): Result<Unit> {
+        return try {
+            val workouts = Workout.values()
+            preferencesStore.edit { preference ->
+                for (workout in workouts) {
+                    val key = intPreferencesKey(date, workout)
+                    preference.remove(key)
                 }
             }
 

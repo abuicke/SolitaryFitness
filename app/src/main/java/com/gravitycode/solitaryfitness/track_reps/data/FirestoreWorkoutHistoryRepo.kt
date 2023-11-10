@@ -26,14 +26,19 @@ class FirestoreWorkoutHistoryRepo(
 
     override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog> {
         return suspendCoroutine { continuation ->
-            workoutLogs(date).get()
+            workoutLog(date).get()
                 .addOnSuccessListener { document ->
-                    Log.v(TAG, "readWorkoutHistory: ${document.id} => ${document.data}")
-                    val workoutLog = WorkoutLog(
-                        document.data!!.entries.associate { entry: MutableMap.MutableEntry<String, Any> ->
-                            Workout.fromString(entry.key)!! to entry.toString().toInt()
+                    val data = document.data
+                    Log.v(TAG, "readWorkoutLog: $data")
+
+                    val workoutLog = WorkoutLog()
+                    if (data != null) {
+                        for (entry: Map.Entry<String, Any> in data) {
+                            val workout = Workout.fromString(entry.key)!!
+                            workoutLog[workout] = entry.value.toString().toInt()
                         }
-                    )
+                    }
+
                     val result = Result.success(workoutLog)
                     continuation.resume(result)
                 }.addOnFailureListener { e ->
@@ -48,7 +53,7 @@ class FirestoreWorkoutHistoryRepo(
         return suspendCoroutine { continuation ->
             val serializableMap = log.toMap().mapKeys { it.key.string }
 
-            workoutLogs(date).set(serializableMap)
+            workoutLog(date).set(serializableMap)
                 .addOnSuccessListener {
                     Log.d(MainActivity.TAG, "successfully wrote workout logs to firestore")
                     val result = Result.success(Unit)
@@ -61,7 +66,36 @@ class FirestoreWorkoutHistoryRepo(
         }
     }
 
-    private fun workoutLogs(date: LocalDate): DocumentReference {
+    override suspend fun updateWorkoutLog(date: LocalDate, workout: Workout, reps: Int): Result<Unit> {
+        return suspendCoroutine { continuation ->
+            require(reps >= 0) { "reps cannot be less than zero, reps provided: $reps" }
+            workoutLog(date).update(workout.string, reps)
+                .addOnSuccessListener {
+                    val result = Result.success(Unit)
+                    continuation.resume(result)
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "failed to update workout log: update($date, $workout, $reps)", e)
+                    val result = Result.failure<Unit>(e)
+                    continuation.resume(result)
+                }
+        }
+    }
+
+    override suspend fun deleteWorkoutLog(date: LocalDate): Result<Unit> {
+        return suspendCoroutine { continuation ->
+            workoutLog(date).delete()
+                .addOnSuccessListener {
+                    val result = Result.success(Unit)
+                    continuation.resume(result)
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, "failed to delete workout log for $date", e)
+                    val result = Result.failure<Unit>(e)
+                    continuation.resume(result)
+                }
+        }
+    }
+
+    private fun workoutLog(date: LocalDate): DocumentReference {
         return firestore.collection("users")
             .document(currentUser.id)
             .collection("workout-logs")

@@ -1,6 +1,7 @@
 package com.gravitycode.solitaryfitness.track_reps.data
 
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import java.time.LocalDate
 
 interface WorkoutHistoryRepo {
@@ -9,7 +10,7 @@ interface WorkoutHistoryRepo {
 
     suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit>
 
-//    suspend fun readWorkoutHistory(): Result<WorkoutHistory>
-//
-//    suspend fun writeWorkoutHistory(history: WorkoutHistory): Result<Unit>
+    suspend fun updateWorkoutLog(date: LocalDate, workout: Workout, reps: Int): Result<Unit>
+
+    suspend fun deleteWorkoutLog(date: LocalDate): Result<Unit>
 }

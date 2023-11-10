@@ -76,22 +76,24 @@ class FirebaseAuthenticator(
         }
     }
 
-    override suspend fun signOut(): Result<Unit> = suspendCoroutine { continuation ->
-        if (user == null) debugError("no user signed in")
-        firebaseAuthUi.signOut(activity)
-            .addOnFailureListener {
-                val errMsg = "failed to sign out user: $user"
-                Log.d(TAG, errMsg)
-                val exception = AuthenticationException(errMsg)
-                val result = Result.failure<Unit>(exception)
-                continuation.resume(result)
-            }
-            .addOnSuccessListener {
-                Log.d(TAG, "signed out user: $user")
-                user = null
-                val result = Result.success(Unit)
-                continuation.resume(result)
-            }
+    override suspend fun signOut(): Result<Unit> {
+        return suspendCoroutine { continuation ->
+            if (user == null) debugError("no user signed in")
+            firebaseAuthUi.signOut(activity)
+                .addOnFailureListener {
+                    val errMsg = "failed to sign out user: $user"
+                    Log.d(TAG, errMsg)
+                    val exception = AuthenticationException(errMsg)
+                    val result = Result.failure<Unit>(exception)
+                    continuation.resume(result)
+                }
+                .addOnSuccessListener {
+                    Log.d(TAG, "signed out user: $user")
+                    user = null
+                    val result = Result.success(Unit)
+                    continuation.resume(result)
+                }
+        }
     }
 
     override fun isUserSignedIn() = user != null

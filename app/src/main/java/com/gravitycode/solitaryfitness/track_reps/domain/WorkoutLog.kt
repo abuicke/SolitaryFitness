@@ -1,6 +1,5 @@
 package com.gravitycode.solitaryfitness.track_reps.domain
 
-import androidx.annotation.IntRange
 import com.google.common.collect.ImmutableMap
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import java.util.EnumMap
@@ -28,7 +27,7 @@ class WorkoutLog(
         return log[workout]!!
     }
 
-    operator fun set(workout: Workout, @IntRange(from = 0) reps: Int) {
+    operator fun set(workout: Workout, reps: Int) {
         require(reps >= 0) { "reps cannot be less than zero, reps provided: $reps" }
         log[workout] = reps
     }
