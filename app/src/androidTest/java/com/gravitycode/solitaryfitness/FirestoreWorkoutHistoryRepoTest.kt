@@ -61,7 +61,7 @@ class FirestoreWorkoutHistoryRepoTest {
     }
 
     @Test
-    fun writeAndReadRecord() {
+    fun writeRecord() {
         runTest {
             val date = LocalDate.now()
             val workoutLog = WorkoutLog(
