@@ -19,7 +19,7 @@ class FirebaseAuthenticator(
     private val firebaseAuthUi: AuthUI
 ) : Authenticator {
 
-    companion object {
+    private companion object {
         private const val TAG = "FirebaseAuthenticator"
     }
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.ActivityScope
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.ToastDuration
@@ -14,23 +15,28 @@ import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@ActivityScope
 class TrackRepsViewModel(
     private val toaster: Toaster,
     private val workoutHistoryRepo: WorkoutHistoryRepo
 ) : ViewModel() {
 
-    companion object {
+    private companion object {
         const val TAG = "TrackRepsViewModel"
     }
 
     private var currentDate: LocalDate = LocalDate.now()
 
-    private val _state = mutableStateOf(TrackRepsState(currentDate))
+    private val _state = mutableStateOf(TrackRepsState(currentDate, WorkoutLog()))
     val state: State<TrackRepsState> = _state
 
+    // Specifies whether a workout log already exists for
+    // this date, in which case the update function should
+    // be called on the repository. If a new record needs
+    // to be created the write function should be used.
+    private var doesRecordAlreadyExist = false
+
     init {
-        loadWorkoutHistory()
+        loadWorkoutLog()
     }
 
     fun onEvent(event: TrackRepsEvent) {
@@ -40,12 +46,18 @@ class TrackRepsViewModel(
         }
     }
 
-    private fun loadWorkoutHistory() {
+    private fun loadWorkoutLog() {
         viewModelScope.launch {
             val result = workoutHistoryRepo.readWorkoutLog(currentDate)
             if (result.isSuccess) {
-                val workoutLog = result.getOrNull()!!
-                _state.value = TrackRepsState(currentDate, workoutLog.toMap())
+                val workoutLog = result.getOrNull()
+                if (workoutLog != null) {
+                    doesRecordAlreadyExist = true
+                    _state.value = TrackRepsState(currentDate, workoutLog)
+                } else {
+                    doesRecordAlreadyExist = false
+                    _state.value = TrackRepsState(currentDate, WorkoutLog())
+                }
             } else {
                 debugError("failed to read workout log from repository", result)
             }
@@ -54,18 +66,28 @@ class TrackRepsViewModel(
 
     private fun changeDate(date: LocalDate) {
         if (currentDate != date) {
-            loadWorkoutHistory()
+            currentDate = date
+            loadWorkoutLog()
         }
     }
 
     private fun incrementWorkout(workout: Workout, quantity: Int) {
-        val newReps = state.value[workout] + quantity
-        _state.value = state.value.copy(workout, newReps)
+        val newReps = state.value.log[workout] + quantity
+        _state.value = TrackRepsState(currentDate, state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
-            val result = workoutHistoryRepo.updateWorkoutLog(currentDate, workout, newReps)
-            if (result.isSuccess) {
-                _state.value = state.value.copy(workout, state.value[workout] - quantity)
+            var firstTimeWrite = false
+            val result = if (doesRecordAlreadyExist) {
+                workoutHistoryRepo.updateWorkoutLog(currentDate, workout, newReps)
+            } else {
+                firstTimeWrite = true
+                doesRecordAlreadyExist = true
+                workoutHistoryRepo.writeWorkoutLog(currentDate, state.value.log)
+            }
+            if (result.isFailure) {
+                doesRecordAlreadyExist = !firstTimeWrite && doesRecordAlreadyExist
+                val oldReps = state.value.log[workout] - quantity
+                _state.value = TrackRepsState(currentDate, state.value.log.copy(workout, oldReps))
                 toaster("Couldn't save reps", ToastDuration.SHORT)
                 debugError("Failed to write workout history to repository", result)
             } else {

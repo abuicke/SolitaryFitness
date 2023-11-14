@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 interface WorkoutHistoryRepo {
 
-    suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog>
+    suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?>
 
     suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit>
 

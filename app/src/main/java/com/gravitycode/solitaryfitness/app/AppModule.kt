@@ -5,8 +5,7 @@ import android.content.Context
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestoreSettings
-import com.google.firebase.firestore.ktx.persistentCacheSettings
+import com.gravitycode.solitaryfitness.util.data.firestoreSettings
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Module
 import dagger.Provides
@@ -24,12 +23,9 @@ object AppModule {
     @Provides
     fun providesFirebaseFirestore(): FirebaseFirestore {
         val firestore = FirebaseFirestore.getInstance()
-        firestore.firestoreSettings = firestoreSettings {
-            setLocalCacheSettings(persistentCacheSettings {
-                setSizeBytes(10)
-            })
-        }
-
+        firestore.firestoreSettings = firestoreSettings(
+            persistentCacheSizeMb = 10
+        )
         return firestore
     }
 

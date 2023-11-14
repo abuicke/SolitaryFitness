@@ -35,6 +35,7 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
+import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
@@ -73,7 +74,10 @@ private fun TrackRepsScreen() {
     TrackRepsScreen(
         modifier = Modifier.fillMaxSize(),
         appState = AppState(null),
-        trackRepsState = TrackRepsState(LocalDate.now(), 0, 15, 30, 20, 9, 0, 45, 40),
+        trackRepsState = TrackRepsState(
+            LocalDate.now(),
+            WorkoutLog(0, 15, 30, 20, 9, 0, 45, 40)
+        ),
         onEvent = { _ -> },
         onAppEvent = { _ -> }
     )
@@ -173,7 +177,7 @@ private fun TrackRepsGrid(
 
         WorkoutButton(
             workoutName = workout.string,
-            currentReps = trackRepsState[workout],
+            currentReps = trackRepsState.log[workout],
             onClickAddReps = { reps ->
                 onEvent(TrackRepsEvent.Increment(workout, reps))
             }

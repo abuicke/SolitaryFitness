@@ -13,20 +13,28 @@ class PreferencesWorkoutHistoryRepo(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutHistoryRepo {
 
-    override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog> {
+    override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
         val preferences = preferencesStore.data.first()
 
-        val workoutLog = WorkoutLog()
         val workouts = Workout.values()
+        val firstKey = intPreferencesKey(date, workouts[0])
+        val recordExists = preferences.contains(firstKey)
 
-        for (workout in workouts) {
-            val reps = preferences[intPreferencesKey(date, workout)]
-            if (reps != null) {
-                workoutLog[workout] = reps
-            }
+        return if (recordExists) {
+            val workoutLog = WorkoutLog(
+                handstandPressUps = preferences[intPreferencesKey(date, Workout.HANDSTAND_PRESS_UP)]!!,
+                pressUps = preferences[intPreferencesKey(date, Workout.PRESS_UP)]!!,
+                sitUps = preferences[intPreferencesKey(date, Workout.SIT_UP)]!!,
+                squats = preferences[intPreferencesKey(date, Workout.SQUAT)]!!,
+                squatThrusts = preferences[intPreferencesKey(date, Workout.SQUAT_THRUST)]!!,
+                burpees = preferences[intPreferencesKey(date, Workout.BURPEE)]!!,
+                starJumps = preferences[intPreferencesKey(date, Workout.STAR_JUMP)]!!,
+                stepUps = preferences[intPreferencesKey(date, Workout.STEP_UP)]!!
+            )
+            Result.success(workoutLog)
+        } else {
+            Result.success(null)
         }
-
-        return Result.success(workoutLog)
     }
 
     override suspend fun writeWorkoutLog(date: LocalDate, log: WorkoutLog): Result<Unit> {

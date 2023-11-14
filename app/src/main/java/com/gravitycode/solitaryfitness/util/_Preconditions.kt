@@ -8,5 +8,5 @@ fun debugError(message: String, throwable: Throwable? = null) {
     }
 }
 
-fun debugError(message: String, result: Result<Any>) =
+fun debugError(message: String, result: Result<Any?>) =
     debugError(message, result.exceptionOrNull())

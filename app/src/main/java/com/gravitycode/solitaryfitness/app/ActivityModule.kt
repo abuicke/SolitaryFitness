@@ -1,12 +1,18 @@
 package com.gravitycode.solitaryfitness.app
 
+import android.content.Context
 import androidx.activity.ComponentActivity
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator
 import com.gravitycode.solitaryfitness.track_reps.data.FirestoreWorkoutHistoryRepo
+import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
 import com.gravitycode.solitaryfitness.util.ui.Toaster
@@ -15,6 +21,16 @@ import dagger.Provides
 
 @Module
 object ActivityModule {
+
+    @Provides
+    @ActivityScope
+    fun providesAuthenticator(
+        activity: ComponentActivity,
+        auth: FirebaseAuth,
+        authUI: AuthUI
+    ): Authenticator =
+        FirebaseAuthenticator(activity, auth, authUI)
+
 
 //    @Provides
 //    @ActivityScope
@@ -28,15 +44,6 @@ object ActivityModule {
 //    @ActivityScope
 //    fun provideWorkoutHistoryRepo(preferencesStore: DataStore<Preferences>): WorkoutHistoryRepo =
 //        PreferencesWorkoutHistoryRepo(preferencesStore)
-
-    @Provides
-    @ActivityScope
-    fun providesAuthenticator(
-        activity: ComponentActivity,
-        auth: FirebaseAuth,
-        authUI: AuthUI
-    ): Authenticator =
-        FirebaseAuthenticator(activity, auth, authUI)
 
     @Provides
     @ActivityScope
