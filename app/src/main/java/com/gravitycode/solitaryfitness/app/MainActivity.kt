@@ -37,9 +37,6 @@ import javax.inject.Inject
  * TODO: Test Firebase works offline.
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the
  *  ViewModel, should it also be checked for in the repository?
- * TODO: Is there a race condition with Firebase? What happens if the user performs many operations quickly?
- *  Are they run one after another or simultaneously? If it's the latter I will need to synchronize the
- *  Firestore repo. I will also need to check if this is true for the Preferences repo.
  * TODO: Need to use `PreferencesWorkoutHistoryRepo` when the user is logged out. Just maintain two independent records?
  *  It doesn't make sense to expect records that are recorded when you're logged in to be available when you
  *  log out, but I should upload all records stored in preferences to Firestore when the user logs in.
