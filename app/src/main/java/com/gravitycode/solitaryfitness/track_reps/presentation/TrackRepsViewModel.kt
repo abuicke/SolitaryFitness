@@ -26,7 +26,7 @@ class TrackRepsViewModel(
 
     private var currentDate: LocalDate = LocalDate.now()
 
-    private val _state = mutableStateOf(TrackRepsState(currentDate, WorkoutLog()))
+    private val _state = mutableStateOf(TrackRepsState(currentDate))
     val state: State<TrackRepsState> = _state
 
     // Specifies whether a workout log already exists for
@@ -65,13 +65,16 @@ class TrackRepsViewModel(
     }
 
     private fun changeDate(date: LocalDate) {
-        if (currentDate != date) {
-            currentDate = date
-            loadWorkoutLog()
-        }
+        currentDate = date
+        loadWorkoutLog()
     }
 
+    /**
+     * TODO: Could just retain a reference to the old TrackRepsState and reassign that if the update fails
+     * TODO: Need to check that `quantity` isn't negative
+     * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
+        require(quantity >= 0) { "cannot increment by a negative value" }
         val newReps = state.value.log[workout] + quantity
         _state.value = TrackRepsState(currentDate, state.value.log.copy(workout, newReps))
 

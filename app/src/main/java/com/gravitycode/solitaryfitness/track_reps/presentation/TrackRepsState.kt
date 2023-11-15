@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 class TrackRepsState(
     val date: LocalDate,
-    val log: WorkoutLog
+    val log: WorkoutLog = WorkoutLog()
 ) {
 
     /**
