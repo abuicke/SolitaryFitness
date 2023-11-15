@@ -17,9 +17,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.time.LocalDate
 
-/**
- * TODO: Measure and potentially change to `@MediumTest`
- * */
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi

@@ -14,17 +14,11 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 /**
- * IN ORDER TO REMOVE A USER YOU NEED TO DELETE EVERY DOCUMENT WHICH CONTAINS FIELDS INSIDE THAT USER, AND
- * DO THE SAME THING FOR ALL THEIR COLLECTIONS AND SUBCOLLECTIONS. I don't know if that should be handled
- * here, in the authenticator, or somewhere else.
- *
- * @see [TestFirestoreWorkoutHistoryRepo.clearTestRecords]
- *
  * If you are using [DocumentReference.set] to update document fields then be careful, it kills non-updated
  * fields in the document. eg. I had 6 fields in a document and I updated only 4 fields then `set()` method
  * removed 2 fields and their information from that document on firestore.
  *
- * @see [https://stackoverflow.com/a/48544954/4596649]
+ * (How to add Document with Custom ID to firestore)[https://stackoverflow.com/a/48544954/4596649]
  * */
 open class FirestoreWorkoutHistoryRepo(
     private val firestore: FirebaseFirestore,
@@ -84,7 +78,8 @@ open class FirestoreWorkoutHistoryRepo(
     final override suspend fun updateWorkoutLog(
         date: LocalDate,
         workout: Workout,
-        reps: Int): Result<Unit> {
+        reps: Int
+    ): Result<Unit> {
         return suspendCoroutine { continuation ->
             require(reps >= 0) { "reps cannot be less than zero, reps provided: $reps" }
             workoutLog(date).update(workout.string, reps)
