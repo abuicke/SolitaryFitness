@@ -1,10 +1,11 @@
-package com.gravitycode.solitaryfitness.track_reps.data
+package com.gravitycode.solitaryfitness.test_implementations
 
 import android.net.Uri
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
+import com.gravitycode.solitaryfitness.track_reps.data.FirestoreWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.util.data.deleteDocuments
 
 class TestFirestoreWorkoutHistoryRepo(

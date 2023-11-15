@@ -3,10 +3,10 @@ package com.gravitycode.solitaryfitness
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.gravitycode.solitaryfitness.app.AppModule
-import com.gravitycode.solitaryfitness.track_reps.data.TestFirestoreWorkoutHistoryRepo
+import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
-import com.gravitycode.solitaryfitness.util.test.assertSuccess
+import com.gravitycode.solitaryfitness.util.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest

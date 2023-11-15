@@ -13,7 +13,7 @@ import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistory
 import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
 import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.track_reps.util.Workout
-import com.gravitycode.solitaryfitness.util.test.assertSuccess
+import com.gravitycode.solitaryfitness.util.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
