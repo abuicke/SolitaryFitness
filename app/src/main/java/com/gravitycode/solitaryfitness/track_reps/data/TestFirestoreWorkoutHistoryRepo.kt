@@ -1,17 +1,11 @@
 package com.gravitycode.solitaryfitness.track_reps.data
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.util.data.delete
-import com.gravitycode.solitaryfitness.util.test.testError
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import com.gravitycode.solitaryfitness.util.data.deleteDocuments
 
 class TestFirestoreWorkoutHistoryRepo(
     private val firestore: FirebaseFirestore,
@@ -38,7 +32,7 @@ class TestFirestoreWorkoutHistoryRepo(
         // document contains is a collection, it won't even show up in a query for some genius reason, but
         // if you add a field to it it will. So in this case I need to delete all the documents contained
         // within the workout-logs subcollection and the test user will be automatically removed.
-        workoutLogs(TEST_USER_ID).delete()
+        workoutLogs(TEST_USER_ID).deleteDocuments()
     }
 }
 
