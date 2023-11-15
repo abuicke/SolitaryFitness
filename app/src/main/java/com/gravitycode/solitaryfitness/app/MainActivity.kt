@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var toaster: Toaster
 
     private lateinit var activityComponent: ActivityComponent
-//    @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
+    @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
 
     private lateinit var appState: MutableState<AppState>
 
@@ -102,24 +102,24 @@ class MainActivity : ComponentActivity() {
         activityComponent = appComponent.activityComponent().componentActivity(this).build()
         activityComponent.inject(this)
 
-//        val currentUser = authenticator.getSignedInUser()
-//        appState = mutableStateOf(AppState(currentUser))
-//
-//        setContent {
-//            SolitaryFitnessTheme {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    TrackRepsScreen(
-//                        appState = appState.value,
-//                        trackRepsState = trackRepsViewModel.state.value,
-//                        onAppEvent = this::handleAppEvent,
-//                        onEvent = trackRepsViewModel::onEvent
-//                    )
-//                }
-//            }
-//        }
+        val currentUser = authenticator.getSignedInUser()
+        appState = mutableStateOf(AppState(currentUser))
+
+        setContent {
+            SolitaryFitnessTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    TrackRepsScreen(
+                        appState = appState.value,
+                        trackRepsState = trackRepsViewModel.state.value,
+                        onAppEvent = this::handleAppEvent,
+                        onEvent = trackRepsViewModel::onEvent
+                    )
+                }
+            }
+        }
     }
 
     private fun handleAppEvent(appEvent: AppEvent) {
