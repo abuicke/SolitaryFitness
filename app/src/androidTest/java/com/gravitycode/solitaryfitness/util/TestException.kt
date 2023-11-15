@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util.test
+package com.gravitycode.solitaryfitness.util
 
 class TestException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
