@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.app
+package com.gravitycode.solitaryfitness.di
 
 import android.app.Application
 import android.content.Context
@@ -26,6 +26,7 @@ object AppModule {
         firestore.firestoreSettings = firestoreSettings(
             persistentCacheSizeMb = 10
         )
+
         return firestore
     }
 

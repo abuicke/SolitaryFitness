@@ -2,10 +2,10 @@ package com.gravitycode.solitaryfitness
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.app.AppModule
-import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.di.AppModule
+import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -20,12 +20,12 @@ import java.time.LocalDate
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
-class FirestoreWorkoutHistoryRepoTest {
+class FirestoreWorkoutLogsRepositoryTest {
 
     private companion object {
 
         private val firestore = AppModule.providesFirebaseFirestore()
-        private val repository = TestFirestoreWorkoutHistoryRepo(
+        private val repository = TestFirestoreWorkoutLogsRepository(
             firestore,
             "Adam Buicke",
             "buickea@gmail.com",
@@ -44,7 +44,7 @@ class FirestoreWorkoutHistoryRepoTest {
 
     @Before
     fun clearTestRecords() {
-        FirestoreWorkoutHistoryRepoTest.clearTestRecords()
+        FirestoreWorkoutLogsRepositoryTest.clearTestRecords()
     }
 
     @Test

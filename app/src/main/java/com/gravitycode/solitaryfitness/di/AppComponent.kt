@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.app
+package com.gravitycode.solitaryfitness.di
 
 import android.app.Application
 import dagger.BindsInstance

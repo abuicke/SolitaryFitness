@@ -1,6 +1,7 @@
-package com.gravitycode.solitaryfitness.app
+package com.gravitycode.solitaryfitness.di
 
 import androidx.activity.ComponentActivity
+import com.gravitycode.solitaryfitness.app.MainActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 

@@ -9,10 +9,10 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.gravitycode.solitaryfitness.track_reps.data.PreferencesWorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.data.WorkoutHistoryRepo
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -40,7 +40,7 @@ import java.time.LocalDate
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
-class PreferencesWorkoutHistoryRepoTest {
+class PreferencesWorkoutLogsRepositoryTest {
 
     companion object {
 
@@ -51,7 +51,7 @@ class PreferencesWorkoutHistoryRepoTest {
         private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create {
             applicationContext.preferencesDataStoreFile(TEST_DATA_STORE)
         }
-        private val repository: WorkoutHistoryRepo = PreferencesWorkoutHistoryRepo(dataStore)
+        private val repository: WorkoutLogsRepository = PreferencesWorkoutLogsRepository(dataStore)
 
         @AfterClass
         @JvmStatic
@@ -67,7 +67,7 @@ class PreferencesWorkoutHistoryRepoTest {
 
     @Before
     fun clearTestDataStore() {
-        PreferencesWorkoutHistoryRepoTest.clearTestDataStore()
+        PreferencesWorkoutLogsRepositoryTest.clearTestDataStore()
     }
 
     @Test

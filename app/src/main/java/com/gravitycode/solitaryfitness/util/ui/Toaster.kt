@@ -2,7 +2,7 @@ package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
 import android.widget.Toast
-import com.gravitycode.solitaryfitness.app.ApplicationScope
+import com.gravitycode.solitaryfitness.di.ApplicationScope
 
 /**
  * TODO: This should be implementing an interface for testing, but then I lose the nice, neat

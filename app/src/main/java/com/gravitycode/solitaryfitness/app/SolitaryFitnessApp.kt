@@ -1,6 +1,7 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
+import com.gravitycode.solitaryfitness.di.AppComponent
 
 class SolitaryFitnessApp : Application() {
 

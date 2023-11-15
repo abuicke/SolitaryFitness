@@ -1,6 +1,6 @@
-package com.gravitycode.solitaryfitness.track_reps.domain
+package com.gravitycode.solitaryfitness.log_workout.domain
 
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 
 data class WorkoutLog(
     val handstandPressUps: Int = 0,

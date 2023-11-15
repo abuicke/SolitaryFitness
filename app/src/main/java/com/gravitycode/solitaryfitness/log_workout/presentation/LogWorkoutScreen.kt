@@ -7,7 +7,7 @@
  *
  * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
  * */
-package com.gravitycode.solitaryfitness.track_reps.presentation
+package com.gravitycode.solitaryfitness.log_workout.presentation
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -35,8 +35,8 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.`log-workout`.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
@@ -74,7 +74,7 @@ private fun TrackRepsScreen() {
     TrackRepsScreen(
         modifier = Modifier.fillMaxSize(),
         appState = AppState(null),
-        trackRepsState = TrackRepsState(
+        logWorkoutState = LogWorkoutState(
             LocalDate.now(),
             WorkoutLog(0, 15, 30, 20, 9, 0, 45, 40)
         ),
@@ -87,9 +87,9 @@ private fun TrackRepsScreen() {
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
     appState: AppState,
-    trackRepsState: TrackRepsState,
+    logWorkoutState: LogWorkoutState,
     onAppEvent: (AppEvent) -> Unit,
-    onEvent: (TrackRepsEvent) -> Unit
+    onEvent: (LogWorkoutEvent) -> Unit
 ) {
     val workouts = Workout.values()
 
@@ -111,17 +111,17 @@ fun TrackRepsScreen(
         TrackRepsGrid(
             modifier = Modifier.weight(1f),
             workouts = workouts,
-            trackRepsState = trackRepsState,
+            logWorkoutState = logWorkoutState,
             onEvent = onEvent
         )
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
         WheelDatePicker(
-            startDate = trackRepsState.date,
+            startDate = logWorkoutState.date,
             maxDate = LocalDate.now()
         ) { snappedDate ->
-            onEvent(TrackRepsEvent.DateSelected(snappedDate))
+            onEvent(LogWorkoutEvent.DateSelected(snappedDate))
         }
     }
 }
@@ -164,8 +164,8 @@ private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Uni
 private fun TrackRepsGrid(
     modifier: Modifier = Modifier,
     workouts: Array<Workout>,
-    trackRepsState: TrackRepsState,
-    onEvent: (TrackRepsEvent) -> Unit
+    logWorkoutState: LogWorkoutState,
+    onEvent: (LogWorkoutEvent) -> Unit
 ) {
     Grid(
         modifier = modifier,
@@ -177,9 +177,9 @@ private fun TrackRepsGrid(
 
         WorkoutButton(
             workoutName = workout.string,
-            currentReps = trackRepsState.log[workout],
+            currentReps = logWorkoutState.log[workout],
             onClickAddReps = { reps ->
-                onEvent(TrackRepsEvent.Increment(workout, reps))
+                onEvent(LogWorkoutEvent.Increment(workout, reps))
             }
         )
     }

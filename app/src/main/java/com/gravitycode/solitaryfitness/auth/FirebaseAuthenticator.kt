@@ -2,6 +2,8 @@ package com.gravitycode.solitaryfitness.auth
 
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.Lifecycle.State.INITIALIZED
+import androidx.lifecycle.Lifecycle.State.STARTED
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
@@ -40,6 +42,10 @@ class FirebaseAuthenticator(
     private var user: User? = null
 
     init {
+        check(activity.lifecycle.currentState in INITIALIZED..STARTED) {
+            "firebase authenticator must be constructed before component activity enters the resumed state"
+        }
+
         val currentFirebaseUser = firebaseAuth.currentUser
         if (currentFirebaseUser != null) {
             this.user = User(currentFirebaseUser)

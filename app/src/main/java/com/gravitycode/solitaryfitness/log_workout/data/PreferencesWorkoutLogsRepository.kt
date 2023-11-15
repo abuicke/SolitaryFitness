@@ -1,17 +1,17 @@
-package com.gravitycode.solitaryfitness.track_reps.data
+package com.gravitycode.solitaryfitness.log_workout.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 
-class PreferencesWorkoutHistoryRepo(
+class PreferencesWorkoutLogsRepository(
     private val preferencesStore: DataStore<Preferences>
-) : WorkoutHistoryRepo {
+) : WorkoutLogsRepository {
 
     override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
         val preferences = preferencesStore.data.first()

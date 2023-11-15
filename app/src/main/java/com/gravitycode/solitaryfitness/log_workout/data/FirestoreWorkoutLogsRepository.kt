@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.track_reps.data
+package com.gravitycode.solitaryfitness.log_workout.data
 
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
@@ -6,8 +6,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import java.time.LocalDate
 import kotlin.coroutines.resume
@@ -20,10 +20,10 @@ import kotlin.coroutines.suspendCoroutine
  *
  * (How to add Document with Custom ID to firestore)[https://stackoverflow.com/a/48544954/4596649]
  * */
-open class FirestoreWorkoutHistoryRepo(
+open class FirestoreWorkoutLogsRepository(
     private val firestore: FirebaseFirestore,
     authenticator: Authenticator
-) : WorkoutHistoryRepo {
+) : WorkoutLogsRepository {
 
     private companion object {
         const val TAG = "FirestoreWorkoutHistoryRepo"

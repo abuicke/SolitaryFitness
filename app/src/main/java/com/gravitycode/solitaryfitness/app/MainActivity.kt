@@ -13,8 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsScreen
-import com.gravitycode.solitaryfitness.track_reps.presentation.TrackRepsViewModel
+import com.gravitycode.solitaryfitness.di.ActivityComponent
+import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
+import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.launch
@@ -28,6 +29,11 @@ import javax.inject.Inject
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
  * TODO: Test Firebase works offline.
+ * TODO: Test @Private injections
+ * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
+ *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
+ *  actual test.
+ * TODO: Refactor: Replace "repo" with "repository" and do the same for all other shorthands.
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the
  *  ViewModel, should it also be checked for in the repository?
  * TODO: Need to use `PreferencesWorkoutHistoryRepo` when the user is logged out. Just maintain two independent records?
@@ -57,7 +63,7 @@ import javax.inject.Inject
  * TODO: Remove [com.gravitycode.solitaryfitness.util.test] package and JUnit dependency in release build.
  *
  * TODO: Is there space to make use of an object pool anywhere? Such as when I'm copying the WorkoutLogs
- *  over and over again in the [TrackRepsViewModel] or just generally when I'm returning the objects from
+ *  over and over again in the [LogWorkoutViewModel] or just generally when I'm returning the objects from
  *  the repos etc.?
  *
  *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
@@ -84,7 +90,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var toaster: Toaster
 
     private lateinit var activityComponent: ActivityComponent
-    @Inject lateinit var trackRepsViewModel: TrackRepsViewModel
+    @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
     private lateinit var appState: MutableState<AppState>
 
@@ -106,9 +112,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     TrackRepsScreen(
                         appState = appState.value,
-                        trackRepsState = trackRepsViewModel.state.value,
+                        logWorkoutState = logWorkoutViewModel.state.value,
                         onAppEvent = this::handleAppEvent,
-                        onEvent = trackRepsViewModel::onEvent
+                        onEvent = logWorkoutViewModel::onEvent
                     )
                 }
             }

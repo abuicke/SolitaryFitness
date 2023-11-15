@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.track_reps.util
+package com.gravitycode.solitaryfitness.log_workout.util
 
 enum class Workout(val string: String) {
 

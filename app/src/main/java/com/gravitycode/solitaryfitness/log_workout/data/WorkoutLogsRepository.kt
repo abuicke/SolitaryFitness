@@ -1,10 +1,10 @@
-package com.gravitycode.solitaryfitness.track_reps.data
+package com.gravitycode.solitaryfitness.log_workout.data
 
-import com.gravitycode.solitaryfitness.track_reps.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.track_reps.util.Workout
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import java.time.LocalDate
 
-interface WorkoutHistoryRepo {
+interface WorkoutLogsRepository {
 
     suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?>
 
