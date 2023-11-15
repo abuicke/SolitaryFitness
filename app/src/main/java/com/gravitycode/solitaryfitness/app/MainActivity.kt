@@ -15,6 +15,7 @@ import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.ActivityComponent
 import com.gravitycode.solitaryfitness.log_workout.data.Configuration
+import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
@@ -31,7 +32,7 @@ import javax.inject.Inject
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
  * TODO: Test Firebase works offline.
- * TODO: Test @Private injections
+ * TODO: Replace @see with proper markdown everywhere it's referencing a URL
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
  *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
  *  actual test.
