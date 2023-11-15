@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.ActivityComponent
+import com.gravitycode.solitaryfitness.log_workout.data.Configuration
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.debugError
@@ -88,21 +90,30 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
-
-    private lateinit var activityComponent: ActivityComponent
-    @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
+    @Inject lateinit var repoFactory: WorkoutLogsRepositoryFactory
 
     private lateinit var appState: MutableState<AppState>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appComponent = (applicationContext as SolitaryFitnessApp).appComponent
-        activityComponent = appComponent.activityComponent().componentActivity(this).build()
-        activityComponent.inject(this)
+        val app = applicationContext as SolitaryFitnessApp
+        app.appComponent.activityComponent()
+            .componentActivity(this)
+            .build()
+            .inject(this)
 
         val currentUser = authenticator.getSignedInUser()
         appState = mutableStateOf(AppState(currentUser))
+
+        /**
+         * TODO: [LogWorkoutViewModel] needs to be reconfigured with the Firestore repository if the user
+         *  logs in, and set back to the preferences store repository if they log out. Would this be best
+         *  accomplished with a flow? Or something similar? Some kind of broadcast?
+         * */
+        val config = Configuration(isUserSignedIn = authenticator.isUserSignedIn())
+        val repository = repoFactory.create(config)
+        val logWorkoutViewModel = LogWorkoutViewModel(toaster, repository)
 
         setContent {
             SolitaryFitnessTheme {

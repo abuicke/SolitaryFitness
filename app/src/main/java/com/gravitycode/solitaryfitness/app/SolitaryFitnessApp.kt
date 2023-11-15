@@ -2,6 +2,7 @@ package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
 import com.gravitycode.solitaryfitness.di.AppComponent
+import com.gravitycode.solitaryfitness.di.DaggerAppComponent
 
 class SolitaryFitnessApp : Application() {
 

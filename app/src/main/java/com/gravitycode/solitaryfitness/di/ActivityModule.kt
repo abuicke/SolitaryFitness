@@ -36,6 +36,7 @@ object ActivityModule {
         return FirebaseAuthenticator(activity, auth, ui)
     }
 
+    @Private
     @Provides
     @ActivityScope
     fun providesWorkoutHistoryPreferencesStore(context: Context): DataStore<Preferences> {
@@ -46,12 +47,14 @@ object ActivityModule {
 
     @Private
     @Provides
+    @ActivityScope
     fun providePreferencesWorkoutHistoryRepo(
-        preferencesStore: DataStore<Preferences>
+        @Private preferencesStore: DataStore<Preferences>
     ) = PreferencesWorkoutLogsRepository(preferencesStore)
 
     @Private
     @Provides
+    @ActivityScope
     fun provideFirestoreWorkoutLogsRepository(
         firestore: FirebaseFirestore,
         authenticator: Authenticator
@@ -59,16 +62,9 @@ object ActivityModule {
 
     @Provides
     @ActivityScope
-    fun provideLogWorkoutViewModel(
-        toaster: Toaster,
-        repo: WorkoutLogsRepository
-    ) = LogWorkoutViewModel(toaster, repo)
-
-    @Provides
-    @ActivityScope
     fun providesWorkoutLogsRepositoryFactory(
-        preferencesRepository: Lazy<PreferencesWorkoutLogsRepository>,
-        firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
+        @Private preferencesRepository: Lazy<PreferencesWorkoutLogsRepository>,
+        @Private firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
     ): WorkoutLogsRepositoryFactory {
         return LazyWorkoutLogsRepositoryFactory(
             preferencesRepository,

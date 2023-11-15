@@ -35,7 +35,7 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
-import com.gravitycode.solitaryfitness.`log-workout`.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
