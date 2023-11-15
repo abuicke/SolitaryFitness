@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util.data
+package com.gravitycode.solitaryfitness.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.CollectionReference
@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
+import com.gravitycode.solitaryfitness.util.data.megabytesToBytes
 import com.gravitycode.solitaryfitness.util.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

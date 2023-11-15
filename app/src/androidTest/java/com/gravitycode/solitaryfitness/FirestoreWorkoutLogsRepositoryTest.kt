@@ -2,7 +2,7 @@ package com.gravitycode.solitaryfitness
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.di.AppModule
+import com.gravitycode.solitaryfitness.app.AppModule
 import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout

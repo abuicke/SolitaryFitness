@@ -13,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.di.ActivityComponent
 import com.gravitycode.solitaryfitness.log_workout.data.Configuration
-import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.Toaster
+import com.gravitycode.solitaryfitness.app.ui.Toaster
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

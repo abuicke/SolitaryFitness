@@ -1,16 +1,13 @@
-package com.gravitycode.solitaryfitness.di
+package com.gravitycode.solitaryfitness.log_workout
 
 import android.content.Context
-import androidx.activity.ComponentActivity
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator
+import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
@@ -25,13 +22,7 @@ import javax.inject.Qualifier
 private annotation class Private
 
 @Module
-object ActivityModule {
-
-    @Provides
-    @ActivityScope
-    fun providesAuthenticator(activity: ComponentActivity, auth: FirebaseAuth, ui: AuthUI): Authenticator {
-        return FirebaseAuthenticator(activity, auth, ui)
-    }
+object LogWorkoutModule {
 
     @Private
     @Provides

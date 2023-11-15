@@ -9,8 +9,8 @@ import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.ToastDuration
-import com.gravitycode.solitaryfitness.util.ui.Toaster
+import com.gravitycode.solitaryfitness.app.ui.ToastDuration
+import com.gravitycode.solitaryfitness.app.ui.Toaster
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 

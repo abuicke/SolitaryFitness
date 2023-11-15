@@ -1,6 +1,9 @@
-package com.gravitycode.solitaryfitness.di
+package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
+import com.gravitycode.solitaryfitness.firebase.FirebaseModule
+import com.gravitycode.solitaryfitness.app.ui.UiModule
+import com.gravitycode.solitaryfitness.di.ApplicationScope
 import dagger.BindsInstance
 import dagger.Component
 
@@ -24,7 +27,7 @@ import dagger.Component
  * (dagger-basics#dagger-components)[https://developer.android.com/training/dependency-injection/]
  * */
 @ApplicationScope
-@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class, UiModule::class, FirebaseModule::class])
 interface AppComponent {
 
     @Component.Builder
