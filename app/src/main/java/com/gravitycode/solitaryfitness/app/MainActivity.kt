@@ -62,8 +62,6 @@ import javax.inject.Inject
  *
  *
  *
- * TODO: Remove [com.gravitycode.solitaryfitness.util.test] package and JUnit dependency in release build.
- *
  * TODO: Is there space to make use of an object pool anywhere? Such as when I'm copying the WorkoutLogs
  *  over and over again in the [LogWorkoutViewModel] or just generally when I'm returning the objects from
  *  the repos etc.?

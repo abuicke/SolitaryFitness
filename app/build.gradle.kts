@@ -108,11 +108,6 @@ dependencies {
     // WheelPickerCompose - https://github.com/commandiron/WheelPickerCompose
     implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
 
-    /**
-     * TODO: Remove [com.gravitycode.solitaryfitness.util.test] package and JUnit dependency in release build.
-     * */
-    implementation("junit:junit:4.13.2")
-
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
