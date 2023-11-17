@@ -86,10 +86,10 @@ private fun TrackRepsScreen() {
 @Composable
 fun TrackRepsScreen(
     modifier: Modifier = Modifier,
-    appState: AppState,
     logWorkoutState: LogWorkoutState,
+    onEvent: (LogWorkoutEvent) -> Unit,
+    appState: AppState,
     onAppEvent: (AppEvent) -> Unit,
-    onEvent: (LogWorkoutEvent) -> Unit
 ) {
     val workouts = Workout.values()
 

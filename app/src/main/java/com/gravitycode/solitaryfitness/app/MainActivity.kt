@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.log_workout.data.Configuration
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory.Configuration
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
@@ -27,9 +27,13 @@ import javax.inject.Inject
  *
  * GOOGLE CLOUD API KEY IS RESTRICTED TO ONLY USE FIRESTORE - NEED TO ADD SERVICES TO THE KEY TO USE THEM
  *
+ *
+ *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
  * TODO: Test Firebase works offline.
+ * TODO: Verify that Dagger isn't creating either repository until `get()` is called.
+ * TODO: Implement ViewModel Factory with a Screen enum for parameter?
  * TODO: Replace @see with proper markdown everywhere it's referencing a URL
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
  *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
@@ -63,7 +67,7 @@ import javax.inject.Inject
  *
  * TODO: Is there space to make use of an object pool anywhere? Such as when I'm copying the WorkoutLogs
  *  over and over again in the [LogWorkoutViewModel] or just generally when I'm returning the objects from
- *  the repos etc.?
+ *  the repos etc.? Anywhere `copy()` is used would be a good candidate
  *
  *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
  *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`
@@ -82,6 +86,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     private companion object {
+
         const val TAG = "MainActivity"
     }
 
@@ -104,6 +109,12 @@ class MainActivity : ComponentActivity() {
         appState = mutableStateOf(AppState(currentUser))
 
         /**
+         * The last thing I need to do is set up the logic to switch over to the Firestore repository
+         * when the user signs in and back to the preferences repository when the user signs out. Any data
+         * that has been saved in the preferences repository should be transferred to Firestore, but I
+         * don't think the workouts logged when you were signed in should be downloaded to the preferences
+         * when you sign out. That would lead to confusing behavior if you sign out anf another person signs in.
+         *
          * TODO: [LogWorkoutViewModel] needs to be reconfigured with the Firestore repository if the user
          *  logs in, and set back to the preferences store repository if they log out. Would this be best
          *  accomplished with a flow? Or something similar? Some kind of broadcast?
@@ -119,10 +130,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TrackRepsScreen(
-                        appState = appState.value,
                         logWorkoutState = logWorkoutViewModel.state.value,
-                        onAppEvent = this::handleAppEvent,
-                        onEvent = logWorkoutViewModel::onEvent
+                        onEvent = logWorkoutViewModel::onEvent,
+                        appState = appState.value,
+                        onAppEvent = this::handleAppEvent
                     )
                 }
             }
