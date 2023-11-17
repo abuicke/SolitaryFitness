@@ -14,12 +14,20 @@ import com.gravitycode.solitaryfitness.app.ui.Toaster
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+/**
+ * Never collect a flow from the UI directly from launch or the launchIn extension function if the UI needs
+ * to be updated. These functions process events even when the view is not visible. This behavior can lead
+ * to app crashes. To avoid that, use [androidx.lifecycle.repeatOnLifecycle].
+ *
+ * See warning in (StateFlow and SharedFlow)[https://developer.android.com/kotlin/flow/stateflow-and-sharedflow]
+ * */
 class LogWorkoutViewModel(
     private val toaster: Toaster,
     private val workoutLogsRepository: WorkoutLogsRepository
 ) : ViewModel() {
 
     private companion object {
+
         const val TAG = "TrackRepsViewModel"
     }
 
