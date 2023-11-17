@@ -31,7 +31,7 @@ import javax.inject.Inject
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
- * TODO: Test Firebase works offline.
+ * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
  * TODO: Verify that Dagger isn't creating either repository until `get()` is called.
  * TODO: Implement ViewModel Factory with a Screen enum for parameter?
  * TODO: Replace @see with proper markdown everywhere it's referencing a URL
@@ -115,6 +115,8 @@ class MainActivity : ComponentActivity() {
          * don't think the workouts logged when you were signed in should be downloaded to the preferences
          * when you sign out. That would lead to confusing behavior if you sign out anf another person signs in.
          *
+         * TODO: Need to reset the view model state when sign in happens.
+         *
          * TODO: [LogWorkoutViewModel] needs to be reconfigured with the Firestore repository if the user
          *  logs in, and set back to the preferences store repository if they log out. Would this be best
          *  accomplished with a flow? Or something similar? Some kind of broadcast?
@@ -153,6 +155,7 @@ class MainActivity : ComponentActivity() {
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
                 appState.value = AppState(user)
+                toaster("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
             } else {
                 toaster("Failed to sign in")
@@ -166,6 +169,8 @@ class MainActivity : ComponentActivity() {
             val result = authenticator.signOut()
             if (result.isSuccess) {
                 appState.value = AppState(null)
+                toaster("Signed out")
+                Log.v(TAG, "signed out")
             } else {
                 toaster("Failed to sign out")
                 debugError("Sign out failed", result)
