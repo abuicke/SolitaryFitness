@@ -113,7 +113,7 @@ class MainActivity : ComponentActivity() {
          * when the user signs in and back to the preferences repository when the user signs out. Any data
          * that has been saved in the preferences repository should be transferred to Firestore, but I
          * don't think the workouts logged when you were signed in should be downloaded to the preferences
-         * when you sign out. That would lead to confusing behavior if you sign out anf another person signs in.
+         * when you sign out. That would lead to confusing behavior if you sign out and another person signs in.
          *
          * TODO: Need to reset the view model state when sign in happens.
          *
