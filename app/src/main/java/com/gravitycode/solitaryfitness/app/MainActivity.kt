@@ -30,23 +30,24 @@ import javax.inject.Inject
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  *
+ * TODO: When the user signs in, offer to transfer their offline progress in the preferences store to Firebase.
+ *  To do this I will need to maintain a string set in the preferences data store with all the dates that
+ *  have logs associated with them so I can iterate over every log that has data. I should delete the
+ *  preferences store data while I'm uploading to Firestore as this will create a clean "offline" account
+ *  for other use. If the user does not want to transfer the data then don't delete the preferences logs.
+ * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
- * TODO: Verify that Dagger isn't creating either repository until `get()` is called.
- * TODO: If the user is signed out and then signs in, or is signed in and then signs out, are both repositories
- *  held in memory? How to make it so only the repo which is currently being used is held in memory? Or is
- *  that even worth doing?
- * TODO: Implement ViewModel Factory with a Screen enum for parameter?
+ * TODO: When the app is profiled the memory increases and then stays there, particularly when the user logs
+ *  in and the Firestore repo is assumedly initialized. How can I make it so that only one repo is ever
+ *  retained in memory? Use a WeakReference? Create WeakLazyWorkoutLogRepository?
+ * TODO: Is there a race condition between the ViewModel completing its setup and the composable being put
+ *  on the screen? If reps are added before the repository has initialized assumedly the app will crash?
  * TODO: Replace @see with proper markdown everywhere it's referencing a URL
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
  *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
  *  actual test.
- * TODO: Refactor: Replace "repo" with "repository" and do the same for all other shorthands.
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the
  *  ViewModel, should it also be checked for in the repository?
- * TODO: Need to use `PreferencesWorkoutHistoryRepo` when the user is logged out. Just maintain two independent records?
- *  It doesn't make sense to expect records that are recorded when you're logged in to be available when you
- *  log out, but I should upload all records stored in preferences to Firestore when the user logs in.
- * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
  * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
  * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?
  * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
@@ -96,10 +97,6 @@ class MainActivity : ComponentActivity(), AppController {
     @Inject lateinit var toaster: Toaster
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    /**
-     * TODO: Need to make sure `replay = 1` is actually what I want. Try using `replay = 0` and see if the
-     *  behavior still works.
-     * */
     override val appState = MutableSharedFlow<AppState>(replay = 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
