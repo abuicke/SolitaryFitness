@@ -1,10 +1,10 @@
 package com.gravitycode.solitaryfitness.app
 
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 interface AppController {
 
-    val appState: StateFlow<AppState>
+    val appState: SharedFlow<AppState>
 
     fun requestSignIn()
 

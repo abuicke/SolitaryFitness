@@ -92,8 +92,8 @@ private enum class MenuItem(val string: String) {
 
 @Composable
 fun TrackRepsScreen(
-    viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     appController: AppController,
+    viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {
     val workouts = Workout.values()
@@ -104,7 +104,7 @@ fun TrackRepsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val appState = appController.appState.collectAsState()
+        val appState = appController.appState.collectAsState(AppState())
 
         TopBar(appState.value.isUserSignedIn()) { item ->
             when (item) {

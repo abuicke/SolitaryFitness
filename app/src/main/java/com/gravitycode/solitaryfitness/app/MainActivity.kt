@@ -17,7 +17,9 @@ import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFac
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.debugError
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -94,19 +96,11 @@ class MainActivity : ComponentActivity(), AppController {
     @Inject lateinit var toaster: Toaster
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    override val appState = MutableStateFlow(AppState(null))
-
     /**
-     *
-     *
-     * TODO: Replace AppController.StateFlow with SharedFlow so that [LogWorkoutViewModel] can subscribe to
-     *  it and automatically retrieve the repository it needs from the factory.
-     *
-     *
-     *
-     *
+     * TODO: Need to make sure `replay = 1` is actually what I want. Try using `replay = 0` and see if the
+     *  behavior still works.
      * */
-
+    override val appState = MutableSharedFlow<AppState>(replay = 1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +110,10 @@ class MainActivity : ComponentActivity(), AppController {
             .build()
             .inject(this)
 
-        val currentUser = authenticator.getSignedInUser()
-        appState.value = AppState(currentUser)
+        lifecycleScope.launch {
+            val currentUser = authenticator.getSignedInUser()
+            appState.emit(AppState(currentUser))
+        }
 
         setContent {
             SolitaryFitnessTheme {
@@ -126,8 +122,8 @@ class MainActivity : ComponentActivity(), AppController {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TrackRepsScreen(
-                        viewModel = logWorkoutViewModel,
-                        appController = this
+                        appController = this,
+                        viewModel = logWorkoutViewModel
                     )
                 }
             }
@@ -139,7 +135,7 @@ class MainActivity : ComponentActivity(), AppController {
             val result = authenticator.signIn()
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
-                appState.value = AppState(user)
+                appState.emit(AppState(user))
                 toaster("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
             } else {
@@ -153,7 +149,7 @@ class MainActivity : ComponentActivity(), AppController {
         lifecycleScope.launch {
             val result = authenticator.signOut()
             if (result.isSuccess) {
-                appState.value = AppState(null)
+                appState.emit(AppState())
                 toaster("Signed out")
                 Log.v(TAG, "signed out")
             } else {

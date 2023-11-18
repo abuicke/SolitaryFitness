@@ -33,9 +33,7 @@ class LogWorkoutViewModel(
         const val TAG = "TrackRepsViewModel"
     }
 
-    private var repository: WorkoutLogsRepository = repositoryFactory.create(
-        appController.appState.value.isUserSignedIn()
-    )
+    private lateinit var repository: WorkoutLogsRepository
     private var currentDate: LocalDate = LocalDate.now()
 
     override val state = mutableStateOf(LogWorkoutState(currentDate))
@@ -47,7 +45,16 @@ class LogWorkoutViewModel(
     private var doesRecordAlreadyExist = false
 
     init {
-        loadWorkoutLog()
+        /**
+         * TODO: Need to make sure this job is canceled when I no longer need to observe this state.
+         * */
+        viewModelScope.launch {
+            appController.appState.collect { appState ->
+                Log.d(TAG, "app state collected: $appState")
+                repository = repositoryFactory.create(appState.isUserSignedIn())
+                loadWorkoutLog()
+            }
+        }
     }
 
     override fun onEvent(event: LogWorkoutEvent) {

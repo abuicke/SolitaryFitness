@@ -1,14 +1,13 @@
 package com.gravitycode.solitaryfitness.di
 
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.ActivityModule
+import com.gravitycode.solitaryfitness.app.ActivityModule
 import com.gravitycode.solitaryfitness.app.MainActivity
 import com.gravitycode.solitaryfitness.auth.AuthModule
 import com.gravitycode.solitaryfitness.firebase.FirebaseModule
 import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
 import dagger.BindsInstance
 import dagger.Component
-import dagger.Subcomponent
 
 @ActivityScope
 @Component(

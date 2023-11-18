@@ -1,8 +1,8 @@
-package com.gravitycode.solitaryfitness
+package com.gravitycode.solitaryfitness.app
 
 import android.content.Context
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Module
 import dagger.Provides
@@ -14,8 +14,9 @@ object ActivityModule {
     fun providesApplicationContext(activity: ComponentActivity): Context = activity.applicationContext
 
     @Provides
-    fun providesToaster(context: Context) = Toaster(context)
+    fun providesAppController(activity: ComponentActivity) = activity as AppController
 
     @Provides
-    fun providesAppController(activity: ComponentActivity) = activity as AppController
+    @ActivityScope
+    fun providesToaster(context: Context) = Toaster(context)
 }
