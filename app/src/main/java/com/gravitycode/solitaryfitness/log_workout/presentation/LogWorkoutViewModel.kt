@@ -47,6 +47,7 @@ class LogWorkoutViewModel(
     init {
         /**
          * TODO: Need to make sure this job is canceled when I no longer need to observe this state.
+         *  Check why and how the Job was cancelled in the clean architecture project.
          * */
         viewModelScope.launch {
             appController.appState.collect { appState ->
