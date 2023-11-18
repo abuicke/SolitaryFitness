@@ -7,25 +7,22 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory.Configuration
+import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.app.ui.Toaster
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * "When you repeat yourself 3 times, then refactor..."
- *
- * GOOGLE CLOUD API KEY IS RESTRICTED TO ONLY USE FIRESTORE - NEED TO ADD SERVICES TO THE KEY TO USE THEM
  *
  *
  *
@@ -33,6 +30,9 @@ import javax.inject.Inject
  *
  * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
  * TODO: Verify that Dagger isn't creating either repository until `get()` is called.
+ * TODO: If the user is signed out and then signs in, or is signed in and then signs out, are both repositories
+ *  held in memory? How to make it so only the repo which is currently being used is held in memory? Or is
+ *  that even worth doing?
  * TODO: Implement ViewModel Factory with a Screen enum for parameter?
  * TODO: Replace @see with proper markdown everywhere it's referencing a URL
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
@@ -83,7 +83,7 @@ import javax.inject.Inject
  * TODO: Implement number change animation. Like if the user clicks +10 you see the reps quickly
  *  count up from the current reps to +10.
  * */
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), AppController {
 
     private companion object {
 
@@ -92,38 +92,32 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
-    @Inject lateinit var repoFactory: WorkoutLogsRepositoryFactory
+    @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    private lateinit var appState: MutableState<AppState>
+    override val appState = MutableStateFlow(AppState(null))
+
+    /**
+     *
+     *
+     * TODO: Replace AppController.StateFlow with SharedFlow so that [LogWorkoutViewModel] can subscribe to
+     *  it and automatically retrieve the repository it needs from the factory.
+     *
+     *
+     *
+     *
+     * */
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val app = applicationContext as SolitaryFitnessApp
-        app.appComponent.activityComponent()
+        DaggerActivityComponent.builder()
             .componentActivity(this)
             .build()
             .inject(this)
 
         val currentUser = authenticator.getSignedInUser()
-        appState = mutableStateOf(AppState(currentUser))
-
-        /**
-         * The last thing I need to do is set up the logic to switch over to the Firestore repository
-         * when the user signs in and back to the preferences repository when the user signs out. Any data
-         * that has been saved in the preferences repository should be transferred to Firestore, but I
-         * don't think the workouts logged when you were signed in should be downloaded to the preferences
-         * when you sign out. That would lead to confusing behavior if you sign out and another person signs in.
-         *
-         * TODO: Need to reset the view model state when sign in happens.
-         *
-         * TODO: [LogWorkoutViewModel] needs to be reconfigured with the Firestore repository if the user
-         *  logs in, and set back to the preferences store repository if they log out. Would this be best
-         *  accomplished with a flow? Or something similar? Some kind of broadcast?
-         * */
-        val config = Configuration(isUserSignedIn = authenticator.isUserSignedIn())
-        val repository = repoFactory.create(config)
-        val logWorkoutViewModel = LogWorkoutViewModel(toaster, repository)
+        appState.value = AppState(currentUser)
 
         setContent {
             SolitaryFitnessTheme {
@@ -132,24 +126,15 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TrackRepsScreen(
-                        logWorkoutState = logWorkoutViewModel.state.value,
-                        onEvent = logWorkoutViewModel::onEvent,
-                        appState = appState.value,
-                        onAppEvent = this::handleAppEvent
+                        viewModel = logWorkoutViewModel,
+                        appController = this
                     )
                 }
             }
         }
     }
 
-    private fun handleAppEvent(appEvent: AppEvent) {
-        when (appEvent) {
-            AppEvent.SignIn -> signIn()
-            AppEvent.SignOut -> signOut()
-        }
-    }
-
-    private fun signIn() {
+    override fun requestSignIn() {
         lifecycleScope.launch {
             val result = authenticator.signIn()
             if (result.isSuccess) {
@@ -164,7 +149,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun signOut() {
+    override fun requestSignOut() {
         lifecycleScope.launch {
             val result = authenticator.signOut()
             if (result.isSuccess) {

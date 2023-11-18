@@ -6,12 +6,15 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -59,4 +62,12 @@ object LogWorkoutModule {
             firestoreRepository
         )
     }
+
+    @Provides
+    @ActivityScope
+    fun providesLogWorkoutViewModel(
+        appController: AppController,
+        toaster: Toaster,
+        factory: WorkoutLogsRepositoryFactory
+    ) = LogWorkoutViewModel(appController, toaster, factory)
 }

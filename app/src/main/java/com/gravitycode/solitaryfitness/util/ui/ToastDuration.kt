@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.app.ui
+package com.gravitycode.solitaryfitness.util.ui
 
 import android.widget.Toast
 

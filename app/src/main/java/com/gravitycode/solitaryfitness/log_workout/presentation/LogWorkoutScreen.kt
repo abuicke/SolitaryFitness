@@ -21,6 +21,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,15 +34,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
-import com.gravitycode.solitaryfitness.app.AppEvent
+import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
 
+/**
+ * TODO: Consider moving this out into it's won class and applying the same method of filters the values()
+ *  function to be used in other screens. This enum should be all potential menu items which are then
+ *  selected from on a per-screen and per-context basis.
+ * */
 private enum class MenuItem(val string: String) {
 
     SIGN_IN("Sign In"),
@@ -57,8 +64,8 @@ private enum class MenuItem(val string: String) {
     companion object {
 
         fun fromString(str: String): MenuItem? {
-            for(item in values()) {
-                if(item.string == str) {
+            for (item in values()) {
+                if (item.string == str) {
                     return item
                 }
             }
@@ -68,60 +75,60 @@ private enum class MenuItem(val string: String) {
     }
 }
 
-@Composable
-@Preview(showSystemUi = true)
-private fun TrackRepsScreen() {
-    TrackRepsScreen(
-        modifier = Modifier.fillMaxSize(),
-        appState = AppState(null),
-        logWorkoutState = LogWorkoutState(
-            LocalDate.now(),
-            WorkoutLog(0, 15, 30, 20, 9, 0, 45, 40)
-        ),
-        onEvent = { _ -> },
-        onAppEvent = { _ -> }
-    )
-}
+//@Composable
+//@Preview(showSystemUi = true)
+//private fun TrackRepsScreen() {
+//    TrackRepsScreen(
+//        modifier = Modifier.fillMaxSize(),
+//        appState = AppState(null),
+//        logWorkoutState = LogWorkoutState(
+//            LocalDate.now(),
+//            WorkoutLog(0, 15, 30, 20, 9, 0, 45, 40)
+//        ),
+//        onEvent = { _ -> },
+//        onAppEvent = { _ -> }
+//    )
+//}
 
 @Composable
 fun TrackRepsScreen(
-    modifier: Modifier = Modifier,
-    logWorkoutState: LogWorkoutState,
-    onEvent: (LogWorkoutEvent) -> Unit,
-    appState: AppState,
-    onAppEvent: (AppEvent) -> Unit,
+    viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
+    appController: AppController,
+    modifier: Modifier = Modifier
 ) {
     val workouts = Workout.values()
-
     val context = LocalContext.current
 
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopBar(appState.isUserSignedIn()) { item ->
+
+        val appState = appController.appState.collectAsState()
+
+        TopBar(appState.value.isUserSignedIn()) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> onAppEvent(AppEvent.SignIn)
-                MenuItem.SIGN_OUT -> onAppEvent(AppEvent.SignOut)
-                MenuItem.RESET_REPS -> Toast.makeText(context, "Reset Reps", Toast.LENGTH_SHORT).show()
-                MenuItem.EDIT_REPS -> Toast.makeText(context, "Edit Reps", Toast.LENGTH_SHORT).show()
-                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
+                MenuItem.SIGN_IN -> appController.requestSignIn()
+                MenuItem.SIGN_OUT -> appController.requestSignOut()
+                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
+                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit)
+                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
             }
         }
         TrackRepsGrid(
             modifier = Modifier.weight(1f),
             workouts = workouts,
-            logWorkoutState = logWorkoutState,
-            onEvent = onEvent
+            logWorkoutState = viewModel.state.value,
+            onEvent = viewModel::onEvent
         )
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
         WheelDatePicker(
-            startDate = logWorkoutState.date,
+            startDate = viewModel.state.value.date,
             maxDate = LocalDate.now()
         ) { snappedDate ->
-            onEvent(LogWorkoutEvent.DateSelected(snappedDate))
+            viewModel.onEvent(LogWorkoutEvent.DateSelected(snappedDate))
         }
     }
 }

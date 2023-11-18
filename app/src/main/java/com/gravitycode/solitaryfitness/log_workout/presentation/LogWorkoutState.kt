@@ -5,5 +5,6 @@ import java.time.LocalDate
 
 class LogWorkoutState(
     val date: LocalDate,
-    val log: WorkoutLog = WorkoutLog()
+    val log: WorkoutLog = WorkoutLog(),
+    val editMode: Boolean = false
 )

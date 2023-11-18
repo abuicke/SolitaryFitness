@@ -1,6 +1,5 @@
 package com.gravitycode.solitaryfitness.log_workout.data
 
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory.Configuration
 import dagger.Lazy
 
 class LazyWorkoutLogsRepositoryFactory(
@@ -8,8 +7,8 @@ class LazyWorkoutLogsRepositoryFactory(
     private val firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
 ) : WorkoutLogsRepositoryFactory {
 
-    override fun create(configuration: Configuration): WorkoutLogsRepository {
-        return if (configuration.isUserSignedIn) {
+    override fun create(isUserSignedIn: Boolean): WorkoutLogsRepository {
+        return if (isUserSignedIn) {
             firestoreRepository.get()
         } else {
             preferencesRepository.get()
