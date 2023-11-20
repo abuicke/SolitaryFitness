@@ -22,14 +22,12 @@ import kotlin.coroutines.suspendCoroutine
  * */
 open class FirestoreWorkoutLogsRepository(
     private val firestore: FirebaseFirestore,
-    authenticator: Authenticator
+    private val authenticator: Authenticator
 ) : WorkoutLogsRepository {
 
     private companion object {
         const val TAG = "FirestoreWorkoutHistoryRepo"
     }
-
-    private val currentUser: User = authenticator.getSignedInUser()!!
 
     final override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
         return suspendCoroutine { continuation ->
@@ -124,6 +122,7 @@ open class FirestoreWorkoutLogsRepository(
     }
 
     private fun workoutLog(date: LocalDate): DocumentReference {
+        val currentUser = authenticator.getSignedInUser()!!
         return workoutLogs(currentUser.id).document(date.toString())
     }
 }

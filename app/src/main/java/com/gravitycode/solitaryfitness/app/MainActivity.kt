@@ -1,6 +1,7 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,18 +11,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
-import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 /**
  * "When you repeat yourself 3 times, then refactor..."
@@ -29,13 +28,14 @@ import javax.inject.Inject
  *
  *
  * TODO: Add UI tests to verify all the usual behavior I test manually.
+ * TODO: Need to write rigorous tests for the [LogWorkoutViewModel]
  *
  * TODO: When the user signs in, offer to transfer their offline progress in the preferences store to Firebase.
  *  To do this I will need to maintain a string set in the preferences data store with all the dates that
  *  have logs associated with them so I can iterate over every log that has data. I should delete the
  *  preferences store data while I'm uploading to Firestore as this will create a clean "offline" account
  *  for other use. If the user does not want to transfer the data then don't delete the preferences logs.
- * TODO: Put profile pic in the toolbar when user signs in. Use Glide? Is there a Kotlin-first solution?
+ * TODO: Quickly switching between accounts seems to cause a crash. Need to test for this and verify.
  * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
  * TODO: When the app is profiled the memory increases and then stays there, particularly when the user logs
  *  in and the Firestore repo is assumedly initialized. How can I make it so that only one repo is ever
@@ -71,6 +71,7 @@ import javax.inject.Inject
  * TODO: Is there space to make use of an object pool anywhere? Such as when I'm copying the WorkoutLogs
  *  over and over again in the [LogWorkoutViewModel] or just generally when I'm returning the objects from
  *  the repos etc.? Anywhere `copy()` is used would be a good candidate
+ *  (Android Pools Helper Class)[https://developer.android.com/reference/androidx/core/util/Pools]
  *
  *  TODO: I haven't been using UseCases. Where do they belong? In accessing the DataStore? Remember
  *      you can override the invoke operator `()` so they can be called like `XxUseCase(args...)`

@@ -70,15 +70,15 @@ class FirebaseAuthenticator(
             this.user = user
             Result.success(user)
         } else {
-            val error: Throwable = if (response != null && response.error != null) {
-                response.error!!
-            } else {
-                AuthenticationException(
-                    "unspecified firebase ui exception, result code: ${result.resultCode}"
-                )
-            }
-
-            Result.failure(error)
+            Result.failure(
+                if (response != null && response.error != null) {
+                    response.error!!
+                } else {
+                    AuthenticationException(
+                        "unspecified firebase ui exception, result code: ${result.resultCode}"
+                    )
+                }
+            )
         }
     }
 

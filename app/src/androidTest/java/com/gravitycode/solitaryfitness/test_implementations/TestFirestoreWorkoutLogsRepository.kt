@@ -48,7 +48,7 @@ private class TestAuthenticator(
         userId,
         userName,
         userEmail,
-        Uri.parse(profilePicUrl)
+        profilePicUrl
     )
 
     override suspend fun signIn() = Result.success(user)

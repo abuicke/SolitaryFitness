@@ -53,8 +53,8 @@ class LogWorkoutViewModel(
      * */
 
 
-
     private lateinit var repository: WorkoutLogsRepository
+
     // Specifies whether a workout log already exists for
     // this date, in which case the update function should
     // be called on the repository. If a new record needs
@@ -118,6 +118,7 @@ class LogWorkoutViewModel(
 
     /**
      * TODO: Could just retain a reference to the old TrackRepsState and reassign that if the update fails
+     *  This logic is implemented, need to test by setting `if(result.isFailure)` to `if(!result.isFailure)`
      * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         require(quantity >= 0) { "cannot increment by a negative value" }

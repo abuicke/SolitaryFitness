@@ -11,10 +11,16 @@ package com.gravitycode.solitaryfitness.log_workout.presentation
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -22,22 +28,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
-import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
@@ -112,7 +117,8 @@ fun TrackRepsScreen(
                 MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
                 MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
                 MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit)
-                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
+                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT)
+                    .show() //something to do with NavController
             }
         }
         TrackRepsGrid(
@@ -149,29 +155,46 @@ private fun TopBar(
      * TODO: This is running twice
      * */
     Log.i("mo", "user = $user")
-    val isUserSignedIn = user != null
 
     TopAppBar(
-        // title and navigationIcon are swapped so
-        // that they appear in the correct order.
+        modifier = Modifier.height(IntrinsicSize.Max),
         title = {
-            if (user != null) {
-                AsyncImage(
-                    model = user.profilePicture,
-                    contentDescription = "User profile picture"
+            Row(
+                modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (user != null) {
+                    val imageLoaded = remember { mutableStateOf(false) }
+
+                    AsyncImage(
+                        modifier = Modifier
+                            // Prevent the padding from taking up space before the image appears
+                            .padding(end = if (imageLoaded.value) 12.dp else 0.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            // Don't show the image until it has finished loading
+                            .fillMaxHeight(if (imageLoaded.value) 0.5f else 0.0f),
+                        contentScale = ContentScale.Fit,
+                        model = user.profilePicture,
+                        placeholder = painterResource(R.drawable.placeholder_pfp),
+                        contentDescription = "User profile picture",
+                        onSuccess = { imageLoaded.value = true },
+                        onError = { state ->
+                            debugError("failed to load async image", state.result.throwable)
+                        }
+                    )
+                }
+                Text(
+                    text = "Track Workouts",
+                    color = MaterialTheme.colorScheme.background
                 )
             }
-        },
-        navigationIcon = {
-            Text(
-                text = "Track Workouts",
-                color = MaterialTheme.colorScheme.background
-            )
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
+            val isUserSignedIn = user != null
             val menuItems = MenuItem.values().filter { menuItem ->
                 when (menuItem) {
                     MenuItem.SIGN_IN -> !isUserSignedIn
@@ -180,7 +203,10 @@ private fun TopBar(
                 }
             }.map { it.string }
 
-            OverflowMenu(menuItems) { string ->
+            OverflowMenu(
+                modifier = Modifier.fillMaxHeight(),
+                menuItems = menuItems
+            ) { string ->
                 val menuItem: MenuItem? = MenuItem.fromString(string)
                 if (menuItem != null) {
                     onMenuItemClicked(menuItem)
