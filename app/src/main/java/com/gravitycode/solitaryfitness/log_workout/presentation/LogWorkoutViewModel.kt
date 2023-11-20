@@ -92,7 +92,6 @@ class LogWorkoutViewModel(
 
     /**
      * TODO: Could just retain a reference to the old TrackRepsState and reassign that if the update fails
-     * TODO: Need to check that `quantity` isn't negative
      * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         require(quantity >= 0) { "cannot increment by a negative value" }
