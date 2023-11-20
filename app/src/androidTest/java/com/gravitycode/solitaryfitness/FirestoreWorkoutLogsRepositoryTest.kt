@@ -2,9 +2,9 @@ package com.gravitycode.solitaryfitness
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.util.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

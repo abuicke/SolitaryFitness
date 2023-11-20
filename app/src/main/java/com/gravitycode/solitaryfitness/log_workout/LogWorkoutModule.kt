@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.AppController
-import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
@@ -15,6 +14,7 @@ import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositor
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides

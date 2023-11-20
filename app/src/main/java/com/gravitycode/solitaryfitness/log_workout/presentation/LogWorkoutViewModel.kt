@@ -5,14 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.util.ui.ToastDuration
-import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate

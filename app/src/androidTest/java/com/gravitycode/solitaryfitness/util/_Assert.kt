@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.util
 
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 
 fun <T> assertSuccess(result: Result<T>, message: String? = null) {
     assertTrue(message, result.isSuccess)
