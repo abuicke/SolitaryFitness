@@ -9,6 +9,7 @@
  * */
 package com.gravitycode.solitaryfitness.log_workout.presentation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,14 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
@@ -45,7 +47,7 @@ import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
 
 /**
- * TODO: Consider moving this out into it's won class and applying the same method of filters the values()
+ * TODO: Consider moving this out into it's own class and applying the same method of filters the values()
  *  function to be used in other screens. This enum should be all potential menu items which are then
  *  selected from on a per-screen and per-context basis.
  * */
@@ -92,7 +94,6 @@ private enum class MenuItem(val string: String) {
 
 @Composable
 fun TrackRepsScreen(
-    appController: AppController,
     viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {
@@ -103,13 +104,12 @@ fun TrackRepsScreen(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val logWorkoutState = viewModel.state.value
 
-        val appState = appController.appState.collectAsState(AppState())
-
-        TopBar(appState.value.isUserSignedIn()) { item ->
+        TopBar(logWorkoutState.user) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> appController.requestSignIn()
-                MenuItem.SIGN_OUT -> appController.requestSignOut()
+                MenuItem.SIGN_IN -> viewModel.onEvent(AppEvent.SignIn)
+                MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
                 MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
                 MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit)
                 MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
@@ -118,12 +118,18 @@ fun TrackRepsScreen(
         TrackRepsGrid(
             modifier = Modifier.weight(1f),
             workouts = workouts,
-            logWorkoutState = viewModel.state.value,
+            logWorkoutState = logWorkoutState,
             onEvent = viewModel::onEvent
         )
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
+        // TODO: Make sure recompose doesn't happen twice when the date is changed, and test to see if the
+        //  picker really is being set by the LogWorkoutState by setting the date to something earlier.
+        //  What also happens if I set a date in the future on the LogWorkoutState? Should an exception be
+        //  thrown in this instance if it's not already? I really don't like the behavior of how the date
+        //  picker stays at the current date if you try to scroll to a future date. It should go to the max
+        //  date allowed if you try to go past it.
         WheelDatePicker(
             startDate = viewModel.state.value.date,
             maxDate = LocalDate.now()
@@ -135,11 +141,30 @@ fun TrackRepsScreen(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun TopBar(isUserSignedIn: Boolean, onMenuItemClicked: (MenuItem) -> Unit) {
+private fun TopBar(
+    user: User?,
+    onMenuItemClicked: (MenuItem) -> Unit
+) {
+    /**
+     * TODO: This is running twice
+     * */
+    Log.i("mo", "user = $user")
+    val isUserSignedIn = user != null
+
     TopAppBar(
+        // title and navigationIcon are swapped so
+        // that they appear in the correct order.
         title = {
+            if (user != null) {
+                AsyncImage(
+                    model = user.profilePicture,
+                    contentDescription = "User profile picture"
+                )
+            }
+        },
+        navigationIcon = {
             Text(
-                text = stringResource(R.string.track_reps_topbar_text),
+                text = "Track Workouts",
                 color = MaterialTheme.colorScheme.background
             )
         },

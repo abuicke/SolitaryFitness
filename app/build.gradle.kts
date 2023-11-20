@@ -68,7 +68,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
     // Coil - Image Loading
-    implementation("io.coil-kt:coil:2.5.0")
+//    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Multi Dex
     implementation("androidx.multidex:multidex:2.0.1")

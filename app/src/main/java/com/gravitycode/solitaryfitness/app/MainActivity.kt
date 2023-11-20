@@ -118,10 +118,7 @@ class MainActivity : ComponentActivity(), AppController {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TrackRepsScreen(
-                        appController = this,
-                        viewModel = logWorkoutViewModel
-                    )
+                    TrackRepsScreen(logWorkoutViewModel)
                 }
             }
         }

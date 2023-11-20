@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.app.AppEvent
+import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.util.ui.ToastDuration
 import com.gravitycode.solitaryfitness.util.ui.Toaster
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
@@ -33,11 +35,26 @@ class LogWorkoutViewModel(
         const val TAG = "TrackRepsViewModel"
     }
 
+    override val state = mutableStateOf(LogWorkoutState())
+
+
+    /**
+     *
+     *
+     * TODO: `readWorkoutLog(2023-11-20): null` is running 4 times in a row when signed in.
+     *
+     *
+     * TODO: As far as I can remember I wanted to try going further with using generics to collapse the two
+     *  onEvent functions into one.
+     *
+     *
+     *
+     *
+     * */
+
+
+
     private lateinit var repository: WorkoutLogsRepository
-    private var currentDate: LocalDate = LocalDate.now()
-
-    override val state = mutableStateOf(LogWorkoutState(currentDate))
-
     // Specifies whether a workout log already exists for
     // this date, in which case the update function should
     // be called on the repository. If a new record needs
@@ -52,9 +69,17 @@ class LogWorkoutViewModel(
         viewModelScope.launch {
             appController.appState.collect { appState ->
                 Log.d(TAG, "app state collected: $appState")
+                state.value = state.value.copy(user = appState.user)
                 repository = repositoryFactory.create(appState.isUserSignedIn())
                 loadWorkoutLog()
             }
+        }
+    }
+
+    override fun onEvent(event: AppEvent) {
+        when (event) {
+            is AppEvent.SignIn -> appController.requestSignIn()
+            is AppEvent.SignOut -> appController.requestSignOut()
         }
     }
 
@@ -69,15 +94,16 @@ class LogWorkoutViewModel(
 
     private fun loadWorkoutLog() {
         viewModelScope.launch {
+            val currentDate = state.value.date
             val result = repository.readWorkoutLog(currentDate)
             if (result.isSuccess) {
                 val workoutLog = result.getOrNull()
                 if (workoutLog != null) {
                     doesRecordAlreadyExist = true
-                    state.value = LogWorkoutState(currentDate, workoutLog)
+                    state.value = state.value.copy(log = workoutLog)
                 } else {
                     doesRecordAlreadyExist = false
-                    state.value = LogWorkoutState(currentDate, WorkoutLog())
+                    state.value = state.value.copy(log = WorkoutLog())
                 }
             } else {
                 debugError("failed to read workout log from repository", result)
@@ -86,7 +112,7 @@ class LogWorkoutViewModel(
     }
 
     private fun changeDate(date: LocalDate) {
-        currentDate = date
+        state.value = state.value.copy(date = date)
         loadWorkoutLog()
     }
 
@@ -95,10 +121,16 @@ class LogWorkoutViewModel(
      * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         require(quantity >= 0) { "cannot increment by a negative value" }
+
+        val oldState = state.value
+        val currentDate = state.value.date
         val newReps = state.value.log[workout] + quantity
-        state.value = LogWorkoutState(currentDate, state.value.log.copy(workout, newReps))
+        state.value = state.value.copy(log = state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
+            /**
+             * TODO: Shouldn't this initially be set to `!doesRecordAlreadyExist`
+             * */
             var firstTimeWrite = false
             val result = if (doesRecordAlreadyExist) {
                 repository.updateWorkoutLog(currentDate, workout, newReps)
@@ -109,9 +141,8 @@ class LogWorkoutViewModel(
             }
             if (result.isFailure) {
                 doesRecordAlreadyExist = !firstTimeWrite && doesRecordAlreadyExist
-                val oldReps = state.value.log[workout] - quantity
-                state.value = LogWorkoutState(currentDate, state.value.log.copy(workout, oldReps))
-                toaster("Couldn't save reps", ToastDuration.SHORT)
+                state.value = oldState
+                toaster("Couldn't save reps")
                 debugError("Failed to write workout history to repository", result)
             } else {
                 Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")

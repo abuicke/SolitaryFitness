@@ -23,7 +23,7 @@ fun OverflowMenu(menuItems: List<String>, onMenuItemClicked: (String) -> Unit) {
     }) {
         Icon(
             imageVector = Icons.Default.MoreVert,
-            contentDescription = stringResource(R.string.overflow_icon_content_description),
+            contentDescription = "Overflow icon",
             tint = MaterialTheme.colorScheme.background
         )
     }
