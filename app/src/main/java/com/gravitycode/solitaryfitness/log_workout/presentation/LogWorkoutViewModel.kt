@@ -35,22 +35,6 @@ class LogWorkoutViewModel(
 
     override val state = mutableStateOf(LogWorkoutState())
 
-
-    /**
-     *
-     *
-     * TODO: `readWorkoutLog(2023-11-20): null` is running 4 times in a row when signed in.
-     *
-     *
-     * TODO: As far as I can remember I wanted to try going further with using generics to collapse the two
-     *  onEvent functions into one.
-     *
-     *
-     *
-     *
-     * */
-
-
     private lateinit var repository: WorkoutLogsRepository
 
     // Specifies whether a workout log already exists for
@@ -75,6 +59,7 @@ class LogWorkoutViewModel(
     }
 
     override fun onEvent(event: AppEvent) {
+        Log.v(TAG, "onEvent($event)")
         when (event) {
             is AppEvent.SignIn -> appController.requestSignIn()
             is AppEvent.SignOut -> appController.requestSignOut()
@@ -82,6 +67,7 @@ class LogWorkoutViewModel(
     }
 
     override fun onEvent(event: LogWorkoutEvent) {
+        Log.v(TAG, "onEvent($event)")
         when (event) {
             is LogWorkoutEvent.DateSelected -> changeDate(event.date)
             is LogWorkoutEvent.Increment -> incrementWorkout(event.workout, event.quantity)
@@ -108,7 +94,7 @@ class LogWorkoutViewModel(
     }
 
     private fun changeDate(date: LocalDate) {
-        if(date != state.value.date) {
+        if (date != state.value.date) {
             state.value = state.value.copy(date = date)
             viewModelScope.launch {
                 loadWorkoutLog()
@@ -116,10 +102,6 @@ class LogWorkoutViewModel(
         }
     }
 
-    /**
-     * TODO: Could just retain a reference to the old TrackRepsState and reassign that if the update fails
-     *  This logic is implemented, need to test by setting `if(result.isFailure)` to `if(!result.isFailure)`
-     * */
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         require(quantity >= 0) { "cannot increment by a negative value" }
 
@@ -129,23 +111,17 @@ class LogWorkoutViewModel(
         state.value = state.value.copy(log = state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
-            /**
-             * TODO: Shouldn't this initially be set to `!doesRecordAlreadyExist`
-             * */
-            var firstTimeWrite = false
             val result = if (doesRecordAlreadyExist) {
                 repository.updateWorkoutLog(currentDate, workout, newReps)
             } else {
-                firstTimeWrite = true
-                doesRecordAlreadyExist = true
                 repository.writeWorkoutLog(currentDate, state.value.log)
             }
             if (result.isFailure) {
-                doesRecordAlreadyExist = !firstTimeWrite && doesRecordAlreadyExist
                 state.value = oldState
                 toaster("Couldn't save reps")
                 debugError("Failed to write workout history to repository", result)
             } else {
+                doesRecordAlreadyExist = true
                 Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
             }
         }
