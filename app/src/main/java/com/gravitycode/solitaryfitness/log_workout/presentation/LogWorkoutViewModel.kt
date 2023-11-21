@@ -90,28 +90,30 @@ class LogWorkoutViewModel(
         }
     }
 
-    private fun loadWorkoutLog() {
-        viewModelScope.launch {
-            val currentDate = state.value.date
-            val result = repository.readWorkoutLog(currentDate)
-            if (result.isSuccess) {
-                val workoutLog = result.getOrNull()
-                if (workoutLog != null) {
-                    doesRecordAlreadyExist = true
-                    state.value = state.value.copy(log = workoutLog)
-                } else {
-                    doesRecordAlreadyExist = false
-                    state.value = state.value.copy(log = WorkoutLog())
-                }
+    private suspend fun loadWorkoutLog() {
+        val currentDate = state.value.date
+        val result = repository.readWorkoutLog(currentDate)
+        if (result.isSuccess) {
+            val workoutLog = result.getOrNull()
+            if (workoutLog != null) {
+                doesRecordAlreadyExist = true
+                state.value = state.value.copy(log = workoutLog)
             } else {
-                debugError("failed to read workout log from repository", result)
+                doesRecordAlreadyExist = false
+                state.value = state.value.copy(log = WorkoutLog())
             }
+        } else {
+            debugError("failed to read workout log from repository", result)
         }
     }
 
     private fun changeDate(date: LocalDate) {
-        state.value = state.value.copy(date = date)
-        loadWorkoutLog()
+        if(date != state.value.date) {
+            state.value = state.value.copy(date = date)
+            viewModelScope.launch {
+                loadWorkoutLog()
+            }
+        }
     }
 
     /**

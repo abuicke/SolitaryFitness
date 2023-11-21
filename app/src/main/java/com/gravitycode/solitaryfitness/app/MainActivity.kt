@@ -29,11 +29,10 @@ import javax.inject.Inject
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  * TODO: Need to write rigorous tests for the [LogWorkoutViewModel]
  *
- * TODO: When the user signs in, offer to transfer their offline progress in the preferences store to Firebase.
- *  To do this I will need to maintain a string set in the preferences data store with all the dates that
- *  have logs associated with them so I can iterate over every log that has data. I should delete the
- *  preferences store data while I'm uploading to Firestore as this will create a clean "offline" account
- *  for other use. If the user does not want to transfer the data then don't delete the preferences logs.
+ * TODO:
+ *  1) When a user signs in, ask "Keep current data?" and if they say "Yes", upload all Preferences Store
+ *  logs to Firestore while an async task dialog (or its equivalent) shows "Syncing..."
+ *
  * TODO: Quickly switching between accounts seems to cause a crash. Need to test for this and verify.
  * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
  * TODO: When the app is profiled the memory increases and then stays there, particularly when the user logs
