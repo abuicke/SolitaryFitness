@@ -18,8 +18,8 @@ import kotlin.coroutines.suspendCoroutine
  * of Dagger, construct the component which is using the activity instance in [ComponentActivity.onCreate]
  * or [ComponentActivity.onStart].
  *
- * @see [https://stackoverflow.com/questions/64476827/]
- * @see [https://developer.android.com/training/basics/intents/result#separate]
+ * (Resolve "must call register before LifecycleOwner STARTED")[https://stackoverflow.com/questions/64476827/]
+ * (Get activity result in other class)[https://developer.android.com/training/basics/intents/result#separate]
  * */
 class GetActivityResult<I, O>(
     activity: ComponentActivity,

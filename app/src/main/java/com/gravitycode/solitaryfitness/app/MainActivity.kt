@@ -41,7 +41,6 @@ import javax.inject.Inject
  *  retained in memory? Use a WeakReference? Create WeakLazyWorkoutLogRepository?
  * TODO: Is there a race condition between the ViewModel completing its setup and the composable being put
  *  on the screen? If reps are added before the repository has initialized assumedly the app will crash?
- * TODO: Replace @see with proper markdown everywhere it's referencing a URL
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
  *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
  *  actual test.
