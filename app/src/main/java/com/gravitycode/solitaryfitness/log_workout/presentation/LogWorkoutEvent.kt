@@ -11,5 +11,9 @@ sealed class LogWorkoutEvent {
 
     object Reset : LogWorkoutEvent()
 
-    object Edit : LogWorkoutEvent()
+    data class Edit(val mode: Mode) : LogWorkoutEvent() {
+        enum class Mode {
+            START, SAVE, CANCEL
+        }
+    }
 }

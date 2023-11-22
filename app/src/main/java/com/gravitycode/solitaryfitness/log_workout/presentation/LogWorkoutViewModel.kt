@@ -37,12 +37,6 @@ class LogWorkoutViewModel(
 
     private lateinit var repository: WorkoutLogsRepository
 
-    // Specifies whether a workout log already exists for
-    // this date, in which case the update function should
-    // be called on the repository. If a new record needs
-    // to be created the write function should be used.
-    private var doesRecordAlreadyExist = false
-
     init {
         /**
          * TODO: Need to make sure this job is canceled when I no longer need to observe this state.
@@ -72,21 +66,22 @@ class LogWorkoutViewModel(
             is LogWorkoutEvent.DateSelected -> changeDate(event.date)
             is LogWorkoutEvent.Increment -> incrementWorkout(event.workout, event.quantity)
             is LogWorkoutEvent.Reset -> resetReps()
-            is LogWorkoutEvent.Edit -> editReps()
+            is LogWorkoutEvent.Edit -> editReps(event.mode)
         }
     }
 
     private suspend fun loadWorkoutLog() {
         val currentDate = state.value.date
         val result = repository.readWorkoutLog(currentDate)
+
         if (result.isSuccess) {
             val workoutLog = result.getOrNull()
             if (workoutLog != null) {
-                doesRecordAlreadyExist = true
                 state.value = state.value.copy(log = workoutLog)
             } else {
-                doesRecordAlreadyExist = false
-                state.value = state.value.copy(log = WorkoutLog())
+                val log = WorkoutLog()
+                state.value = state.value.copy(log = log)
+                repository.writeWorkoutLog(currentDate, log)
             }
         } else {
             debugError("failed to read workout log from repository", result)
@@ -111,31 +106,41 @@ class LogWorkoutViewModel(
         state.value = state.value.copy(log = state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
-            val result = if (doesRecordAlreadyExist) {
-                repository.updateWorkoutLog(currentDate, workout, newReps)
-            } else {
-                repository.writeWorkoutLog(currentDate, state.value.log)
-            }
+            val result = repository.updateWorkoutLog(currentDate, workout, newReps)
             if (result.isFailure) {
                 state.value = oldState
                 toaster("Couldn't save reps")
-                debugError("Failed to write workout history to repository", result)
+                debugError("Failed to write workout log to repository", result)
             } else {
-                doesRecordAlreadyExist = true
                 Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
             }
         }
     }
 
     private fun resetReps() {
-        toaster("Reset Reps")
-//        _state.value = LogWorkoutState(currentDate, WorkoutLog())
-//        viewModelScope.launch {
-//            repository.writeWorkoutLog(currentDate, state.value.log)
-//        }
+        val oldState = state.value
+
+        val log = WorkoutLog()
+        state.value = state.value.copy(log = log)
+
+        viewModelScope.launch {
+            val result = repository.writeWorkoutLog(state.value.date, log)
+            if (result.isFailure) {
+                state.value = oldState
+                toaster("Couldn't reset reps")
+                debugError("Failed to reset reps and write to repository", result)
+            } else {
+                Log.v(TAG, "reset reps successfully")
+            }
+        }
     }
 
-    private fun editReps() {
-        toaster("Edit Reps")
+    /**
+     * TODO: When in edit mode turn each Text that contains a rep count into an EditText and show two
+     *  floating action buttons, one to save the changes that were made (floppy disk save icon) and one to
+     *  cancel all the edits that were made (X icon [https://www.google.com/search?q=x+close+icon])
+     * */
+    private fun editReps(mode: LogWorkoutEvent.Edit.Mode) {
+        state.value = state.value.copy(editMode = mode == LogWorkoutEvent.Edit.Mode.START)
     }
 }

@@ -116,9 +116,8 @@ fun TrackRepsScreen(
                 MenuItem.SIGN_IN -> viewModel.onEvent(AppEvent.SignIn)
                 MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
                 MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
-                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit)
-                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT)
-                    .show() //something to do with NavController
+                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
+                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
             }
         }
         TrackRepsGrid(
