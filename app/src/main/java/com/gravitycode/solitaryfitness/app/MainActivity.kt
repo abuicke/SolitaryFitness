@@ -44,6 +44,8 @@ import javax.inject.Inject
  * TODO: When the app is profiled the memory increases and then stays there, particularly when the user logs
  *  in and the Firestore repo is assumedly initialized. How can I make it so that only one repo is ever
  *  retained in memory? Use a WeakReference? Create WeakLazyWorkoutLogRepository?
+ * TODO: What happens when read, write or update is called multiple times quickly (assumedly while one of
+ *  the earlier calls is still executing)?
  * TODO: Is there a race condition between the ViewModel completing its setup and the composable being put
  *  on the screen? If reps are added before the repository has initialized assumedly the app will crash?
  * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]

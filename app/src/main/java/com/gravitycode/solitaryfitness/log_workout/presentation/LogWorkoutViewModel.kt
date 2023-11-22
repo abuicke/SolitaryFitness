@@ -40,7 +40,8 @@ class LogWorkoutViewModel(
     init {
         /**
          * TODO: Need to make sure this job is canceled when I no longer need to observe this state.
-         *  Check why and how the Job was cancelled in the clean architecture project.
+         *  This would probably be resolved by simply using a ViewModel factory in MainActivity instead of
+         *  injecting the ViewModel directly and using the same pattern I have right here with the repo.
          * */
         viewModelScope.launch {
             appController.appState.collect { appState ->
@@ -137,8 +138,9 @@ class LogWorkoutViewModel(
 
     /**
      * TODO: When in edit mode turn each Text that contains a rep count into an EditText and show two
-     *  floating action buttons, one to save the changes that were made (floppy disk save icon) and one to
-     *  cancel all the edits that were made (X icon [https://www.google.com/search?q=x+close+icon])
+     *  floating action buttons, one to save the changes that were made (floppy disk save icon - pull save
+     *  icon from clean architecture notes app) and one to cancel all the edits that were made (X icon
+     *  [https://www.google.com/search?q=x+close+icon])
      * */
     private fun editReps(mode: LogWorkoutEvent.Edit.Mode) {
         state.value = state.value.copy(editMode = mode == LogWorkoutEvent.Edit.Mode.START)
