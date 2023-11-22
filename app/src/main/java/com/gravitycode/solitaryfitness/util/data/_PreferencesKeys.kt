@@ -21,9 +21,6 @@ fun longPreferencesKey(name: Any, vararg names: Any) =
 fun stringSetPreferencesKey(name: Any, vararg names: Any) =
     androidx.datastore.preferences.core.stringSetPreferencesKey(toString(name, *names))
 
-/**
- * TODO: Test
- * */
 private fun toString(any: Any, vararg anys: Any): String {
     val strBldr = StringBuilder(any.toString())
     for (a in anys) {

@@ -1,9 +1,7 @@
 package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import com.gravitycode.solitaryfitness.app.ApplicationScope
 
 /**
  * TODO: This should be implementing an interface for testing, but then I lose the nice, neat
@@ -11,10 +9,9 @@ import com.gravitycode.solitaryfitness.app.ApplicationScope
  *  An interface plus a factory would solve this problem?
  *  Can also just mark the toaster parameter as nullable and not pass it in during testing.
  * */
-@ApplicationScope
 class Toaster(private val context: Context) {
 
-    operator fun invoke(text: String, duration: ToastDuration) {
+    operator fun invoke(text: String, duration: ToastDuration = ToastDuration.SHORT) {
         Toast.makeText(context, text, duration.toInt()).show()
     }
 }

@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Solitary Fitness</string>
-    <string name="track_reps_topbar_text">Track Workouts</string>
-    <string name="overflow_icon_content_description">Overflow icon</string>
 </resources>

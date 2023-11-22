@@ -1,0 +1,14 @@
+{
+  "User": {
+    "mProviderId": "google.com",
+    "mEmail": "buickea@gmail.com",
+    "mPhoneNumber": null,
+    "mName": "Adam Buicke",
+    "mPhotoUri": "https://lh3.googleusercontent.com/a/ACg8ocL8p9etpQsdZNTxhdbz_lVknHmZY44d2QE6landGS3Lbws=s96-c"
+  },
+  "mToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImY4MzNlOGE3ZmUzZmU0Yjg3ODk0ODIxOWExNjg0YWZhMzczY2E4NmYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3MDMwMDc4NzYxMTQtdXNuYXNmZ29kbHI2bzRhdHRjaG41dmpxYm0xajU5aHYuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3MDMwMDc4NzYxMTQtMGQ4c2xyN3U0OGxiM2d0Zmtvb2hhYWs4YmppOTk4NXMuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTQyNjMxMjYyMzkyMDE3MDk3MTUiLCJlbWFpbCI6ImJ1aWNrZWFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJBZGFtIEJ1aWNrZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NMOHA5ZXRwUXNkWk5UeGhkYnpfbFZrbkhtWlk0NGQyUUU2bGFuZEdTM0xid3M9czk2LWMiLCJnaXZlbl9uYW1lIjoiQWRhbSIsImZhbWlseV9uYW1lIjoiQnVpY2tlIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2OTkzMDI5MjksImV4cCI6MTY5OTMwNjUyOX0.PkLuAxuJhm31qrWK24NcYJRKnloLZGYx7GDqAla9BCf54onU0ACGMTGe2Km6LFU_0Vxn9zUxHqnVENvhZf3PKotDhvYzHqdnWPtxrdsWOCnUO__apPtxgqvvq-2e6wlw0oVDouILaTUbI7jtXTJ729ecZ4ngGs7ZngZKgrAHapcFJn5ue1BUc7lN9AD4eb7CKU76Rt7Jt45P1grIpcRo9_0u6A42ms9FayY7soCbAPnOUdtsv_3S-2qrgl2MCwY7Do47k2qdqQnxmcTb3iqQFPS4OwR482NQCEOFKphbZ2o-AVBBWeQyZwbhOGdfJ7pHuzyhoQ399qB8_VfSjQJuiQ",
+  "mSecret": null,
+  "mIsNewUser": true,
+  "mException": null,
+  "mPendingCredential": null
+}

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -54,12 +55,11 @@ android {
 
 dependencies {
 
-    // noinspection GradleDependency
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     // Compose
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.1")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -67,11 +67,15 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
+    // Coil - Image Loading
+//    implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     // Multi Dex
     implementation("androidx.multidex:multidex:2.0.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
 
     // Dagger 2
     implementation("com.google.dagger:dagger:2.48")
@@ -83,6 +87,17 @@ dependencies {
 
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Firebase
+    // Use the BoM (Bill-of-Materials) so that only compatible versions of the Firebase libraries are
+    // used, provided no explicit version is set on the libraries (https://reflectoring.io/maven-bom/)
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    // Not part of the BoM, so requires an explicit version
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // JCIP Concurrency Annotations
     // implementation("net.jcip:jcip-annotations:1.0")
