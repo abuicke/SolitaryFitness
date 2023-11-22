@@ -21,6 +21,8 @@ import java.time.LocalDate
  * to app crashes. To avoid that, use [androidx.lifecycle.repeatOnLifecycle].
  *
  * See warning in (StateFlow and SharedFlow)[https://developer.android.com/kotlin/flow/stateflow-and-sharedflow]
+ *
+ * TODO: Do I need to implement this behavior?
  * */
 class LogWorkoutViewModel(
     private val appController: AppController,

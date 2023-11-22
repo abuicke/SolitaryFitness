@@ -2,8 +2,6 @@ package com.gravitycode.solitaryfitness.auth
 
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.Lifecycle.State.CREATED
-import androidx.lifecycle.Lifecycle.State.INITIALIZED
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth

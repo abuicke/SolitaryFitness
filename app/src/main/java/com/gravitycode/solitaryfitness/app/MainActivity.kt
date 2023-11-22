@@ -48,6 +48,8 @@ import javax.inject.Inject
  *  retained in memory? Use a WeakReference? Create WeakLazyWorkoutLogRepository?
  * TODO: What happens when read, write or update is called multiple times quickly (assumedly while one of
  *  the earlier calls is still executing)?
+ * TODO: When any part of the LogWorkoutState gets updated, e.g. the date, every other composable that gets
+ *  a value from the state seems to recompose. Is there a more efficient way of doing this?
  * TODO: Is there a race condition between the ViewModel completing its setup and the composable being put
  *  on the screen? If reps are added before the repository has initialized assumedly the app will crash?
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the

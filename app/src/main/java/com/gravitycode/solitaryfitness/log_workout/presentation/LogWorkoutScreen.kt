@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.commandiron.wheel_picker_compose.WheelDatePicker
+import com.google.firebase.firestore.proto.TargetGlobal
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
@@ -50,6 +51,8 @@ import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
+
+private const val TAG = "LogWorkoutScreen"
 
 /**
  * TODO: Consider moving this out into it's own class and applying the same method of filters the values()
@@ -110,6 +113,7 @@ fun TrackRepsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val logWorkoutState = viewModel.state.value
+        Log.d(TAG, "view model state updated: $logWorkoutState")
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {
@@ -150,11 +154,6 @@ private fun TopBar(
     user: User?,
     onMenuItemClicked: (MenuItem) -> Unit
 ) {
-    /**
-     * TODO: This is running twice
-     * */
-    Log.i("mo", "user = $user")
-
     TopAppBar(
         modifier = Modifier.height(IntrinsicSize.Max),
         title = {
