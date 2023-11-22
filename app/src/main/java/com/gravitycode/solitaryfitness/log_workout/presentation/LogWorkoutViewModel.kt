@@ -130,7 +130,7 @@ class LogWorkoutViewModel(
                 toaster("Couldn't reset reps")
                 debugError("Failed to reset reps and write to repository", result)
             } else {
-                Log.v(TAG, "reset reps successfully")
+                Log.v(TAG, "reps reset successfully")
             }
         }
     }

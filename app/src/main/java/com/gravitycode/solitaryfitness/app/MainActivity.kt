@@ -29,11 +29,17 @@ import javax.inject.Inject
  * TODO: Add UI tests to verify all the usual behavior I test manually.
  * TODO: Need to write rigorous tests for the [LogWorkoutViewModel]
  *
- * TODO:
- *  1) When a user signs in, ask "Keep current data?" and if they say "Yes", upload all Preferences Store
- *  logs to Firestore while an async task dialog (or its equivalent) shows "Syncing..."
+ * TODO: `com.firebase.ui.auth.FirebaseUiException: Code: 7, message: 7` happens randomly. When an
+ *  authentication exception occurs, need to handle it gracefully and show a toast asking the user to sign
+ *  in again.
+ * TODO: When a user signs in, ask "Would you like to save your offline work to your account?" and if they
+ *  say "Yes", upload all Preferences Store logs to Firestore while an async task dialog (or its equivalent)
+ *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
+ *  iterate over them and upload them to Firestore.
  *
- * TODO: Quickly switching between accounts seems to cause a crash. Need to test for this and verify.
+ * TODO: Allow customizing rep count on a per workout basis via long pressing the rep count
+ * TODO: Need to have a long snackbar with an undo option when reset is clicked
+ * TODO: Need to check if phone is online to sign in
  * TODO: Test Firebase works offline. Throws an offline exception when mobile data is enabled.
  * TODO: When the app is profiled the memory increases and then stays there, particularly when the user logs
  *  in and the Firestore repo is assumedly initialized. How can I make it so that only one repo is ever
@@ -44,8 +50,10 @@ import javax.inject.Inject
  *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
  *  actual test.
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the
- *  ViewModel, should it also be checked for in the repository?
- * TODO: FirebaseUI crashes when there's no internet connection. Test without internet connection and resolve.
+ *  ViewModel, should it also be checked for in the repository? Yes, I think so. No class should rely on the
+ *  error handling of any other. It should do its own checks. I'm just wondering if data sanitization is
+ *  commonly handled in the repository? I suppose that's the whole point of abstracting out an interface
+ *  to interact with your data source.
  * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?
  * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
  *      1) Successful sign in: "Signed in as {email}"
@@ -54,12 +62,13 @@ import javax.inject.Inject
  *      4) Failure sign out: "Failed to sign out"
  *
  * TODO: Overflow:
- *          Sign In
+ *          Sign In/Sign Out
  *          Reset Reps
  *          Edit Reps - Adjust rep counts in each cell.
  *          Settings:
- *              1) Set custom values for rep buttons
+ *              1) Set custom values for rep buttons (All: 1, 5, 10) or on a per workout basis
  *              2) Boolean option: keep reps grid open until X is selected
+ *              3) Clear history: offline, online or both
  *
  *
  *
