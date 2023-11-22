@@ -37,8 +37,6 @@ import javax.inject.Inject
  *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
  *  iterate over them and upload them to Firestore.
  *
- *  TODO: "mo" log executing twice in LogRepsScreen
- *
  * TODO: Allow customizing rep count on a per workout basis via long pressing the rep count
  * TODO: Need to have a long snackbar with an undo option when reset is clicked
  * TODO: Need to check if phone is online to sign in
