@@ -50,9 +50,6 @@ import javax.inject.Inject
  *  the earlier calls is still executing)?
  * TODO: Is there a race condition between the ViewModel completing its setup and the composable being put
  *  on the screen? If reps are added before the repository has initialized assumedly the app will crash?
- * TODO: Test that activity lifecycle check in [com.gravitycode.solitaryfitness.auth.FirebaseAuthenticator]
- *  works correctly. Construct the object in each stage of the [MainActivity]. I don't think I can write an
- *  actual test.
  * TODO: Need to write checks that a date in the future is never submitted. I suppose that's handled by the
  *  ViewModel, should it also be checked for in the repository? Yes, I think so. No class should rely on the
  *  error handling of any other. It should do its own checks. I'm just wondering if data sanitization is
