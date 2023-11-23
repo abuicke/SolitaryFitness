@@ -21,7 +21,7 @@ import dagger.Provides
 import javax.inject.Qualifier
 
 @Qualifier
-@Retention(AnnotationRetention.BINARY)
+@Retention(AnnotationRetention.RUNTIME)
 private annotation class Private
 
 @Module

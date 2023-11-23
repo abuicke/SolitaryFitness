@@ -151,7 +151,7 @@ class MainActivity : ComponentActivity(), AppController {
         lifecycleScope.launch {
             val result = authenticator.signOut()
             if (result.isSuccess) {
-                appState.emit(AppState())
+                appState.emit(AppState(null))
                 toaster("Signed out")
                 Log.v(TAG, "signed out")
             } else {
