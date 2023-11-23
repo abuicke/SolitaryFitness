@@ -161,7 +161,7 @@ private fun TopBar(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (user != null) {
+                if (user?.profilePicture != null) {
                     val imageLoaded = remember { mutableStateOf(false) }
 
                     AsyncImage(

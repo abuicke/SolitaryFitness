@@ -67,10 +67,6 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
 
-    // Coil - Image Loading
-//    implementation("io.coil-kt:coil:2.5.0")
-    implementation("io.coil-kt:coil-compose:2.5.0")
-
     // Multi Dex
     implementation("androidx.multidex:multidex:2.0.1")
 
@@ -99,17 +95,15 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // JCIP Concurrency Annotations
-    // implementation("net.jcip:jcip-annotations:1.0")
-
-    // Klutter
-    // implementation("uy.kohesive.klutter:klutter-core:3.0.0")
-
-    // Guava
-    implementation("com.google.guava:guava:32.1.2-android")
+    // Coil - Image Loading
+    // implementation("io.coil-kt:coil:2.5.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     // WheelPickerCompose - https://github.com/commandiron/WheelPickerCompose
     implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+
+    // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
     // Tooling
     debugImplementation("androidx.compose.ui:ui-tooling")

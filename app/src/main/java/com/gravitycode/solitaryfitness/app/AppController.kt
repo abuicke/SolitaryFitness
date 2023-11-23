@@ -9,4 +9,6 @@ interface AppController {
     fun requestSignIn()
 
     fun requestSignOut()
+
+    fun launchTransferDataFlow()
 }
