@@ -8,6 +8,7 @@ import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -27,6 +28,9 @@ open class FirestoreWorkoutLogsRepository(
     private companion object {
         const val TAG = "FirestoreWorkoutHistoryRepo"
     }
+
+    override val metaData: MetaData<LocalDate>
+        get() = TODO("Not yet implemented")
 
     final override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
         return suspendCoroutine { continuation ->

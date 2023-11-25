@@ -2,9 +2,12 @@ package com.gravitycode.solitaryfitness.log_workout.data
 
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 interface WorkoutLogsRepository {
+
+    val metaData: MetaData<LocalDate>
 
     suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?>
 

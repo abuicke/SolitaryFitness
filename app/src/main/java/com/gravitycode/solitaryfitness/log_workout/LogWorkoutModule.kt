@@ -37,8 +37,9 @@ object LogWorkoutModule {
     @Provides
     @ActivityScope
     fun providePreferencesWorkoutLogsRepo(
+        appController: AppController,
         @Private preferencesStore: DataStore<Preferences>
-    ) = PreferencesWorkoutLogsRepository(preferencesStore)
+    ) = PreferencesWorkoutLogsRepository(appController, preferencesStore)
 
     @Private
     @Provides

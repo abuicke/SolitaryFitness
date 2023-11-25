@@ -22,13 +22,12 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Toaster
-import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import javax.inject.Inject
 
 /**
@@ -47,6 +46,9 @@ import javax.inject.Inject
  *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
  *  iterate over them and upload them to Firestore.
  *
+ * TODO: It doesn't seem like dispatchers should be specified by the calling code as they're not aware of
+ *  the implementation details of what they're calling. It seems like this should be done with [withContext]
+ *  in the function being called.
  * TODO: For `launchTransferDataFlow()` to be called there should be some work to transfer. The user
  *  shouldn't have immediately signed in first time they launched the app and then receive this message.
  *  The logic I will need later in the process to iterate over all available records will also be required now.
@@ -54,7 +56,6 @@ import javax.inject.Inject
  *  happens.
  * TODO: Need to specify launch(Dispatchers.IO) for all coroutine operations (lifecycleScope and viewModelScope)
  *  that involve accessing disk or network (so any time I access a repository).
- * TODO: Replace direct calls to `intPreferencesKey` with a `key(LocalDate, Workout)` function
  * TODO: Allow customizing rep count on a per workout basis via long pressing the rep count
  * TODO: Need to have a long snackbar with an undo option when reset is clicked
  * TODO: Need to check if phone is online to sign in
@@ -121,23 +122,11 @@ class MainActivity : ComponentActivity(), AppController {
         const val TAG = "MainActivity"
     }
 
-    /**
-     *
-     *
-     *
-     * TODO: Start implementing logic to get a list or map (or a flow?) of every record in a repository.
-     *  It would make it even easier if I could just query the number of records, but not sure how easy it
-     *  would be to implement that in the Firestore repo.
-     *
-     *
-     *
-     *
-     * */
-
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
+    override val applicationScope = MainScope()
     override val appState = MutableSharedFlow<AppState>(replay = 1)
     private val appControllerSettings = AppControllerSettings(this)
 
@@ -172,8 +161,8 @@ class MainActivity : ComponentActivity(), AppController {
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
                 appState.emit(AppState(user))
-                if (!appControllerSettings.containsUser(user)) {
-                    appControllerSettings.addUser(user)
+                if (!appControllerSettings.hasUserPreviouslySignedIn(user)) {
+                    appControllerSettings.addUserToSignInHistory(user)
                     launchTransferDataFlow()
                 }
                 withContext(Dispatchers.Main) {
@@ -213,7 +202,7 @@ class MainActivity : ComponentActivity(), AppController {
 
 private class AppControllerSettings(activity: ComponentActivity) {
 
-    companion object {
+    private companion object {
 
         private val USERS_KEY = stringSetPreferencesKey("users")
     }
@@ -232,14 +221,14 @@ private class AppControllerSettings(activity: ComponentActivity) {
         }
     }
 
-    suspend fun addUser(user: User) {
+    suspend fun addUserToSignInHistory(user: User) {
         preferencesStore.edit { preferences ->
             users.add(user.id)
             preferences[USERS_KEY] = users
         }
     }
 
-    fun containsUser(user: User): Boolean {
+    fun hasUserPreviouslySignedIn(user: User): Boolean {
         return users.contains(user.id)
     }
 }
