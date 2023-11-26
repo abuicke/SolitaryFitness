@@ -15,6 +15,7 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
+import com.gravitycode.solitaryfitness.data.SyncDataService
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
@@ -98,6 +99,7 @@ import javax.inject.Inject
  *
  *
  *
+ * TODO: Need to test that only single instances are being created by Dagger.
  *
  * TODO: Is there space to make use of an object pool anywhere? Such as when I'm copying the WorkoutLogs
  *  over and over again in the [LogWorkoutViewModel] or just generally when I'm returning the objects from
@@ -127,6 +129,7 @@ class MainActivity : ComponentActivity(), AppController {
 
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
+    @Inject lateinit var syncFirestoreDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
@@ -159,64 +162,44 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    /**
-     *
-     *
-     *
-     *
-     * TODO: All the withContexts seem very crazy
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * */
-
     override fun requestSignIn() {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             val repository = repositoryFactory.getInstance(authenticator.isUserSignedIn())
             val firstRecord = repository.metaData.getExistingRecords().firstOrNull()
             val hasOfflineData = firstRecord != null
 
-            val result = authenticator.signIn()
+            val result = withContext(Dispatchers.IO) {
+                authenticator.signIn()
+            }
 
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
                 appState.emit(AppState(user))
                 if (!appControllerSettings.hasUserPreviouslySignedIn(user) && hasOfflineData) {
                     appControllerSettings.addUserToSignInHistory(user)
-                    withContext(Dispatchers.Main) {
-                        launchTransferDataFlow()
-                    }
+                    launchTransferDataFlow()
                 }
-                withContext(Dispatchers.Main) {
-                    toaster("Signed in: ${user.email}")
-                }
+                toaster("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
             } else {
-                withContext(Dispatchers.Main) {
-                    toaster("Failed to sign in")
-                }
+                toaster("Failed to sign in")
                 debugError("Sign in failed", result)
             }
         }
     }
 
     override fun requestSignOut() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = authenticator.signOut()
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                authenticator.signOut()
+            }
+
             if (result.isSuccess) {
                 appState.emit(AppState(null))
-                withContext(Dispatchers.Main) {
-                    toaster("Signed out")
-                }
+                toaster("Signed out")
                 Log.v(TAG, "signed out")
             } else {
-                withContext(Dispatchers.Main) {
-                    toaster("Failed to sign out")
-                }
+                toaster("Failed to sign out")
                 debugError("Sign out failed", result)
             }
         }
@@ -226,6 +209,15 @@ class MainActivity : ComponentActivity(), AppController {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
             .setMessage(R.string.transfer_dialog_message)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                dialog.dismiss()
+                // TODO: Show syncing dialog
+                lifecycleScope.launch(Dispatchers.IO) {
+                    syncFirestoreDataService.sync()
+                }
+                // TODO: Dismiss syncing dialog
+            }
+            .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 }

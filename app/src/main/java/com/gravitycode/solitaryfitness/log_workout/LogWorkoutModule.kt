@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.auth.Authenticator
+import com.gravitycode.solitaryfitness.util.data.firestoreSettings
 import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
@@ -44,8 +45,20 @@ object LogWorkoutModule {
     @Private
     @Provides
     @ActivityScope
+    fun providesFirebaseFirestore(): FirebaseFirestore {
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.firestoreSettings = firestoreSettings(
+            persistentCacheSizeMb = 10
+        )
+
+        return firestore
+    }
+
+    @Private
+    @Provides
+    @ActivityScope
     fun provideFirestoreWorkoutLogsRepository(
-        firestore: FirebaseFirestore,
+        @Private firestore: FirebaseFirestore,
         authenticator: Authenticator
     ) = FirestoreWorkoutLogsRepository(firestore, authenticator)
 

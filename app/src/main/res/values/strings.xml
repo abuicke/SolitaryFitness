@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Solitary Fitness</string>
 
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <!-- Transfer flow dialog -->
     <string name="transfer_dialog_title">Transfer Data</string>
     <string name="transfer_dialog_message">
