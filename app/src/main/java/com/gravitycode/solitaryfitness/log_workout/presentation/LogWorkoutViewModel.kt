@@ -51,7 +51,7 @@ class LogWorkoutViewModel(
             appController.appState.collect { appState ->
                 Log.d(TAG, "app state collected: $appState")
                 _state.value = _state.value.copy(user = appState.user)
-                repository = repositoryFactory.create(appState.isUserSignedIn())
+                repository = repositoryFactory.getInstance(appState.isUserSignedIn())
                 loadWorkoutLog()
             }
         }

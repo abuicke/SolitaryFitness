@@ -16,6 +16,7 @@ import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
@@ -26,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -46,6 +48,7 @@ import javax.inject.Inject
  *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
  *  iterate over them and upload them to Firestore.
  *
+ * TODO: Implement `getFirstRecord()` in [Metadata] and use everywhere `getExistingRecords()` is currently called.
  * TODO: It doesn't seem like dispatchers should be specified by the calling code as they're not aware of
  *  the implementation details of what they're calling. It seems like this should be done with [withContext]
  *  in the function being called.
@@ -124,6 +127,7 @@ class MainActivity : ComponentActivity(), AppController {
 
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var toaster: Toaster
+    @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
     override val applicationScope = MainScope()
@@ -157,11 +161,16 @@ class MainActivity : ComponentActivity(), AppController {
 
     override fun requestSignIn() {
         lifecycleScope.launch(Dispatchers.IO) {
+            val repository = repositoryFactory.getInstance(authenticator.isUserSignedIn())
+            val firstRecord = repository.metaData.getExistingRecords().firstOrNull()
+            val hasOfflineData = firstRecord != null
+
             val result = authenticator.signIn()
+
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
                 appState.emit(AppState(user))
-                if (!appControllerSettings.hasUserPreviouslySignedIn(user)) {
+                if (!appControllerSettings.hasUserPreviouslySignedIn(user) && hasOfflineData) {
                     appControllerSettings.addUserToSignInHistory(user)
                     launchTransferDataFlow()
                 }

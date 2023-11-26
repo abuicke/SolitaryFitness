@@ -7,7 +7,7 @@ class LazyWorkoutLogsRepositoryFactory(
     private val firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
 ) : WorkoutLogsRepositoryFactory {
 
-    override fun create(isUserSignedIn: Boolean): WorkoutLogsRepository {
+    override fun getInstance(isUserSignedIn: Boolean): WorkoutLogsRepository {
         return if (isUserSignedIn) {
             firestoreRepository.get()
         } else {
