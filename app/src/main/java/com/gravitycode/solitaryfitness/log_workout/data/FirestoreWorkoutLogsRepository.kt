@@ -40,12 +40,12 @@ open class FirestoreWorkoutLogsRepository(
                     Log.v(TAG, "readWorkoutLog($date): $data")
 
                     val result = if (data != null) {
-                        val workoutLogBuilder = WorkoutLog.Builder()
+                        val map = HashMap<Workout, Int>(Workout.values().size)
                         for (entry: Map.Entry<String, Any> in data) {
                             val workout = Workout.fromString(entry.key)!!
-                            workoutLogBuilder[workout] = entry.value.toString().toInt()
+                            map[workout] = entry.value.toString().toInt()
                         }
-                        Result.success(workoutLogBuilder.build())
+                        Result.success(WorkoutLog.from(map))
                     } else {
                         Result.success(null)
                     }

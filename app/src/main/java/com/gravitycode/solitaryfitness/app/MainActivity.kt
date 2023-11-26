@@ -159,6 +159,21 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
+    /**
+     *
+     *
+     *
+     *
+     * TODO: All the withContexts seem very crazy
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     * */
+
     override fun requestSignIn() {
         lifecycleScope.launch(Dispatchers.IO) {
             val repository = repositoryFactory.getInstance(authenticator.isUserSignedIn())
@@ -172,14 +187,18 @@ class MainActivity : ComponentActivity(), AppController {
                 appState.emit(AppState(user))
                 if (!appControllerSettings.hasUserPreviouslySignedIn(user) && hasOfflineData) {
                     appControllerSettings.addUserToSignInHistory(user)
-                    launchTransferDataFlow()
+                    withContext(Dispatchers.Main) {
+                        launchTransferDataFlow()
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     toaster("Signed in: ${user.email}")
                 }
                 Log.d(TAG, "signed in as user: $user")
             } else {
-                toaster("Failed to sign in")
+                withContext(Dispatchers.Main) {
+                    toaster("Failed to sign in")
+                }
                 debugError("Sign in failed", result)
             }
         }
@@ -195,7 +214,9 @@ class MainActivity : ComponentActivity(), AppController {
                 }
                 Log.v(TAG, "signed out")
             } else {
-                toaster("Failed to sign out")
+                withContext(Dispatchers.Main) {
+                    toaster("Failed to sign out")
+                }
                 debugError("Sign out failed", result)
             }
         }

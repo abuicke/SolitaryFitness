@@ -132,6 +132,8 @@ private class PreferencesMetaData(
         }
     }
 
+    override fun containsRecord(date: LocalDate) = records.contains(date.toString())
+
     suspend fun addRecordExistsFor(date: LocalDate) {
         preferencesStore.edit { preferences ->
             val success = records.add(date.toString())

@@ -84,9 +84,7 @@ class LogWorkoutViewModel(
             if (workoutLog != null) {
                 _state.value = _state.value.copy(log = workoutLog)
             } else {
-                val log = WorkoutLog()
-                _state.value = _state.value.copy(log = log)
-                repository.writeWorkoutLog(currentDate, log)
+                _state.value = _state.value.copy(log = WorkoutLog())
             }
         } else {
             debugError("failed to read workout log from repository", result)
@@ -111,7 +109,16 @@ class LogWorkoutViewModel(
         _state.value = _state.value.copy(log = _state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
-            val result = repository.updateWorkoutLog(currentDate, workout, newReps)
+            val recordAlreadyExists = repository.metaData.containsRecord(currentDate)
+            val result = if(recordAlreadyExists) {
+                repository.updateWorkoutLog(currentDate, workout, newReps)
+            }else {
+                val log = WorkoutLog.from(hashMapOf(
+                    workout to newReps
+                ))
+                repository.writeWorkoutLog(currentDate, log)
+            }
+
             if (result.isFailure) {
                 _state.value = oldState
                 toaster("Couldn't save reps")

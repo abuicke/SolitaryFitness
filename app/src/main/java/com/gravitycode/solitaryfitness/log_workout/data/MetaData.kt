@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 interface MetaData<RecordsKey> {
 
     fun getExistingRecords(): Flow<RecordsKey>
+
+    fun containsRecord(key: RecordsKey): Boolean
 }
