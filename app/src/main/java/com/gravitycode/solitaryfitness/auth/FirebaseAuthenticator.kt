@@ -48,7 +48,7 @@ class FirebaseAuthenticator(
     }
 
     override suspend fun signIn(): Result<User> {
-        if (user != null) debugError("user already signed in as: $user")
+        if (user != null) debugError("already signed in as: $user")
         val result = getFirebaseSignInResult(
             firebaseAuthUi.createSignInIntentBuilder()
                 .setAvailableProviders(providers)

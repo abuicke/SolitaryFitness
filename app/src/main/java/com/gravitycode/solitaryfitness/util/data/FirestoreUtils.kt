@@ -44,6 +44,9 @@ fun firestoreSettings(persistentCacheSizeMb: Int): FirebaseFirestoreSettings {
 suspend fun CollectionReference.deleteDocuments() {
     return suspendCoroutine { continuation ->
         get().addOnCompleteListener { queryTask ->
+            /**
+             * TODO: I seem to be going on to use the `queryTask.result` even if `queryTask.isSuccessful` is false?
+             * */
             if (!queryTask.isSuccessful) debugError("query firestore task failed", queryTask.exception)
             val query: QuerySnapshot = queryTask.result
             val documents = query.documents

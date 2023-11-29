@@ -38,7 +38,7 @@ object LogWorkoutModule {
     @Private
     @Provides
     @ActivityScope
-    fun providePreferencesWorkoutLogsRepo(
+    fun providePreferencesWorkoutLogsRepository(
         appController: AppController,
         @Private preferencesStore: DataStore<Preferences>
     ) = PreferencesWorkoutLogsRepository(appController, preferencesStore)
@@ -78,9 +78,10 @@ object LogWorkoutModule {
     @Provides
     @ActivityScope
     fun providesSyncDataService(
+        messenger: Messenger,
         @Private preferencesRepository: PreferencesWorkoutLogsRepository,
         @Private firestoreRepository: FirestoreWorkoutLogsRepository
-    ) = SyncDataService.create(preferencesRepository, firestoreRepository)
+    ) = SyncDataService.create(messenger, preferencesRepository, firestoreRepository)
 
     @Provides
     @ActivityScope

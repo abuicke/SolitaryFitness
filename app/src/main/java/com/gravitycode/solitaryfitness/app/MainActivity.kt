@@ -210,6 +210,21 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
+    /**
+     *
+     *
+     *
+     *
+     * TODO: UI Doesn't refresh after new valued have been added to Firestore. Need to support an active
+     *  listener to Firestore data so the ViewModel will invalidate automatically. This will also be necessary
+     *  for when I have a web client.
+     *
+     *
+     *
+     *
+     *
+     * */
+
     override fun launchTransferDataFlow() {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
@@ -220,11 +235,7 @@ class MainActivity : ComponentActivity(), AppController {
                 messenger.toast("Show syncing dialog")
 
                 lifecycleScope.launch(Dispatchers.IO) {
-                    syncDataService.sync(SyncDataService.Mode.OVERWRITE) { date ->
-
-                        debugError("Failed to sync record for $date")
-                        messenger.toast("Sync failed for $date, retrying...")
-                    }
+                    syncDataService.sync(SyncDataService.Mode.OVERWRITE)
                 }
 
                 // TODO: Dismiss syncing dialog
