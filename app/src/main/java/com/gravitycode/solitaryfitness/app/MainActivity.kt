@@ -15,7 +15,7 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.data.SyncDataService
+import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
@@ -23,7 +23,7 @@ import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.Toaster
+import com.gravitycode.solitaryfitness.util.ui.Messenger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,6 +49,10 @@ import javax.inject.Inject
  *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
  *  iterate over them and upload them to Firestore.
  *
+ * TODO: Need to understand how laziness is actually working in Dagger. If the user has not signed in and
+ *  is using the app offline, absolutely no Firebase or Firestore repo resources should be created (including
+ *  creating the FirebaseFirestore instance to begin with). The sync service should also not be created.
+ * TODO: Have the sync service accept lazy versions of the repos in dagger if necessary.
  * TODO: Implement `getFirstRecord()` in [Metadata] and use everywhere `getExistingRecords()` is currently called.
  * TODO: It doesn't seem like dispatchers should be specified by the calling code as they're not aware of
  *  the implementation details of what they're calling. It seems like this should be done with [withContext]
@@ -80,6 +84,7 @@ import javax.inject.Inject
  *  commonly handled in the repository? I suppose that's the whole point of abstracting out an interface
  *  to interact with your data source.
  * TODO: What happens when [Authenticator.signIn] or [Authenticator.signOut] is called multiple times?
+ * TODO: Implement [Messenger.snackbar]
  * TODO: Use snackbar instead of toast for sign in and sign out, also notify for all 4:
  *      1) Successful sign in: "Signed in as {email}"
  *      2) Successful sign out: "Signed out"
@@ -128,8 +133,8 @@ class MainActivity : ComponentActivity(), AppController {
     }
 
     @Inject lateinit var authenticator: Authenticator
-    @Inject lateinit var toaster: Toaster
-    @Inject lateinit var syncFirestoreDataService: SyncDataService
+    @Inject lateinit var messenger: Messenger
+    @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
@@ -165,7 +170,7 @@ class MainActivity : ComponentActivity(), AppController {
     override fun requestSignIn() {
         lifecycleScope.launch {
             val repository = repositoryFactory.getInstance(authenticator.isUserSignedIn())
-            val firstRecord = repository.metaData.getExistingRecords().firstOrNull()
+            val firstRecord = repository.metaData.getRecords().firstOrNull()
             val hasOfflineData = firstRecord != null
 
             val result = withContext(Dispatchers.IO) {
@@ -179,10 +184,10 @@ class MainActivity : ComponentActivity(), AppController {
                     appControllerSettings.addUserToSignInHistory(user)
                     launchTransferDataFlow()
                 }
-                toaster("Signed in: ${user.email}")
+                messenger.toast("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
             } else {
-                toaster("Failed to sign in")
+                messenger.toast("Failed to sign in")
                 debugError("Sign in failed", result)
             }
         }
@@ -196,10 +201,10 @@ class MainActivity : ComponentActivity(), AppController {
 
             if (result.isSuccess) {
                 appState.emit(AppState(null))
-                toaster("Signed out")
+                messenger.toast("Signed out")
                 Log.v(TAG, "signed out")
             } else {
-                toaster("Failed to sign out")
+                messenger.toast("Failed to sign out")
                 debugError("Sign out failed", result)
             }
         }
@@ -212,10 +217,18 @@ class MainActivity : ComponentActivity(), AppController {
             .setPositiveButton(R.string.yes) { dialog, _ ->
                 dialog.dismiss()
                 // TODO: Show syncing dialog
+                messenger.toast("Show syncing dialog")
+
                 lifecycleScope.launch(Dispatchers.IO) {
-                    syncFirestoreDataService.sync()
+                    syncDataService.sync(SyncDataService.Mode.OVERWRITE) { date ->
+
+                        debugError("Failed to sync record for $date")
+                        messenger.toast("Sync failed for $date, retrying...")
+                    }
                 }
+
                 // TODO: Dismiss syncing dialog
+                messenger.toast("Dismiss syncing dialog")
             }
             .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
             .show()

@@ -126,7 +126,7 @@ private class PreferencesMetaData(
         }
     }
 
-    override fun getExistingRecords(): Flow<LocalDate> {
+    override fun getRecords(): Flow<LocalDate> {
         return records.asFlow().map { dateStr ->
             LocalDate.parse(dateStr)
         }

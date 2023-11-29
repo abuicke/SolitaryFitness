@@ -1,6 +1,7 @@
 package com.gravitycode.solitaryfitness.log_workout.data
 
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,6 +30,9 @@ open class FirestoreWorkoutLogsRepository(
         const val TAG = "FirestoreWorkoutHistoryRepo"
     }
 
+    /**
+     * TODO: Remember to use Set for backing collection or whatever's fastest for searching with contains()
+     * */
     override val metaData: MetaData<LocalDate>
         get() = TODO("Not yet implemented")
 
@@ -113,6 +117,7 @@ open class FirestoreWorkoutLogsRepository(
      * @return the top-level collection which contains all users,
      * can be overridden by a child class to change where users are stored.
      * */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     protected open fun users() = firestore.collection("users")
 
     /**
@@ -120,6 +125,7 @@ open class FirestoreWorkoutLogsRepository(
      *
      * @return a collection containing all the workout logs for the specified user
      * */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     protected fun workoutLogs(userId: String): CollectionReference {
         return users().document(userId).collection("workout-logs")
     }

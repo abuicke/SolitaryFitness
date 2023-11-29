@@ -11,7 +11,7 @@ import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFac
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.Toaster
+import com.gravitycode.solitaryfitness.util.ui.Messenger
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -27,7 +27,7 @@ import java.time.LocalDate
  * */
 class LogWorkoutViewModel(
     private val appController: AppController,
-    private val toaster: Toaster,
+    private val messenger: Messenger,
     private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>() {
 
@@ -121,7 +121,7 @@ class LogWorkoutViewModel(
 
             if (result.isFailure) {
                 _state.value = oldState
-                toaster("Couldn't save reps")
+                messenger.toast("Couldn't save reps")
                 debugError("Failed to write workout log to repository", result)
             } else {
                 Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
@@ -139,7 +139,7 @@ class LogWorkoutViewModel(
             val result = repository.writeWorkoutLog(_state.value.date, log)
             if (result.isFailure) {
                 _state.value = oldState
-                toaster("Couldn't reset reps")
+                messenger.toast("Couldn't reset reps")
                 debugError("Failed to reset reps and write to repository", result)
             } else {
                 Log.v(TAG, "reps reset successfully")

@@ -2,9 +2,9 @@ package com.gravitycode.solitaryfitness.log_workout.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface MetaData<RecordsKey> {
+interface MetaData<RecordKey> {
 
-    fun getExistingRecords(): Flow<RecordsKey>
+    fun getRecords(): Flow<RecordKey>
 
-    fun containsRecord(key: RecordsKey): Boolean
+    fun containsRecord(key: RecordKey): Boolean
 }
