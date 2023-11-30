@@ -49,6 +49,9 @@ import javax.inject.Inject
  *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
  *  iterate over them and upload them to Firestore.
  *
+ * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
+ *  e.g. in [LogWorkoutViewModel.incrementWorkout]
+ * TODO: Need to investigate [AppController.applicationScope] to make sure it's doing what I want.
  * TODO: Need to understand how laziness is actually working in Dagger. If the user has not signed in and
  *  is using the app offline, absolutely no Firebase or Firestore repo resources should be created (including
  *  creating the FirebaseFirestore instance to begin with). The sync service should also not be created.
@@ -99,7 +102,7 @@ import javax.inject.Inject
  *              1) Set custom values for rep buttons (All: 1, 5, 10) or on a per workout basis
  *              2) Boolean option: keep reps grid open until X is selected
  *              3) Clear history: offline, online or both
- *              4) Transfer offline progress to account (in case the user wants to do it later)
+ *              4) Sync offline progress to account (in case the user wants to do it later, or in case the sync previously failed)
  *
  *
  *
@@ -168,9 +171,11 @@ class MainActivity : ComponentActivity(), AppController {
     }
 
     override fun requestSignIn() {
+        check(!authenticator.isUserSignedIn()) { "user is already signed in" }
+
         lifecycleScope.launch {
-            val repository = repositoryFactory.getInstance(authenticator.isUserSignedIn())
-            val firstRecord = repository.metaData.getRecords().firstOrNull()
+            val offlineRepository = repositoryFactory.getInstance(false)
+            val firstRecord = offlineRepository.metaData.getRecords().firstOrNull()
             val hasOfflineData = firstRecord != null
 
             val result = withContext(Dispatchers.IO) {
@@ -180,7 +185,8 @@ class MainActivity : ComponentActivity(), AppController {
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
                 appState.emit(AppState(user))
-                if (!appControllerSettings.hasUserPreviouslySignedIn(user) && hasOfflineData) {
+                val hasUserPreviouslySignedIn = appControllerSettings.hasUserPreviouslySignedIn(user)
+                if (!hasUserPreviouslySignedIn && hasOfflineData) {
                     appControllerSettings.addUserToSignInHistory(user)
                     launchTransferDataFlow()
                 }
@@ -194,6 +200,8 @@ class MainActivity : ComponentActivity(), AppController {
     }
 
     override fun requestSignOut() {
+        check(authenticator.isUserSignedIn()) { "no user is signed in" }
+
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {
                 authenticator.signOut()
@@ -209,21 +217,6 @@ class MainActivity : ComponentActivity(), AppController {
             }
         }
     }
-
-    /**
-     *
-     *
-     *
-     *
-     * TODO: UI Doesn't refresh after new valued have been added to Firestore. Need to support an active
-     *  listener to Firestore data so the ViewModel will invalidate automatically. This will also be necessary
-     *  for when I have a web client.
-     *
-     *
-     *
-     *
-     *
-     * */
 
     override fun launchTransferDataFlow() {
         AlertDialog.Builder(this)

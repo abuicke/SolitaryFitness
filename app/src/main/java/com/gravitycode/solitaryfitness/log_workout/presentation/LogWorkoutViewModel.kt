@@ -110,12 +110,14 @@ class LogWorkoutViewModel(
 
         viewModelScope.launch {
             val recordAlreadyExists = repository.metaData.containsRecord(currentDate)
-            val result = if(recordAlreadyExists) {
+            val result = if (recordAlreadyExists) {
                 repository.updateWorkoutLog(currentDate, workout, newReps)
-            }else {
-                val log = WorkoutLog.from(hashMapOf(
-                    workout to newReps
-                ))
+            } else {
+                val log = WorkoutLog.from(
+                    hashMapOf(
+                        workout to newReps
+                    )
+                )
                 repository.writeWorkoutLog(currentDate, log)
             }
 
