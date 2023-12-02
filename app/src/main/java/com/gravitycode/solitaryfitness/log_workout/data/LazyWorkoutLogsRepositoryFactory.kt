@@ -27,7 +27,7 @@ class LazyWorkoutLogsRepositoryFactory(
 
     override fun getOfflineRepository(): WorkoutLogsRepository {
         synchronized(LOCK) {
-            if (currentRepoKey == null || currentRepoKey == ONLINE) {
+            if (currentRepoKey == ONLINE || currentRepoKey == null) {
                 currentRepoKey = OFFLINE
                 currentRepo = offlineRepository.get()
             }
@@ -38,7 +38,7 @@ class LazyWorkoutLogsRepositoryFactory(
 
     override fun getOnlineRepository(): WorkoutLogsRepository {
         synchronized(LOCK) {
-            if (currentRepoKey == null || currentRepoKey == OFFLINE) {
+            if (currentRepoKey == OFFLINE || currentRepoKey == null) {
                 currentRepoKey = ONLINE
                 currentRepo = onlineRepository.get()
             }

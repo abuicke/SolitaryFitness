@@ -39,12 +39,14 @@ object LogWorkoutModule {
 
     @Private
     @Provides
+    @ActivityScope
     fun providesWorkoutLogsPreferencesStore(
         context: Context
     ) = createPreferencesStoreFromFile(context, "workout_logs")
 
     @Offline
     @Provides
+    @ActivityScope
     fun provideOfflineWorkoutLogsRepository(
         appController: AppController,
         @Private preferencesStore: DataStore<Preferences>
@@ -54,6 +56,7 @@ object LogWorkoutModule {
 
     @Private
     @Provides
+    @ActivityScope
     fun providesFirebaseFirestore(): FirebaseFirestore {
         val firestore = FirebaseFirestore.getInstance()
         firestore.firestoreSettings = firestoreSettings(
@@ -65,6 +68,7 @@ object LogWorkoutModule {
 
     @Online
     @Provides
+    @ActivityScope
     fun provideOnlineWorkoutLogsRepository(
         @Private firestore: FirebaseFirestore,
         authenticator: Authenticator

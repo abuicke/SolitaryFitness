@@ -1,14 +1,18 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.AlertDialog
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.R
@@ -150,6 +154,21 @@ class MainActivity : ComponentActivity(), AppController {
     override val appState = MutableSharedFlow<AppState>(replay = 1)
     private val appControllerSettings = AppControllerSettings(this)
 
+    /**
+     *
+     *
+     *
+     * TODO: Figure out the Dagger laziness stuff next.
+     *  (Added back in scopes for noe to prevents bugs with preferences data store)
+     *
+     *  TODO: Figure out while multiple instances of data store are being created too.
+     *      It seems to be happening more now. Has the previous process not ended or something? Is there a
+     *      way to manually close the data store opened from file?
+     *
+     *
+     *
+     * */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -229,15 +248,18 @@ class MainActivity : ComponentActivity(), AppController {
             .setMessage(R.string.transfer_dialog_message)
             .setPositiveButton(R.string.yes) { dialog, _ ->
                 dialog.dismiss()
-                // TODO: Show syncing dialog
-                messenger.toast("Show syncing dialog")
+                lifecycleScope.launch {
+                    val progressDialog = AlertDialog.Builder(this@MainActivity)
+                        .setView(R.layout.sync_progress_dialog)
+                        .setCancelable(false)
+                        .show()
 
-                lifecycleScope.launch(Dispatchers.IO) {
-                    syncDataService.sync(SyncDataService.Mode.OVERWRITE)
+                    withContext(Dispatchers.IO) {
+                        syncDataService.sync(SyncDataService.Mode.OVERWRITE)
+                    }
+
+                    progressDialog.dismiss()
                 }
-
-                // TODO: Dismiss syncing dialog
-                messenger.toast("Dismiss syncing dialog")
             }
             .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
             .show()
