@@ -17,8 +17,7 @@
         android:text="@string/transfer_in_progress_message"
         android:textSize="20sp" />
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        style="?android:attr/progressBarStyle"
+    <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
