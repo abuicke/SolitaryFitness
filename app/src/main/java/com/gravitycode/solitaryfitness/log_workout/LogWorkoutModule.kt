@@ -12,6 +12,7 @@ import com.gravitycode.solitaryfitness.di.ActivityScope
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
@@ -25,27 +26,34 @@ import javax.inject.Qualifier
 @Retention(AnnotationRetention.RUNTIME)
 private annotation class Private
 
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+private annotation class Offline
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+private annotation class Online
+
 @Module
 object LogWorkoutModule {
 
     @Private
     @Provides
-    @ActivityScope
     fun providesWorkoutLogsPreferencesStore(
         context: Context
     ) = createPreferencesStoreFromFile(context, "workout_logs")
 
-    @Private
+    @Offline
     @Provides
-    @ActivityScope
-    fun providePreferencesWorkoutLogsRepository(
+    fun provideOfflineWorkoutLogsRepository(
         appController: AppController,
         @Private preferencesStore: DataStore<Preferences>
-    ) = PreferencesWorkoutLogsRepository(appController, preferencesStore)
+    ): WorkoutLogsRepository {
+        return PreferencesWorkoutLogsRepository(appController, preferencesStore)
+    }
 
     @Private
     @Provides
-    @ActivityScope
     fun providesFirebaseFirestore(): FirebaseFirestore {
         val firestore = FirebaseFirestore.getInstance()
         firestore.firestoreSettings = firestoreSettings(
@@ -55,23 +63,24 @@ object LogWorkoutModule {
         return firestore
     }
 
-    @Private
+    @Online
     @Provides
-    @ActivityScope
-    fun provideFirestoreWorkoutLogsRepository(
+    fun provideOnlineWorkoutLogsRepository(
         @Private firestore: FirebaseFirestore,
         authenticator: Authenticator
-    ) = FirestoreWorkoutLogsRepository(firestore, authenticator)
+    ): WorkoutLogsRepository {
+        return FirestoreWorkoutLogsRepository(firestore, authenticator)
+    }
 
     @Provides
     @ActivityScope
     fun providesWorkoutLogsRepositoryFactory(
-        @Private preferencesRepository: Lazy<PreferencesWorkoutLogsRepository>,
-        @Private firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
+        @Offline offlineRepository: Lazy<WorkoutLogsRepository>,
+        @Online onlineRepository: Lazy<WorkoutLogsRepository>
     ): WorkoutLogsRepositoryFactory {
         return LazyWorkoutLogsRepositoryFactory(
-            preferencesRepository,
-            firestoreRepository
+            offlineRepository,
+            onlineRepository
         )
     }
 
@@ -79,9 +88,9 @@ object LogWorkoutModule {
     @ActivityScope
     fun providesSyncDataService(
         messenger: Messenger,
-        @Private preferencesRepository: PreferencesWorkoutLogsRepository,
-        @Private firestoreRepository: FirestoreWorkoutLogsRepository
-    ) = SyncDataService.create(messenger, preferencesRepository, firestoreRepository)
+        @Offline offlineRepository: WorkoutLogsRepository,
+        @Online onlineRepository: WorkoutLogsRepository
+    ) = SyncDataService.create(messenger, offlineRepository, onlineRepository)
 
     @Provides
     @ActivityScope

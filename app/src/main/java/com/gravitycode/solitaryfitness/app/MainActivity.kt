@@ -24,13 +24,18 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 /**
@@ -50,7 +55,7 @@ import javax.inject.Inject
  *  iterate over them and upload them to Firestore.
  *
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
- *  e.g. in [LogWorkoutViewModel.incrementWorkout]
+ *  e.g. in [LogWorkoutViewModel.incrementWorkout] or anytime [LogWorkoutViewModel.loadWorkoutLog] is called
  * TODO: Need to investigate [AppController.applicationScope] to make sure it's doing what I want.
  * TODO: Need to understand how laziness is actually working in Dagger. If the user has not signed in and
  *  is using the app offline, absolutely no Firebase or Firestore repo resources should be created (including
@@ -174,7 +179,7 @@ class MainActivity : ComponentActivity(), AppController {
         check(!authenticator.isUserSignedIn()) { "user is already signed in" }
 
         lifecycleScope.launch {
-            val offlineRepository = repositoryFactory.getInstance(false)
+            val offlineRepository = repositoryFactory.getOfflineRepository()
             val firstRecord = offlineRepository.metaData.getRecords().firstOrNull()
             val hasOfflineData = firstRecord != null
 
@@ -239,6 +244,10 @@ class MainActivity : ComponentActivity(), AppController {
     }
 }
 
+/**
+ * TODO: This app should use a getInstance() function, especially because calling
+ *  [createPreferencesStoreFromFile] twice will cause an exception.
+ * */
 private class AppControllerSettings(activity: ComponentActivity) {
 
     private companion object {
