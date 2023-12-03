@@ -5,7 +5,7 @@
  * recompositions, and also across activity or process recreation using the saved instance
  * state mechanism. For example, this happens, when the screen is rotated.
  *
- * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
+ * [Restoring state in Compose](https://developer.android.com/jetpack/compose/state#restore-ui-state)
  * */
 package com.gravitycode.solitaryfitness.log_workout.presentation
 
@@ -41,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.google.firebase.firestore.proto.TargetGlobal
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
@@ -101,7 +100,7 @@ private enum class MenuItem(val string: String) {
 //}
 
 @Composable
-fun TrackRepsScreen(
+fun LogWorkoutScreen(
     viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {

@@ -1,45 +1,39 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
-import android.widget.ProgressBar
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.widget.ContentLoadingProgressBar
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.firestore.proto.TargetGlobal
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
+import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.log_workout.presentation.TrackRepsScreen
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 /**
@@ -53,14 +47,9 @@ import javax.inject.Inject
  * TODO: `com.firebase.ui.auth.FirebaseUiException: Code: 7, message: 7` happens randomly. When an
  *  authentication exception occurs, need to handle it gracefully and show a toast asking the user to sign
  *  in again.
- * TODO: When a user signs in, ask "Would you like to save your offline work to your account?" and if they
- *  say "Yes", upload all Preferences Store logs to Firestore while an async task dialog (or its equivalent)
- *  shows "Syncing...". Will need to retain a Set<String> of all dates a record is stored for so I can easily
- *  iterate over them and upload them to Firestore.
  *
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
  *  e.g. in [LogWorkoutViewModel.incrementWorkout] or anytime [LogWorkoutViewModel.loadWorkoutLog] is called
- * TODO: Need to investigate [AppController.applicationScope] to make sure it's doing what I want.
  * TODO: Need to understand how laziness is actually working in Dagger. If the user has not signed in and
  *  is using the app offline, absolutely no Firebase or Firestore repo resources should be created (including
  *  creating the FirebaseFirestore instance to begin with). The sync service should also not be created.
@@ -150,7 +139,7 @@ class MainActivity : ComponentActivity(), AppController {
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    override val applicationScope = MainScope()
+    override val applicationScope = lifecycleScope
     override val appState = MutableSharedFlow<AppState>(replay = 1)
     private val appControllerSettings = AppControllerSettings(this)
 
@@ -188,7 +177,7 @@ class MainActivity : ComponentActivity(), AppController {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TrackRepsScreen(logWorkoutViewModel)
+                    LogWorkoutScreen(logWorkoutViewModel)
                 }
             }
         }
@@ -210,9 +199,11 @@ class MainActivity : ComponentActivity(), AppController {
                 val user = result.getOrNull()!!
                 appState.emit(AppState(user))
                 val hasUserPreviouslySignedIn = appControllerSettings.hasUserPreviouslySignedIn(user)
-                if (!hasUserPreviouslySignedIn && hasOfflineData) {
+                if (!hasUserPreviouslySignedIn) {
                     appControllerSettings.addUserToSignInHistory(user)
-                    launchTransferDataFlow()
+                    if (hasOfflineData) {
+                        launchTransferDataFlow()
+                    }
                 }
                 messenger.toast("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
@@ -252,6 +243,9 @@ class MainActivity : ComponentActivity(), AppController {
                     val progressDialog = AlertDialog.Builder(this@MainActivity)
                         .setView(R.layout.sync_progress_dialog)
                         .setCancelable(false)
+                        .setOnDismissListener {
+                            messenger.toast("Sync complete")
+                        }
                         .show()
 
                     withContext(Dispatchers.IO) {

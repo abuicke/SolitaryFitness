@@ -7,7 +7,7 @@
     <!-- Transfer data dialogs -->
     <string name="transfer_dialog_title">Transfer Data</string>
     <string name="transfer_dialog_message">
-        Would you like to copy the work you\'ve done so far to your account?
+        Would you like to copy the work you\'ve done so far to your account?\n\nYou can also sync later from the Settings menu.
     </string>
     <string name="transfer_in_progress_message">Syncing in progress…</string>
 </resources>
