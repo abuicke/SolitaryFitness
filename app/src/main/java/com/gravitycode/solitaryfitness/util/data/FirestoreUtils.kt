@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

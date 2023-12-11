@@ -8,8 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.util.debugError
-import kotlinx.coroutines.flow.Flow
+import com.gravitycode.solitaryfitness.util.error.debugError
 import java.time.LocalDate
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

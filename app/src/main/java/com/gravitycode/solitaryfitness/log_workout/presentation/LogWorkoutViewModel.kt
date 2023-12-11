@@ -10,7 +10,7 @@ import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import kotlinx.coroutines.launch
@@ -64,8 +64,8 @@ class LogWorkoutViewModel(
     override fun onEvent(event: AppEvent) {
         Log.v(TAG, "onEvent($event)")
         when (event) {
-            is AppEvent.SignIn -> appController.requestSignIn()
-            is AppEvent.SignOut -> appController.requestSignOut()
+            is AppEvent.SignIn -> appController.launchSignInFlow()
+            is AppEvent.SignOut -> appController.launchSignOutFlow()
         }
     }
 

@@ -20,9 +20,9 @@ interface AppController {
      * */
     val appState: SharedFlow<AppState>
 
-    fun requestSignIn()
+    fun launchSignInFlow()
 
-    fun requestSignOut()
+    fun launchSignOutFlow()
 
-    fun launchTransferDataFlow()
+    fun launchSyncOfflineDataFlow()
 }

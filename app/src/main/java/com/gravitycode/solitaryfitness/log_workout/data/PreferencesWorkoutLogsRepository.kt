@@ -9,7 +9,7 @@ import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow

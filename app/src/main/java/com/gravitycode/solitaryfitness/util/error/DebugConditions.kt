@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util
+package com.gravitycode.solitaryfitness.util.error
 
 import com.gravitycode.solitaryfitness.BuildConfig
 

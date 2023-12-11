@@ -11,7 +11,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.firestore.proto.TargetGlobal
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
@@ -23,12 +22,9 @@ import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -48,11 +44,9 @@ import javax.inject.Inject
  *  authentication exception occurs, need to handle it gracefully and show a toast asking the user to sign
  *  in again.
  *
+ * TODO: Understand `inline` and `crossinline` keywords
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
  *  e.g. in [LogWorkoutViewModel.incrementWorkout] or anytime [LogWorkoutViewModel.loadWorkoutLog] is called
- * TODO: Need to understand how laziness is actually working in Dagger. If the user has not signed in and
- *  is using the app offline, absolutely no Firebase or Firestore repo resources should be created (including
- *  creating the FirebaseFirestore instance to begin with). The sync service should also not be created.
  * TODO: Have the sync service accept lazy versions of the repos in dagger if necessary.
  * TODO: Implement `getFirstRecord()` in [Metadata] and use everywhere `getExistingRecords()` is currently called.
  * TODO: It doesn't seem like dispatchers should be specified by the calling code as they're not aware of
@@ -144,18 +138,9 @@ class MainActivity : ComponentActivity(), AppController {
     private val appControllerSettings = AppControllerSettings(this)
 
     /**
-     *
-     *
-     *
-     * TODO: Figure out the Dagger laziness stuff next.
-     *  (Added back in scopes for noe to prevents bugs with preferences data store)
-     *
      *  TODO: Figure out while multiple instances of data store are being created too.
      *      It seems to be happening more now. Has the previous process not ended or something? Is there a
      *      way to manually close the data store opened from file?
-     *
-     *
-     *
      * */
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,17 +168,23 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    override fun requestSignIn() {
-        check(!authenticator.isUserSignedIn()) { "user is already signed in" }
+    override fun launchSignInFlow() {
+        if (authenticator.isUserSignedIn()) {
+            val currentUser = authenticator.getSignedInUser()!!
+            val name = currentUser.name ?: currentUser.email ?: currentUser.id
+            messenger.toast("You are already signed in as $name")
+            debugError("user is already signed in as $name")
+            return
+        }
 
         lifecycleScope.launch {
-            val offlineRepository = repositoryFactory.getOfflineRepository()
-            val firstRecord = offlineRepository.metaData.getRecords().firstOrNull()
-            val hasOfflineData = firstRecord != null
-
             val result = withContext(Dispatchers.IO) {
                 authenticator.signIn()
             }
+
+            val offlineRepository = repositoryFactory.getOfflineRepository()
+            val firstRecord = offlineRepository.metaData.getRecords().firstOrNull()
+            val hasOfflineData = firstRecord != null
 
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
@@ -202,7 +193,7 @@ class MainActivity : ComponentActivity(), AppController {
                 if (!hasUserPreviouslySignedIn) {
                     appControllerSettings.addUserToSignInHistory(user)
                     if (hasOfflineData) {
-                        launchTransferDataFlow()
+                        launchSyncOfflineDataFlow()
                     }
                 }
                 messenger.toast("Signed in: ${user.email}")
@@ -214,7 +205,7 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    override fun requestSignOut() {
+    override fun launchSignOutFlow() {
         check(authenticator.isUserSignedIn()) { "no user is signed in" }
 
         lifecycleScope.launch {
@@ -233,7 +224,19 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    override fun launchTransferDataFlow() {
+    /**
+     *
+     *
+     *
+     *
+     * TODO: I think that's everything. Tomorrow run this to see if it works.
+     *
+     *
+     *
+     *
+     *
+     * */
+    override fun launchSyncOfflineDataFlow() {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
             .setMessage(R.string.transfer_dialog_message)
@@ -248,11 +251,24 @@ class MainActivity : ComponentActivity(), AppController {
                         }
                         .show()
 
-                    withContext(Dispatchers.IO) {
-                        syncDataService.sync(SyncDataService.Mode.OVERWRITE)
+                    try {
+                        withContext(Dispatchers.IO) {
+                            syncDataService.sync(SyncDataService.Mode.OVERWRITE).collect { resultOf ->
+                                if (resultOf.isFailure) {
+                                    withContext(Dispatchers.Main) {
+                                        messenger.toast("Sync failed for ${resultOf.subject}")
+                                    }
+                                } else {
+                                    Log.v(TAG, "successfully synced ${resultOf.subject}")
+                                }
+                            }
+                        }
+                    } catch (t: Throwable) {
+                        messenger.toast("Sync failed...")
+                        debugError("sync data service failed: ${t.message}", t)
+                    } finally {
+                        progressDialog.dismiss()
                     }
-
-                    progressDialog.dismiss()
                 }
             }
             .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }

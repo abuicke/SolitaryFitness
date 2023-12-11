@@ -45,7 +45,7 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
