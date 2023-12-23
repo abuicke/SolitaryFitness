@@ -224,18 +224,6 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    /**
-     *
-     *
-     *
-     *
-     * TODO: I think that's everything. Tomorrow run this to see if it works.
-     *
-     *
-     *
-     *
-     *
-     * */
     override fun launchSyncOfflineDataFlow() {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
