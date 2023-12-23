@@ -44,6 +44,7 @@ import javax.inject.Inject
  *  authentication exception occurs, need to handle it gracefully and show a toast asking the user to sign
  *  in again.
  *
+ * TODO: Implement commented out overflow menu items in [LogWorkoutScreen]
  * TODO: Understand `inline` and `crossinline` keywords
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
  *  e.g. in [LogWorkoutViewModel.incrementWorkout] or anytime [LogWorkoutViewModel.loadWorkoutLog] is called
