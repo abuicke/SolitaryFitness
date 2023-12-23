@@ -62,13 +62,13 @@ private enum class MenuItem(val string: String) {
 
     SIGN_IN("Sign In"),
 
-    SIGN_OUT("Sign Out"),
+    SIGN_OUT("Sign Out");
 
-    RESET_REPS("Reset Reps"),
-
-    EDIT_REPS("Edit Reps"),
-
-    SETTINGS("Settings");
+//    RESET_REPS("Reset Reps"),
+//
+//    EDIT_REPS("Edit Reps"),
+//
+//    SETTINGS("Settings");
 
     companion object {
 
@@ -118,9 +118,9 @@ fun LogWorkoutScreen(
             when (item) {
                 MenuItem.SIGN_IN -> viewModel.onEvent(AppEvent.SignIn)
                 MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
-                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
-                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
-                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
+//                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
+//                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
+//                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
             }
         }
         TrackRepsGrid(
