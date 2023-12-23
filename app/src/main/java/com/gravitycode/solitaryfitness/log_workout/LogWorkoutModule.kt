@@ -90,11 +90,10 @@ object LogWorkoutModule {
     @Provides
     @ActivityScope
     fun providesSyncDataService(
-        messenger: Messenger,
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
     ): SyncDataService {
-        return LazySyncDataService(messenger, offlineRepository, onlineRepository)
+        return LazySyncDataService(offlineRepository, onlineRepository)
     }
 
     /**
