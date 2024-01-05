@@ -44,6 +44,13 @@ import javax.inject.Inject
  *  authentication exception occurs, need to handle it gracefully and show a toast asking the user to sign
  *  in again.
  *
+ * TODO: App should recover gracefully from asserts where possible, e.g. [launchSignOutFlow] should handle
+ *  an improper state the same as [launchSignInFlow].
+ *
+ *  TODO: Logic is very flimsy. Need to test it on a lot of devices. Particularly devices with only one account.
+ *   Can I re-skin the login UI? Apparently you can do that.
+ *
+ * TODO: Am I using callback functions anywhere? Should be replaced by Flows.
  * TODO: Implement commented out overflow menu items in [LogWorkoutScreen]
  * TODO: Understand `inline` and `crossinline` keywords
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
@@ -142,6 +149,14 @@ class MainActivity : ComponentActivity(), AppController {
      *  TODO: Figure out while multiple instances of data store are being created too.
      *      It seems to be happening more now. Has the previous process not ended or something? Is there a
      *      way to manually close the data store opened from file?
+     * */
+
+    /**
+     *
+     *
+     * TODO: Still haven't resolved issue of UI not updating in response to coming online.
+     *
+     *
      * */
 
     override fun onCreate(savedInstanceState: Bundle?) {
