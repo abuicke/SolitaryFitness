@@ -16,6 +16,7 @@ import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
+import com.gravitycode.solitaryfitness.log_workout.data.SyncMode
 import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutScreen
@@ -24,6 +25,7 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -50,7 +52,6 @@ import javax.inject.Inject
  *  TODO: Logic is very flimsy. Need to test it on a lot of devices. Particularly devices with only one account.
  *   Can I re-skin the login UI? Apparently you can do that.
  *
- * TODO: Am I using callback functions anywhere? Should be replaced by Flows.
  * TODO: Implement commented out overflow menu items in [LogWorkoutScreen]
  * TODO: Understand `inline` and `crossinline` keywords
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
@@ -257,7 +258,7 @@ class MainActivity : ComponentActivity(), AppController {
 
                     try {
                         withContext(Dispatchers.IO) {
-                            syncDataService.sync(SyncDataService.Mode.OVERWRITE).collect { resultOf ->
+                            syncDataService.sync(SyncMode.OVERWRITE).collect { resultOf ->
                                 if (resultOf.isFailure) {
                                     withContext(Dispatchers.Main) {
                                         messenger.toast("Sync failed for ${resultOf.subject}")
