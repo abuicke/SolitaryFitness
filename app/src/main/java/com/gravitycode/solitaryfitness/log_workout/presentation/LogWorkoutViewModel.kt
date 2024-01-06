@@ -79,18 +79,6 @@ class LogWorkoutViewModel(
         }
     }
 
-    /**
-     * This function exists until I decide if there's a better way of letting the view model know it needs
-     * to read from the repository again. It's not clear who should have this responsibility, so for now I'm
-     * deciding that the MainActivity will coordinate this as it requires the minimum amount of code to
-     * implement, and no changes to any other classes bar adding this rudimentary method here.
-     *
-     * TODO: If I decide this is the appropriate to do this then I should add [invalidate] to [ViewModel]
-     * */
-    fun invalidate() {
-
-    }
-
     private suspend fun loadWorkoutLog() {
         val currentDate = _state.value.date
         val result = repository.readWorkoutLog(currentDate)
