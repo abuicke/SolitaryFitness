@@ -20,14 +20,14 @@ class LazySyncDataService(
         const val TAG = "LazySyncDataService"
     }
 
-    override suspend fun sync(mode: SyncDataService.Mode, retryAttempts: Int): Flow<ResultOf<LocalDate>> {
+    override suspend fun sync(mode: SyncMode, retryAttempts: Int): Flow<ResultOf<LocalDate>> {
         val sourceRepository = sourceRepository.get()
         val destinationRepository = destinationRepository.get()
 
         return sourceRepository.metaData.getRecords().map { date ->
             val shouldCopy = when (mode) {
-                SyncDataService.Mode.PRESERVE -> !destinationRepository.metaData.containsRecord(date)
-                SyncDataService.Mode.OVERWRITE -> true
+                SyncMode.PRESERVE -> !destinationRepository.metaData.containsRecord(date)
+                SyncMode.OVERWRITE -> true
             }
 
             var result: ResultOf<LocalDate>? = null

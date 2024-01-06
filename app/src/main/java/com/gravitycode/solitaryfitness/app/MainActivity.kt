@@ -152,14 +152,6 @@ class MainActivity : ComponentActivity(), AppController {
      *      way to manually close the data store opened from file?
      * */
 
-    /**
-     *
-     *
-     * TODO: Still haven't resolved issue of UI not updating in response to coming online.
-     *
-     *
-     * */
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -205,12 +197,15 @@ class MainActivity : ComponentActivity(), AppController {
 
             if (result.isSuccess) {
                 val user = result.getOrNull()!!
-                appState.emit(AppState(user))
                 val hasUserPreviouslySignedIn = appControllerSettings.hasUserPreviouslySignedIn(user)
                 if (!hasUserPreviouslySignedIn) {
                     appControllerSettings.addUserToSignInHistory(user)
                     if (hasOfflineData) {
-                        launchSyncOfflineDataFlow()
+                        launchSyncOfflineDataFlow {
+                            appState.emit(AppState(user))
+                        }
+                    }else {
+                        appState.emit(AppState(user))
                     }
                 }
                 messenger.toast("Signed in: ${user.email}")
@@ -241,7 +236,9 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    override fun launchSyncOfflineDataFlow() {
+    override fun launchSyncOfflineDataFlow() = launchSyncOfflineDataFlow(null)
+
+    private fun launchSyncOfflineDataFlow(onComplete: (suspend () -> (Unit))?) {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
             .setMessage(R.string.transfer_dialog_message)
@@ -273,6 +270,7 @@ class MainActivity : ComponentActivity(), AppController {
                         debugError("sync data service failed: ${t.message}", t)
                     } finally {
                         progressDialog.dismiss()
+                        onComplete?.invoke()
                     }
                 }
             }
