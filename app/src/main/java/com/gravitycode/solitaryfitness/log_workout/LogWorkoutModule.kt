@@ -69,10 +69,11 @@ object LogWorkoutModule {
     @ActivityScope
     @OnlineRepository
     fun provideOnlineWorkoutLogsRepository(
+        appController: AppController,
         @InternalDependency firestore: FirebaseFirestore,
         authenticator: Authenticator
     ): WorkoutLogsRepository {
-        return FirestoreWorkoutLogsRepository(firestore, authenticator)
+        return FirestoreWorkoutLogsRepository(appController, firestore, authenticator)
     }
 
     @Provides

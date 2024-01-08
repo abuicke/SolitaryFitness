@@ -52,6 +52,8 @@ import javax.inject.Inject
  *  TODO: Logic is very flimsy. Need to test it on a lot of devices. Particularly devices with only one account.
  *   Can I re-skin the login UI? Apparently you can do that.
  *
+ * TODO: Just make sync a separate option in the overflow menu.
+ *
  * TODO: Implement commented out overflow menu items in [LogWorkoutScreen]
  * TODO: Understand `inline` and `crossinline` keywords
  * TODO: Inspect everywhere [launch] is called. I'm still not using [Dispatchers.IO] everywhere I should,
@@ -204,9 +206,11 @@ class MainActivity : ComponentActivity(), AppController {
                         launchSyncOfflineDataFlow {
                             appState.emit(AppState(user))
                         }
-                    }else {
+                    } else {
                         appState.emit(AppState(user))
                     }
+                }else {
+                    appState.emit(AppState(user))
                 }
                 messenger.toast("Signed in: ${user.email}")
                 Log.d(TAG, "signed in as user: $user")
@@ -274,7 +278,12 @@ class MainActivity : ComponentActivity(), AppController {
                     }
                 }
             }
-            .setNegativeButton(R.string.no) { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.no) { dialog, _ ->
+                lifecycleScope.launch {
+                    dialog.dismiss()
+                    onComplete?.invoke()
+                }
+            }
             .show()
     }
 }

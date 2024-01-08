@@ -2,7 +2,7 @@ package com.gravitycode.solitaryfitness.log_workout.data
 
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import kotlinx.coroutines.flow.Flow
+import com.gravitycode.solitaryfitness.util.data.MetaData
 import java.time.LocalDate
 
 interface WorkoutLogsRepository {

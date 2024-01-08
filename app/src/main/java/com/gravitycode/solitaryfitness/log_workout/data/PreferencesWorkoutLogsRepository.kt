@@ -7,9 +7,11 @@ import androidx.datastore.preferences.core.edit
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -23,7 +25,7 @@ class PreferencesWorkoutLogsRepository(
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutLogsRepository {
 
-    private val _metaData = PreferencesMetaData(appController, preferencesStore)
+    private val _metaData = PreferencesMetaData(appController.applicationScope, preferencesStore)
     override val metaData: MetaData<LocalDate> = _metaData
 
     override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
@@ -60,7 +62,7 @@ class PreferencesWorkoutLogsRepository(
                 }
             }
 
-            _metaData.addRecordExistsFor(date)
+            _metaData.add(date)
             Result.success(Unit)
         } catch (t: Throwable) {
             Result.failure(t)
@@ -90,7 +92,7 @@ class PreferencesWorkoutLogsRepository(
                 }
             }
 
-            _metaData.removeRecordExistsFor(date)
+            _metaData.remove(date)
             Result.success(Unit)
         } catch (t: Throwable) {
             Result.failure(t)
@@ -98,25 +100,29 @@ class PreferencesWorkoutLogsRepository(
     }
 }
 
-/**
- * Keeps track of what types of information are stored in the repository for
- * easy querying, such as what dates have records associated with them.
- * */
 private class PreferencesMetaData(
-    appController: AppController,
+    scope: CoroutineScope,
     private val preferencesStore: DataStore<Preferences>
 ) : MetaData<LocalDate> {
 
     private companion object {
 
-        const val TAG = "PreferencesWorkoutLogsRepository.MetaData"
+        const val TAG = "PreferencesMetaData"
+
         val DATES_KEY = stringSetPreferencesKey("dates")
     }
 
-    private val records: MutableSet<String> = mutableSetOf()
+    /*
+    * Using HashSet as long as the order of keys does not need to be maintained.
+    * Switch implementation to LinkedHashSet if the contract with MetaData changes.
+    * */
+    private val records = HashSet<String>()
 
     init {
-        appController.applicationScope.launch(Dispatchers.IO) {
+        /**
+         * TODO: Should there also be error handling here as in FirestoreMetaData?
+         * */
+        scope.launch(Dispatchers.IO) {
             val preferences = preferencesStore.data.first()
             val dates: Set<String>? = preferences[DATES_KEY]
 
@@ -132,9 +138,9 @@ private class PreferencesMetaData(
         }
     }
 
-    override fun containsRecord(date: LocalDate) = records.contains(date.toString())
+    override fun containsRecord(key: LocalDate) = records.contains(key.toString())
 
-    suspend fun addRecordExistsFor(date: LocalDate) {
+    suspend fun add(date: LocalDate) {
         preferencesStore.edit { preferences ->
             val success = records.add(date.toString())
             if (success) {
@@ -146,7 +152,7 @@ private class PreferencesMetaData(
         }
     }
 
-    suspend fun removeRecordExistsFor(date: LocalDate) {
+    suspend fun remove(date: LocalDate) {
         preferencesStore.edit { preferences ->
             val success = records.remove(date.toString())
             if (success) {

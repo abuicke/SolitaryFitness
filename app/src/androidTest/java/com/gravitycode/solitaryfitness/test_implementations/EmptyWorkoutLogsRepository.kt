@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.test_implementations
 
-import com.gravitycode.solitaryfitness.log_workout.data.MetaData
+import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
