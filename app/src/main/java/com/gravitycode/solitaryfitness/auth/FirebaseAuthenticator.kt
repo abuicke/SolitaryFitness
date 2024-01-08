@@ -2,13 +2,11 @@ package com.gravitycode.solitaryfitness.auth
 
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.Lifecycle.State.INITIALIZED
-import androidx.lifecycle.Lifecycle.State.STARTED
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.util.data.GetActivityResult
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -42,10 +40,6 @@ class FirebaseAuthenticator(
     private var user: User? = null
 
     init {
-        check(activity.lifecycle.currentState in INITIALIZED..STARTED) {
-            "firebase authenticator must be constructed before component activity enters the resumed state"
-        }
-
         val currentFirebaseUser = firebaseAuth.currentUser
         if (currentFirebaseUser != null) {
             this.user = User(currentFirebaseUser)
@@ -54,7 +48,7 @@ class FirebaseAuthenticator(
     }
 
     override suspend fun signIn(): Result<User> {
-        if (user != null) debugError("user already signed in as: $user")
+        if (user != null) debugError("already signed in as: $user")
         val result = getFirebaseSignInResult(
             firebaseAuthUi.createSignInIntentBuilder()
                 .setAvailableProviders(providers)

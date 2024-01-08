@@ -13,6 +13,20 @@ data class WorkoutLog(
     val stepUps: Int = 0
 ) {
 
+    companion object {
+
+        fun from(map: Map<Workout, Int>) = WorkoutLog(
+            handstandPressUps = if (map.containsKey(Workout.HANDSTAND_PRESS_UP)) map[Workout.HANDSTAND_PRESS_UP]!! else 0,
+            pressUps = if (map.containsKey(Workout.PRESS_UP)) map[Workout.PRESS_UP]!! else 0,
+            sitUps = if (map.containsKey(Workout.SIT_UP)) map[Workout.SIT_UP]!! else 0,
+            squats = if (map.containsKey(Workout.SQUAT)) map[Workout.SQUAT]!! else 0,
+            squatThrusts = if (map.containsKey(Workout.SQUAT_THRUST)) map[Workout.SQUAT_THRUST]!! else 0,
+            burpees = if (map.containsKey(Workout.BURPEE)) map[Workout.BURPEE]!! else 0,
+            starJumps = if (map.containsKey(Workout.STAR_JUMP)) map[Workout.STAR_JUMP]!! else 0,
+            stepUps = if (map.containsKey(Workout.STEP_UP)) map[Workout.STEP_UP]!! else 0
+        )
+    }
+
     init {
         require(handstandPressUps >= 0) {
             "reps cannot be less than zero, reps specified for handstand press-ups = $handstandPressUps"
@@ -75,93 +89,6 @@ data class WorkoutLog(
             Workout.BURPEE -> copy(burpees = reps)
             Workout.STAR_JUMP -> copy(starJumps = reps)
             Workout.STEP_UP -> copy(stepUps = reps)
-        }
-    }
-
-    class Builder {
-
-        private var handstandPressUps: Int = 0
-        private var pressUps: Int = 0
-        private var sitUps: Int = 0
-        private var squats: Int = 0
-        private var squatThrusts: Int = 0
-        private var burpees: Int = 0
-        private var starJumps: Int = 0
-        private var stepUps: Int = 0
-
-        operator fun set(workout: Workout, reps: Int) {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            when (workout) {
-                Workout.HANDSTAND_PRESS_UP -> handstandPressUps = reps
-                Workout.PRESS_UP -> pressUps = reps
-                Workout.SIT_UP -> sitUps = reps
-                Workout.SQUAT -> squats = reps
-                Workout.SQUAT_THRUST -> squatThrusts = reps
-                Workout.BURPEE -> burpees = reps
-                Workout.STAR_JUMP -> starJumps = reps
-                Workout.STEP_UP -> stepUps = reps
-            }
-        }
-
-        fun handstandPressUps(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            handstandPressUps = reps
-            return this
-        }
-
-        fun pressUps(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            pressUps = reps
-            return this
-        }
-
-        fun sitUps(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            sitUps = reps
-            return this
-        }
-
-        fun squats(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            squats = reps
-            return this
-        }
-
-        fun squatThrusts(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            squatThrusts = reps
-            return this
-        }
-
-        fun burpees(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            burpees = reps
-            return this
-        }
-
-        fun starJumps(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            starJumps = reps
-            return this
-        }
-
-        fun stepUps(reps: Int): Builder {
-            require(reps >= 0) { "reps cannot be less than zero, reps specified = $reps" }
-            stepUps = reps
-            return this
-        }
-
-        fun build(): WorkoutLog {
-            return WorkoutLog(
-                handstandPressUps = handstandPressUps,
-                pressUps = pressUps,
-                sitUps = sitUps,
-                squats = squats,
-                squatThrusts = squatThrusts,
-                burpees = burpees,
-                starJumps = starJumps,
-                stepUps = stepUps
-            )
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.gravitycode.solitaryfitness.log_workout.presentation
 
 import android.util.Log
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppController
@@ -9,8 +10,8 @@ import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.util.debugError
-import com.gravitycode.solitaryfitness.util.ui.Toaster
+import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.ui.Messenger
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -21,10 +22,12 @@ import java.time.LocalDate
  * to app crashes. To avoid that, use [androidx.lifecycle.repeatOnLifecycle].
  *
  * See warning in (StateFlow and SharedFlow)[https://developer.android.com/kotlin/flow/stateflow-and-sharedflow]
+ *
+ * TODO: Do I need to implement this behavior?
  * */
 class LogWorkoutViewModel(
     private val appController: AppController,
-    private val toaster: Toaster,
+    private val messenger: Messenger,
     private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>() {
 
@@ -33,7 +36,8 @@ class LogWorkoutViewModel(
         const val TAG = "TrackRepsViewModel"
     }
 
-    override val state = mutableStateOf(LogWorkoutState())
+    private val _state = mutableStateOf(LogWorkoutState())
+    override val state: State<LogWorkoutState> = _state
 
     private lateinit var repository: WorkoutLogsRepository
 
@@ -46,8 +50,12 @@ class LogWorkoutViewModel(
         viewModelScope.launch {
             appController.appState.collect { appState ->
                 Log.d(TAG, "app state collected: $appState")
-                state.value = state.value.copy(user = appState.user)
-                repository = repositoryFactory.create(appState.isUserSignedIn())
+                _state.value = _state.value.copy(user = appState.user)
+                repository = if (appState.isUserSignedIn()) {
+                    repositoryFactory.getOnlineRepository()
+                }else {
+                    repositoryFactory.getOfflineRepository()
+                }
                 loadWorkoutLog()
             }
         }
@@ -56,8 +64,8 @@ class LogWorkoutViewModel(
     override fun onEvent(event: AppEvent) {
         Log.v(TAG, "onEvent($event)")
         when (event) {
-            is AppEvent.SignIn -> appController.requestSignIn()
-            is AppEvent.SignOut -> appController.requestSignOut()
+            is AppEvent.SignIn -> appController.launchSignInFlow()
+            is AppEvent.SignOut -> appController.launchSignOutFlow()
         }
     }
 
@@ -72,17 +80,15 @@ class LogWorkoutViewModel(
     }
 
     private suspend fun loadWorkoutLog() {
-        val currentDate = state.value.date
+        val currentDate = _state.value.date
         val result = repository.readWorkoutLog(currentDate)
 
         if (result.isSuccess) {
             val workoutLog = result.getOrNull()
             if (workoutLog != null) {
-                state.value = state.value.copy(log = workoutLog)
+                _state.value = _state.value.copy(log = workoutLog)
             } else {
-                val log = WorkoutLog()
-                state.value = state.value.copy(log = log)
-                repository.writeWorkoutLog(currentDate, log)
+                _state.value = _state.value.copy(log = WorkoutLog())
             }
         } else {
             debugError("failed to read workout log from repository", result)
@@ -90,8 +96,8 @@ class LogWorkoutViewModel(
     }
 
     private fun changeDate(date: LocalDate) {
-        if (date != state.value.date) {
-            state.value = state.value.copy(date = date)
+        if (date != _state.value.date) {
+            _state.value = _state.value.copy(date = date)
             viewModelScope.launch {
                 loadWorkoutLog()
             }
@@ -101,16 +107,27 @@ class LogWorkoutViewModel(
     private fun incrementWorkout(workout: Workout, quantity: Int) {
         require(quantity >= 0) { "cannot increment by a negative value" }
 
-        val oldState = state.value
-        val currentDate = state.value.date
-        val newReps = state.value.log[workout] + quantity
-        state.value = state.value.copy(log = state.value.log.copy(workout, newReps))
+        val oldState = _state.value
+        val currentDate = _state.value.date
+        val newReps = _state.value.log[workout] + quantity
+        _state.value = _state.value.copy(log = _state.value.log.copy(workout, newReps))
 
         viewModelScope.launch {
-            val result = repository.updateWorkoutLog(currentDate, workout, newReps)
+            val recordAlreadyExists = repository.metaData.containsRecord(currentDate)
+            val result = if (recordAlreadyExists) {
+                repository.updateWorkoutLog(currentDate, workout, newReps)
+            } else {
+                val log = WorkoutLog.from(
+                    hashMapOf(
+                        workout to newReps
+                    )
+                )
+                repository.writeWorkoutLog(currentDate, log)
+            }
+
             if (result.isFailure) {
-                state.value = oldState
-                toaster("Couldn't save reps")
+                _state.value = oldState
+                messenger.toast("Couldn't save reps")
                 debugError("Failed to write workout log to repository", result)
             } else {
                 Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
@@ -119,16 +136,16 @@ class LogWorkoutViewModel(
     }
 
     private fun resetReps() {
-        val oldState = state.value
+        val oldState = _state.value
 
         val log = WorkoutLog()
-        state.value = state.value.copy(log = log)
+        _state.value = _state.value.copy(log = log)
 
         viewModelScope.launch {
-            val result = repository.writeWorkoutLog(state.value.date, log)
+            val result = repository.writeWorkoutLog(_state.value.date, log)
             if (result.isFailure) {
-                state.value = oldState
-                toaster("Couldn't reset reps")
+                _state.value = oldState
+                messenger.toast("Couldn't reset reps")
                 debugError("Failed to reset reps and write to repository", result)
             } else {
                 Log.v(TAG, "reps reset successfully")
@@ -143,6 +160,6 @@ class LogWorkoutViewModel(
      *  [https://www.google.com/search?q=x+close+icon])
      * */
     private fun editReps(mode: LogWorkoutEvent.Edit.Mode) {
-        state.value = state.value.copy(editMode = mode == LogWorkoutEvent.Edit.Mode.START)
+        _state.value = _state.value.copy(editMode = mode == LogWorkoutEvent.Edit.Mode.START)
     }
 }

@@ -2,6 +2,7 @@ package com.gravitycode.solitaryfitness
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
@@ -23,7 +24,7 @@ class FirestoreWorkoutLogsRepositoryTest {
 
     private companion object {
 
-        private val firestore = AppModule.providesFirebaseFirestore()
+        private val firestore = LogWorkoutModule.providesFirebaseFirestore()
         private val repository = TestFirestoreWorkoutLogsRepository(
             firestore,
             "Adam Buicke",

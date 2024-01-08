@@ -5,7 +5,7 @@
  * recompositions, and also across activity or process recreation using the saved instance
  * state mechanism. For example, this happens, when the screen is rotated.
  *
- * [https://developer.android.com/jetpack/compose/state#restore-ui-state]
+ * [Restoring state in Compose](https://developer.android.com/jetpack/compose/state#restore-ui-state)
  * */
 package com.gravitycode.solitaryfitness.log_workout.presentation
 
@@ -45,11 +45,13 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.util.debugError
+import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
+
+private const val TAG = "LogWorkoutScreen"
 
 /**
  * TODO: Consider moving this out into it's own class and applying the same method of filters the values()
@@ -60,13 +62,13 @@ private enum class MenuItem(val string: String) {
 
     SIGN_IN("Sign In"),
 
-    SIGN_OUT("Sign Out"),
+    SIGN_OUT("Sign Out");
 
-    RESET_REPS("Reset Reps"),
-
-    EDIT_REPS("Edit Reps"),
-
-    SETTINGS("Settings");
+//    RESET_REPS("Reset Reps"),
+//
+//    EDIT_REPS("Edit Reps"),
+//
+//    SETTINGS("Settings");
 
     companion object {
 
@@ -98,7 +100,7 @@ private enum class MenuItem(val string: String) {
 //}
 
 @Composable
-fun TrackRepsScreen(
+fun LogWorkoutScreen(
     viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {
@@ -110,14 +112,15 @@ fun TrackRepsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val logWorkoutState = viewModel.state.value
+        Log.d(TAG, "view model state updated: $logWorkoutState")
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {
                 MenuItem.SIGN_IN -> viewModel.onEvent(AppEvent.SignIn)
                 MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
-                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
-                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
-                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
+//                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
+//                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
+//                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
             }
         }
         TrackRepsGrid(
@@ -150,11 +153,6 @@ private fun TopBar(
     user: User?,
     onMenuItemClicked: (MenuItem) -> Unit
 ) {
-    /**
-     * TODO: This is running twice
-     * */
-    Log.i("mo", "user = $user")
-
     TopAppBar(
         modifier = Modifier.height(IntrinsicSize.Max),
         title = {
@@ -162,7 +160,7 @@ private fun TopBar(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (user != null) {
+                if (user?.profilePicture != null) {
                     val imageLoaded = remember { mutableStateOf(false) }
 
                     AsyncImage(

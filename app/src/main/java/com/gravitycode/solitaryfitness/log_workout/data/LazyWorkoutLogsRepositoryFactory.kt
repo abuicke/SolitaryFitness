@@ -1,17 +1,15 @@
 package com.gravitycode.solitaryfitness.log_workout.data
 
 import dagger.Lazy
+import javax.annotation.concurrent.ThreadSafe
 
+@ThreadSafe
 class LazyWorkoutLogsRepositoryFactory(
-    private val preferencesRepository: Lazy<PreferencesWorkoutLogsRepository>,
-    private val firestoreRepository: Lazy<FirestoreWorkoutLogsRepository>
+    private val offlineRepository: Lazy<WorkoutLogsRepository>,
+    private val onlineRepository: Lazy<WorkoutLogsRepository>
 ) : WorkoutLogsRepositoryFactory {
 
-    override fun create(isUserSignedIn: Boolean): WorkoutLogsRepository {
-        return if (isUserSignedIn) {
-            firestoreRepository.get()
-        } else {
-            preferencesRepository.get()
-        }
-    }
+    override fun getOfflineRepository(): WorkoutLogsRepository = offlineRepository.get()
+
+    override fun getOnlineRepository(): WorkoutLogsRepository = onlineRepository.get()
 }

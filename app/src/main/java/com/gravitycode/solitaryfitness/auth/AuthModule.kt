@@ -6,13 +6,32 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.di.ActivityScope
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Qualifier
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+private annotation class Private
 
 @Module
 object AuthModule {
 
+    @Private
+    @Provides
+    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+
+    @Private
+    @Provides
+    fun providesFirebaseAuthUi() = AuthUI.getInstance()
+
     @Provides
     @ActivityScope
-    fun providesAuthenticator(activity: ComponentActivity, auth: FirebaseAuth, ui: AuthUI): Authenticator {
+    fun providesAuthenticator(
+        activity: ComponentActivity,
+        @Private auth: FirebaseAuth,
+        @Private ui: AuthUI
+    ): Authenticator {
         return FirebaseAuthenticator(activity, auth, ui)
     }
 }

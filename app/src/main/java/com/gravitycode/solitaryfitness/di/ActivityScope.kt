@@ -1,8 +1,7 @@
 package com.gravitycode.solitaryfitness.di
 
 import javax.inject.Scope
-import kotlin.annotation.AnnotationRetention.RUNTIME
 
 @Scope
-@Retention(RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ActivityScope
