@@ -10,7 +10,6 @@
 package com.gravitycode.solitaryfitness.log_workout.presentation
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -2,7 +2,6 @@ package com.gravitycode.solitaryfitness.util.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.util.Log
 
 /**
  * TODO: I think I wanted to use this to display a progress dialog that stays on the screen for a minimum

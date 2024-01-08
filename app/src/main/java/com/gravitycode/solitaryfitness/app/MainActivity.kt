@@ -16,8 +16,8 @@ import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
-import com.gravitycode.solitaryfitness.log_workout.data.SyncMode
 import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
+import com.gravitycode.solitaryfitness.log_workout.data.SyncMode
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
@@ -25,7 +25,6 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first

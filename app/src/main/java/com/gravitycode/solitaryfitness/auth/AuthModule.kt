@@ -6,8 +6,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.di.ActivityScope
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Qualifier
 
 @Qualifier
