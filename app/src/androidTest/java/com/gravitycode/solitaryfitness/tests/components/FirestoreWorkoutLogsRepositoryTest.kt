@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness
+package com.gravitycode.solitaryfitness.tests.components
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -6,7 +6,7 @@ import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.util.assertSuccess
+import com.gravitycode.solitaryfitness.test_utils.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -44,7 +44,7 @@ class FirestoreWorkoutLogsRepositoryTest {
 
     @Before
     fun clearTestRecords() {
-        FirestoreWorkoutLogsRepositoryTest.clearTestRecords()
+        Companion.clearTestRecords()
     }
 
     @Test

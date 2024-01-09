@@ -13,6 +13,7 @@ class TestFirestoreWorkoutLogsRepository(
     userEmail: String,
     profilePicUrl: String
 ) : FirestoreWorkoutLogsRepository(
+    TestAppController(),
     firestore,
     TestAuthenticator(TEST_USER_ID, userName, userEmail, profilePicUrl)
 ) {
@@ -34,27 +35,4 @@ class TestFirestoreWorkoutLogsRepository(
         // within the workout-logs subcollection and the test user will be automatically removed.
         workoutLogs(TEST_USER_ID).deleteDocuments()
     }
-}
-
-private class TestAuthenticator(
-    userId: String,
-    userName: String,
-    userEmail: String,
-    profilePicUrl: String
-) : Authenticator {
-
-    private val user = User(
-        userId,
-        userName,
-        userEmail,
-        profilePicUrl
-    )
-
-    override suspend fun signIn() = Result.success(user)
-
-    override suspend fun signOut() = Result.success(Unit)
-
-    override fun isUserSignedIn() = true
-
-    override fun getSignedInUser() = user
 }

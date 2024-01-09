@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -230,6 +231,7 @@ private fun TrackRepsGrid(
         val workout = workouts[index]
 
         WorkoutButton(
+            modifier = Modifier.testTag(workout.string),
             workoutName = workout.string,
             currentReps = logWorkoutState.log[workout],
             onClickAddReps = { reps ->

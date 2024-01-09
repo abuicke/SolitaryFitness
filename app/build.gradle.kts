@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Multi Dex
     implementation("androidx.multidex:multidex:2.0.1")
@@ -105,10 +106,6 @@ dependencies {
     // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
-    // Tooling
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
     // JUnit
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
@@ -125,16 +122,21 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    // Kotlin Coroutines
     // noinspection GradleDependency - versions 1.7.0 -> 1.7.3 causes NoClassDefFoundError
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+
+    // UI Testing
+//    debugImplementation("androidx.compose.ui:ui-test-manifest")
     // I don't know what this is, there's another another compose library specified in
     // https://developer.android.com/training/testing/instrumented-tests, which is below
-    // androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
     // Optional -- UI testing with Espresso
     // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     // Optional -- UI testing with UI Automator
     // androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
     // Optional -- UI testing with Compose
-    // androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
