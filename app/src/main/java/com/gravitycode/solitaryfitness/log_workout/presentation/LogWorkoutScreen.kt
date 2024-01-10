@@ -55,7 +55,7 @@ private const val TAG = "LogWorkoutScreen"
 
 private enum class MenuItem(val string: String) {
 
-    SIGN_IN("Sign In"),
+    SIGN_IN_WITH_GOOGLE("Sign In with Google"),
 
     SIGN_OUT("Sign Out");
 
@@ -111,7 +111,7 @@ fun LogWorkoutScreen(
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {
-                MenuItem.SIGN_IN -> viewModel.onEvent(AppEvent.SignIn)
+                MenuItem.SIGN_IN_WITH_GOOGLE -> viewModel.onEvent(AppEvent.SignIn)
                 MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
 //                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
 //                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
@@ -189,7 +189,7 @@ private fun TopBar(
             val isUserSignedIn = user != null
             val menuItems = MenuItem.values().filter { menuItem ->
                 when (menuItem) {
-                    MenuItem.SIGN_IN -> !isUserSignedIn
+                    MenuItem.SIGN_IN_WITH_GOOGLE -> !isUserSignedIn
                     MenuItem.SIGN_OUT -> isUserSignedIn
                     else -> true
                 }

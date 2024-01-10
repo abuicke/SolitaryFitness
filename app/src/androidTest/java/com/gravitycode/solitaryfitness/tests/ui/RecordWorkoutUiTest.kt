@@ -77,22 +77,22 @@ class RecordWorkoutUiTest {
         stepUp.assertHasRepCount(stepUps)
     }
 
-//    @Test
-//    fun signIn() {
-//        overflow.performClick()
-//        signIn.performClick()
-//
-////        rule.onRoot().onChildren().filterToOne(hasText("@")).performClick()
-//
-//        rule.waitUntil(5000) {
-//            try {
-//                rule.onRoot().onChildren().filter(isDialog()).assertCountEquals(1)
-//                true
-//            } catch (t: Throwable) {
-//                false
-//            }
-//        }
-//    }
+    @Test
+    fun signIn() {
+        overflow.performClick()
+        signIn.performClick()
+
+//        rule.onRoot().onChildren().filterToOne(hasText("@")).performClick()
+
+        rule.waitUntil(5000) {
+            try {
+                rule.onRoot().onChildren().filter(isDialog()).assertCountEquals(1)
+                true
+            } catch (t: Throwable) {
+                false
+            }
+        }
+    }
 }
 
 fun SemanticsNodeInteraction.click1Reps() {

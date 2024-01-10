@@ -2,9 +2,11 @@ package com.gravitycode.solitaryfitness.auth
 
 import android.util.Log
 import androidx.activity.ComponentActivity
+import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
+import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.util.data.GetActivityResult
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
@@ -20,6 +22,7 @@ class FirebaseAuthenticator(
 ) : Authenticator {
 
     private companion object {
+
         private const val TAG = "FirebaseAuthenticator"
     }
 
@@ -27,12 +30,25 @@ class FirebaseAuthenticator(
      * Authentication providers
      * */
     private val providers = arrayListOf(
-        AuthUI.IdpConfig.EmailBuilder().build(),
+//        AuthUI.IdpConfig.EmailBuilder().build(),
         // AuthUI.IdpConfig.PhoneBuilder().build(),
         AuthUI.IdpConfig.GoogleBuilder().build(),
         // AuthUI.IdpConfig.FacebookBuilder().build(),
         // AuthUI.IdpConfig.TwitterBuilder().build()
     )
+
+    /**
+     * Custom Firebase Auth UI layout
+     * */
+    private val authMethodPickerLayout = AuthMethodPickerLayout.Builder(R.layout.auth_method_picker_layout)
+        .setGoogleButtonId(R.id.btn_google)
+        .build()
+
+    private val signInIntent = firebaseAuthUi.createSignInIntentBuilder()
+        .setIsSmartLockEnabled(false)
+        .setAvailableProviders(providers)
+        .setAuthMethodPickerLayout(authMethodPickerLayout)
+        .build()
 
     private val contract = FirebaseAuthUIActivityResultContract()
     private val getFirebaseSignInResult = GetActivityResult(activity, contract)
@@ -48,13 +64,13 @@ class FirebaseAuthenticator(
     }
 
     override suspend fun signIn(): Result<User> {
-        if (user != null) debugError("already signed in as: $user")
-        val result = getFirebaseSignInResult(
-            firebaseAuthUi.createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build()
-        )
+        if (user != null) {
+            val errMsg = "already signed in as: $user"
+            debugError(errMsg)
+            return Result.failure(IllegalStateException(errMsg))
+        }
 
+        val result = getFirebaseSignInResult(signInIntent)
         val response = result.idpResponse
 
         return if (result.resultCode == ComponentActivity.RESULT_OK) {
@@ -78,7 +94,12 @@ class FirebaseAuthenticator(
 
     override suspend fun signOut(): Result<Unit> {
         return suspendCoroutine { continuation ->
-            if (user == null) debugError("no user signed in")
+            if (user == null) {
+                val errMsg = "no user signed in"
+                debugError(errMsg)
+                continuation.resume(Result.failure(IllegalStateException(errMsg)))
+            }
+
             firebaseAuthUi.signOut(activity)
                 .addOnFailureListener {
                     val errMsg = "failed to sign out user: $user"
