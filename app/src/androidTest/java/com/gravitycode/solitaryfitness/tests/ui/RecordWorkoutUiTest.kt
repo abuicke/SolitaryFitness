@@ -16,7 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import kotlin.random.Random
 
-class RecordWorkoutOfflineUiTest {
+class RecordWorkoutUiTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
@@ -76,30 +76,31 @@ fun SemanticsNodeInteraction.click10Reps() {
     onChildren().filter(hasText("10")).assertCountEquals(1).onFirst().performClick()
 }
 
+fun SemanticsNodeInteraction.clickXReps() {
+    onChildren().filter(hasText("X")).assertCountEquals(1).onFirst().performClick()
+}
+
 fun SemanticsNodeInteraction.assertHasRepCount(count: Int) {
     onChildren().filter(hasText(count.toString())).assertCountEquals(1)
 }
 
 fun SemanticsNodeInteraction.addRepsRandomly(): Int {
     var totalReps = 0
-    for (i in 0 until Random.nextInt(1, 26)) {
+    for (i in 0 until Random.nextInt(1, 10001)) {
         performClick()
-        when (Random.nextInt(0, 3)) {
-            0 -> {
+            val rand = Random.nextFloat()
+            if(rand < 0.3) {
                 click1Reps()
                 totalReps += 1
-            }
-
-            1 -> {
+            }else if(rand < 0.6) {
                 click5Reps()
                 totalReps += 5
-            }
-
-            2 -> {
+            }else if(rand < 0.9) {
                 click10Reps()
                 totalReps += 10
+            }else {
+                clickXReps()
             }
-        }
     }
 
     return totalReps
