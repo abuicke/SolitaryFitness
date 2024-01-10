@@ -53,11 +53,6 @@ import java.time.LocalDate
 
 private const val TAG = "LogWorkoutScreen"
 
-/**
- * TODO: Consider moving this out into it's own class and applying the same method of filters the values()
- *  function to be used in other screens. This enum should be all potential menu items which are then
- *  selected from on a per-screen and per-context basis.
- * */
 private enum class MenuItem(val string: String) {
 
     SIGN_IN("Sign In"),
@@ -154,7 +149,7 @@ private fun TopBar(
     onMenuItemClicked: (MenuItem) -> Unit
 ) {
     TopAppBar(
-        modifier = Modifier.height(IntrinsicSize.Max),
+        modifier = Modifier.height(IntrinsicSize.Max).testTag("toolbar"),
         title = {
             Row(
                 modifier = Modifier.fillMaxHeight(),

@@ -119,9 +119,6 @@ private class PreferencesMetaData(
     private val records = HashSet<String>()
 
     init {
-        /**
-         * TODO: Should there also be error handling here as in FirestoreMetaData?
-         * */
         scope.launch(Dispatchers.IO) {
             val preferences = preferencesStore.data.first()
             val dates: Set<String>? = preferences[DATES_KEY]

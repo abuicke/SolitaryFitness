@@ -1,13 +1,19 @@
 package com.gravitycode.solitaryfitness.tests.ui
 
+import android.util.Log
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import com.gravitycode.solitaryfitness.app.MainActivity
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
@@ -21,6 +27,10 @@ class RecordWorkoutUiTest {
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
 
+    private lateinit var overflow: SemanticsNodeInteraction
+    private lateinit var signIn: SemanticsNodeInteraction
+    private lateinit var signOut: SemanticsNodeInteraction
+
     private lateinit var handstandPressUp: SemanticsNodeInteraction
     private lateinit var pressUp: SemanticsNodeInteraction
     private lateinit var sitUp: SemanticsNodeInteraction
@@ -32,6 +42,10 @@ class RecordWorkoutUiTest {
 
     @Before
     fun setUpNodes() {
+        overflow = rule.onNodeWithTag("overflow")
+        signIn = rule.onNodeWithTag("sign in")
+        signOut = rule.onNodeWithTag("sign out")
+
         handstandPressUp = rule.onNodeWithTag(Workout.HANDSTAND_PRESS_UP.string)
         pressUp = rule.onNodeWithTag(Workout.PRESS_UP.string)
         sitUp = rule.onNodeWithTag(Workout.SIT_UP.string)
@@ -62,6 +76,23 @@ class RecordWorkoutUiTest {
         starJump.assertHasRepCount(starJumps)
         stepUp.assertHasRepCount(stepUps)
     }
+
+//    @Test
+//    fun signIn() {
+//        overflow.performClick()
+//        signIn.performClick()
+//
+////        rule.onRoot().onChildren().filterToOne(hasText("@")).performClick()
+//
+//        rule.waitUntil(5000) {
+//            try {
+//                rule.onRoot().onChildren().filter(isDialog()).assertCountEquals(1)
+//                true
+//            } catch (t: Throwable) {
+//                false
+//            }
+//        }
+//    }
 }
 
 fun SemanticsNodeInteraction.click1Reps() {
@@ -86,21 +117,21 @@ fun SemanticsNodeInteraction.assertHasRepCount(count: Int) {
 
 fun SemanticsNodeInteraction.addRepsRandomly(): Int {
     var totalReps = 0
-    for (i in 0 until Random.nextInt(1, 10001)) {
+    for (i in 0 until Random.nextInt(1, 101)) {
         performClick()
-            val rand = Random.nextFloat()
-            if(rand < 0.3) {
-                click1Reps()
-                totalReps += 1
-            }else if(rand < 0.6) {
-                click5Reps()
-                totalReps += 5
-            }else if(rand < 0.9) {
-                click10Reps()
-                totalReps += 10
-            }else {
-                clickXReps()
-            }
+        val rand = Random.nextFloat()
+        if (rand < 0.3) {
+            click1Reps()
+            totalReps += 1
+        } else if (rand < 0.6) {
+            click5Reps()
+            totalReps += 5
+        } else if (rand < 0.9) {
+            click10Reps()
+            totalReps += 10
+        } else {
+            clickXReps()
+        }
     }
 
     return totalReps

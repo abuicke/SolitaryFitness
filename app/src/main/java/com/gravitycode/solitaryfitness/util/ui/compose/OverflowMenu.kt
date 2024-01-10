@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.toLowerCase
 
 @Composable
 fun OverflowMenu(
@@ -23,7 +25,7 @@ fun OverflowMenu(
     val showMenu = remember { mutableStateOf(false) }
 
     IconButton(
-        modifier = modifier,
+        modifier = modifier.testTag("overflow"),
         onClick = { showMenu.value = !showMenu.value }
     ) {
         Icon(
@@ -39,10 +41,14 @@ fun OverflowMenu(
         }
     ) {
         for (menuItem in menuItems) {
-            DropdownMenuItem({ Text(menuItem) }, {
-                showMenu.value = false
-                onMenuItemClicked(menuItem)
-            })
+            DropdownMenuItem(
+                text = { Text(menuItem) },
+                onClick = {
+                    showMenu.value = false
+                    onMenuItemClicked(menuItem)
+                },
+                modifier = Modifier.testTag(menuItem.lowercase())
+            )
         }
     }
 }
