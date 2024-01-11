@@ -1,12 +1,9 @@
 package com.gravitycode.solitaryfitness.tests.ui
 
-import android.util.Log
 import androidx.compose.ui.test.SemanticsNodeInteraction
-import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.filter
 import androidx.compose.ui.test.filterToOne
-import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -43,7 +40,7 @@ class RecordWorkoutUiTest {
     @Before
     fun setUpNodes() {
         overflow = rule.onNodeWithTag("overflow")
-        signIn = rule.onNodeWithTag("sign in")
+        signIn = rule.onNodeWithTag("sign in with google")
         signOut = rule.onNodeWithTag("sign out")
 
         handstandPressUp = rule.onNodeWithTag(Workout.HANDSTAND_PRESS_UP.string)
@@ -82,7 +79,7 @@ class RecordWorkoutUiTest {
         overflow.performClick()
         signIn.performClick()
 
-//        rule.onRoot().onChildren().filterToOne(hasText("@")).performClick()
+        rule.onRoot().onChildren().filterToOne(hasText("1")).performClick()
 
         rule.waitUntil(5000) {
             try {
