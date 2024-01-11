@@ -19,7 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import kotlin.random.Random
 
-class RecordWorkoutUiTest {
+class RecordWorkoutOfflineUiTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
