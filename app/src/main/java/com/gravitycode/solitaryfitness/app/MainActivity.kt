@@ -33,6 +33,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * TODO: Add a test that signs out on UIAutomator.
+ * */
 class MainActivity : ComponentActivity(), AppController {
 
     private companion object {
