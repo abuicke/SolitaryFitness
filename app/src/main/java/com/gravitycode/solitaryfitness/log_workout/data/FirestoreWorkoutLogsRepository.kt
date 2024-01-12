@@ -38,6 +38,7 @@ open class FirestoreWorkoutLogsRepository(
     }
 
     private val _metaData = FirestoreMetaData(appController.applicationScope)
+
     /**
      * TODO: Is this required to be open for testing or should it also be made final?
      * */
@@ -126,7 +127,7 @@ open class FirestoreWorkoutLogsRepository(
      * @return the top-level collection which contains all users,
      * can be overridden by a child class to change where users are stored.
      * */
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     protected open fun users() = firestore.collection("users")
 
     /**
@@ -134,11 +135,16 @@ open class FirestoreWorkoutLogsRepository(
      *
      * @return a collection containing all the workout logs for the specified user
      * */
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     protected fun workoutLogs(userId: String): CollectionReference {
         return users().document(userId).collection("workout-logs")
     }
 
+    /**
+     * a collection containing all the workout logs for the current user
+     *
+     * @throws NullPointerException if no user is currently signed in
+     * */
     private fun workoutLogs() = workoutLogs(authenticator.getSignedInUser()!!.id)
 
     private fun workoutLog(date: LocalDate): DocumentReference {

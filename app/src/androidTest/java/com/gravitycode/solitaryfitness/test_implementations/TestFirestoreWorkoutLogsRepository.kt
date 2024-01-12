@@ -1,11 +1,8 @@
 package com.gravitycode.solitaryfitness.test_implementations
 
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.util.data.deleteDocuments
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.util.data.deleteDocuments
 
 class TestFirestoreWorkoutLogsRepository(
     private val firestore: FirebaseFirestore,
@@ -23,9 +20,7 @@ class TestFirestoreWorkoutLogsRepository(
         const val TEST_USER_ID = "0"
     }
 
-    override fun users(): CollectionReference {
-        return firestore.collection("test-users")
-    }
+    override fun users() = firestore.collection("test-users")
 
     suspend fun clearTestRecords() {
         // Can't delete a collection or a document that only contains a collection and no data fields

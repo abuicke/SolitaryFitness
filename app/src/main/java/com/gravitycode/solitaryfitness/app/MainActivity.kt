@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,6 +26,7 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
+import com.gravitycode.solitaryfitness.util.ui.compose.calculateGridRows
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -35,6 +37,8 @@ import javax.inject.Inject
 
 /**
  * TODO: Add a test that signs out on UIAutomator.
+ * TODO: Figure out DataStore issue.
+ * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
  * */
 class MainActivity : ComponentActivity(), AppController {
 
@@ -108,7 +112,7 @@ class MainActivity : ComponentActivity(), AppController {
                     } else {
                         appState.emit(AppState(user))
                     }
-                }else {
+                } else {
                     appState.emit(AppState(user))
                 }
                 messenger.toast("Signed in: ${user.email}")

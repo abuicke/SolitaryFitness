@@ -3,14 +3,11 @@ package com.gravitycode.solitaryfitness.tests.ui
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.filter
-import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
@@ -26,7 +23,7 @@ import kotlin.random.Random
  * */
 @LargeTest
 @FlakyTest
-class RecordWorkoutOfflineUiTest {
+class RecordWorkoutUiTest {
 
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
@@ -61,7 +58,7 @@ class RecordWorkoutOfflineUiTest {
     }
 
     @Test
-    fun addReps() {
+    fun addReps_Offline() {
         val handstandPressUps = handstandPressUp.addRepsRandomly()
         val pressUps = pressUp.addRepsRandomly()
         val sitUps = sitUp.addRepsRandomly()
@@ -79,6 +76,21 @@ class RecordWorkoutOfflineUiTest {
         burpee.assertHasRepCount(burpees)
         starJump.assertHasRepCount(starJumps)
         stepUp.assertHasRepCount(stepUps)
+    }
+
+    @Test
+    fun addRepsToMultipleDays_Offline() {
+
+    }
+
+    @Test
+    fun addReps_Online() {
+
+    }
+
+    @Test
+    fun addRepsToMultipleDays_Online() {
+        rule.activity.signInForTesting()
     }
 }
 

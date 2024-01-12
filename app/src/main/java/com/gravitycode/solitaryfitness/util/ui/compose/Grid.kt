@@ -87,7 +87,7 @@ fun Grid(
 }
 
 
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+@VisibleForTesting
 internal fun calculateGridRows(columns: Int, items: Int): Int {
     require(columns > 0) { "columns cannot be less than one" }
     require(items > 0) { "items cannot be less than one" }
