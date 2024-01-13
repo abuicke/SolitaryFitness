@@ -12,6 +12,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
+import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
@@ -39,6 +40,7 @@ import javax.inject.Inject
  * TODO: Add a test that signs out on UIAutomator.
  * TODO: Figure out DataStore issue.
  * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
+ * TODO: Use Mockito for Firestore: https://softwareengineering.stackexchange.com/questions/450508
  * */
 class MainActivity : ComponentActivity(), AppController {
 

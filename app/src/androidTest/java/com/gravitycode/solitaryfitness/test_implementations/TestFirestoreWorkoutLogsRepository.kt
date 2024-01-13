@@ -1,18 +1,20 @@
 package com.gravitycode.solitaryfitness.test_implementations
 
+import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.util.data.deleteDocuments
 
 class TestFirestoreWorkoutLogsRepository(
+    appController: AppController,
     private val firestore: FirebaseFirestore,
-    userName: String,
-    userEmail: String,
-    profilePicUrl: String
+    authenticator: Authenticator
 ) : FirestoreWorkoutLogsRepository(
-    TestAppController(),
+    appController,
     firestore,
-    TestAuthenticator(TEST_USER_ID, userName, userEmail, profilePicUrl)
+    authenticator
 ) {
 
     private companion object {
@@ -22,6 +24,7 @@ class TestFirestoreWorkoutLogsRepository(
 
     override fun users() = firestore.collection("test-users")
 
+    @SuppressLint("VisibleForTests")
     suspend fun clearTestRecords() {
         // Can't delete a collection or a document that only contains a collection and no data fields
         // directly, need to delete everything it contains and it will automatically be removed. If all a

@@ -90,7 +90,7 @@ class RecordWorkoutUiTest {
 
     @Test
     fun addRepsToMultipleDays_Online() {
-        rule.activity.signInForTesting()
+
     }
 }
 
