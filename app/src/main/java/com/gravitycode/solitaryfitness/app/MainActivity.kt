@@ -215,7 +215,7 @@ class MainActivity : ComponentActivity(), AppController {
                 Log.d(TAG, "signed in as user: $user")
             } else {
                 messenger.toast("Failed to sign in")
-                debugError("Sign in failed", result)
+                Log.e(TAG, "Sign in failed", result.exceptionOrNull())
             }
         }
     }
@@ -234,7 +234,7 @@ class MainActivity : ComponentActivity(), AppController {
                 Log.v(TAG, "signed out")
             } else {
                 messenger.toast("Failed to sign out")
-                debugError("Sign out failed", result)
+                Log.e(TAG, "Sign out failed", result.exceptionOrNull())
             }
         }
     }
