@@ -4,16 +4,19 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.di.ActivityScope
-import com.gravitycode.solitaryfitness.log_workout.data.FirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.data.firestore.FirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.LazySyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.log_workout.data.firestore.DebugFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.log_workout.data.firestore.ProductionFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.firestoreSettings
@@ -39,10 +42,13 @@ private annotation class OnlineRepository
 object LogWorkoutModule {
 
     @Provides
+    @ActivityScope
     @InternalDependency
     fun providesWorkoutLogsPreferencesStore(
         context: Context
-    ) = createPreferencesStoreFromFile(context, "workout_logs")
+    ): DataStore<Preferences> {
+        return createPreferencesStoreFromFile(context, "workout_logs")
+    }
 
     @Provides
     @ActivityScope
@@ -70,10 +76,15 @@ object LogWorkoutModule {
     @OnlineRepository
     fun provideOnlineWorkoutLogsRepository(
         appController: AppController,
-        @InternalDependency firestore: FirebaseFirestore,
-        authenticator: Authenticator
+        authenticator: Authenticator,
+        @InternalDependency firestore: FirebaseFirestore
     ): WorkoutLogsRepository {
-        return FirestoreWorkoutLogsRepository(appController, firestore, authenticator)
+        val applicationScope = appController.applicationScope
+        return if (BuildConfig.DEBUG) {
+            DebugFirestoreWorkoutLogsRepository(applicationScope, authenticator, firestore)
+        } else {
+            ProductionFirestoreWorkoutLogsRepository(applicationScope, authenticator, firestore)
+        }
     }
 
     @Provides
@@ -82,10 +93,7 @@ object LogWorkoutModule {
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
     ): WorkoutLogsRepositoryFactory {
-        return LazyWorkoutLogsRepositoryFactory(
-            offlineRepository,
-            onlineRepository
-        )
+        return LazyWorkoutLogsRepositoryFactory(offlineRepository, onlineRepository)
     }
 
     @Provides

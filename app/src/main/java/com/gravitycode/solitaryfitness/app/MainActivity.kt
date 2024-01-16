@@ -1,18 +1,17 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
-import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
@@ -27,13 +26,18 @@ import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
-import com.gravitycode.solitaryfitness.util.ui.compose.calculateGridRows
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -41,12 +45,29 @@ import javax.inject.Inject
  * TODO: Figure out DataStore issue.
  * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
  * TODO: Use Mockito for Firestore: https://softwareengineering.stackexchange.com/questions/450508
+ * TODO: Test no internet connection
+ * TODO: Need error handling and return [Result] everywhere preferences store is accessed.
+ * TODO: Check to see of there are other locations where I can use runCatching to return [Result]s
+ * TODO: Write test for [AppControllerSettings]
+ * TODO: Are there any places where it would be more profitable to us async/await? (Anywhere a result is
+ *  waited for, what about logging in and out?)
  * */
 class MainActivity : ComponentActivity(), AppController {
+
+    /**
+     *
+     *
+     * TODO: Test internet connection stuff next
+     *
+     *
+     * */
 
     private companion object {
 
         const val TAG = "MainActivity"
+
+        val applicationScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+        val appState = MutableSharedFlow<AppState>(replay = 1)
     }
 
     @Inject lateinit var authenticator: Authenticator
@@ -55,9 +76,10 @@ class MainActivity : ComponentActivity(), AppController {
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    override val applicationScope = lifecycleScope
-    override val appState = MutableSharedFlow<AppState>(replay = 1)
-    private val appControllerSettings = AppControllerSettings(this)
+    override val applicationScope = Companion.applicationScope
+    override val appState = Companion.appState
+
+    private lateinit var appControllerSettings: AppControllerSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +90,10 @@ class MainActivity : ComponentActivity(), AppController {
             .inject(this)
 
         lifecycleScope.launch {
+            appControllerSettings = AppControllerSettings.getInstance(this@MainActivity)
+        }
+
+        applicationScope.launch {
             val currentUser = authenticator.getSignedInUser()
             appState.emit(AppState(currentUser))
         }
@@ -81,6 +107,13 @@ class MainActivity : ComponentActivity(), AppController {
                     LogWorkoutScreen(logWorkoutViewModel)
                 }
             }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isChangingConfigurations) {
+            applicationScope.cancel("MainActivity destroyed")
         }
     }
 
@@ -106,7 +139,12 @@ class MainActivity : ComponentActivity(), AppController {
                 val user = result.getOrNull()!!
                 val hasUserPreviouslySignedIn = appControllerSettings.hasUserPreviouslySignedIn(user)
                 if (!hasUserPreviouslySignedIn) {
-                    appControllerSettings.addUserToSignInHistory(user)
+                    val historyResult = appControllerSettings.addUserToSignInHistory(user)
+                    if (historyResult.isSuccess) {
+                        Log.d(TAG, "successfully added user ${user.email} to sign in history")
+                    } else {
+                        debugError("failed to add user ${user.email} to sign in history")
+                    }
                     if (hasOfflineData) {
                         launchSyncOfflineDataFlow {
                             appState.emit(AppState(user))
@@ -193,31 +231,50 @@ class MainActivity : ComponentActivity(), AppController {
     }
 }
 
-private class AppControllerSettings(activity: ComponentActivity) {
+private class AppControllerSettings private constructor(context: Context) {
 
-    private companion object {
+    companion object {
 
         private val USERS_KEY = stringSetPreferencesKey("users")
-    }
+        private val mutex = Mutex()
 
-    private val preferencesStore = createPreferencesStoreFromFile(activity, "app_controller")
-    private val users: MutableSet<String> = mutableSetOf()
+        private var instance: AppControllerSettings? = null
 
-    init {
-        activity.lifecycleScope.launch(Dispatchers.IO) {
-            val preferences = preferencesStore.data.first()
-            val userIds: Set<String>? = preferences[USERS_KEY]
+        /**
+         * Return the singleton instance of [AppControllerSettings]
+         * */
+        suspend fun getInstance(context: Context): AppControllerSettings {
+            return instance ?: mutex.withLock {
+                instance ?: AppControllerSettings(context).apply {
+                    try {
+                        val preferences = withContext(Dispatchers.IO) {
+                            preferencesStore.data.first()
+                        }
+                        val userIds: Set<String>? = preferences[USERS_KEY]
+                        if (userIds != null) {
+                            users.addAll(userIds)
+                        }
+                    } catch (ioe: IOException) {
+                        debugError("failed to read app controller settings from preferences store", ioe)
+                    }
 
-            if (userIds != null) {
-                users.addAll(userIds)
+                    instance = this
+                }
             }
         }
     }
 
-    suspend fun addUserToSignInHistory(user: User) {
-        preferencesStore.edit { preferences ->
-            users.add(user.id)
-            preferences[USERS_KEY] = users
+    private val preferencesStore = createPreferencesStoreFromFile(context, "app_controller")
+    private val users: MutableSet<String> = mutableSetOf()
+
+    suspend fun addUserToSignInHistory(user: User): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                preferencesStore.edit { preferences ->
+                    users.add(user.id)
+                    preferences[USERS_KEY] = users
+                }
+            }
         }
     }
 

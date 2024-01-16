@@ -24,6 +24,17 @@ import java.time.LocalDate
  * See warning in (StateFlow and SharedFlow)[https://developer.android.com/kotlin/flow/stateflow-and-sharedflow]
  *
  * TODO: Do I need to implement this behavior?
+ *
+ * ViewModel classes should prefer creating coroutines instead of exposing suspend functions to perform
+ * business logic. Suspend functions in the ViewModel can be useful if instead of exposing state using a
+ * stream of data, only a single value needs to be emitted.
+ *
+ * In addition to that, your coroutines will survive configuration changes automatically if the work is
+ * started in the viewModelScope. If you create coroutines using lifecycleScope instead, you'd have to
+ * handle that manually. If the coroutine needs to outlive the ViewModel's scope, check out the Creating
+ * coroutines in the business and data layer section.
+ *
+ * [https://developer.android.com/kotlin/coroutines/coroutines-best-practices#viewmodel-coroutines]
  * */
 class LogWorkoutViewModel(
     private val appController: AppController,

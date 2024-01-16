@@ -5,6 +5,9 @@
       <entry key="All Tests">
         <State />
       </entry>
+      <entry key="FirestoreWorkoutLogsRepositoryTest">
+        <State />
+      </entry>
       <entry key="GoogleSignInUiTest">
         <State />
       </entry>
@@ -15,9 +18,6 @@
         <State />
       </entry>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="test()">
         <State />
       </entry>
     </value>

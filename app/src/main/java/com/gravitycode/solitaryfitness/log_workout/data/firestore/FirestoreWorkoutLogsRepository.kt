@@ -1,15 +1,18 @@
-package com.gravitycode.solitaryfitness.log_workout.data
+package com.gravitycode.solitaryfitness.log_workout.data.firestore
 
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.auth.Authenticator
+import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.log_workout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData
+import com.gravitycode.solitaryfitness.util.error.IllegalStateError
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,15 +23,14 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 /**
- * If you are using [DocumentReference.set] to update document fields then be careful, it kills non-updated
- * fields in the document. eg. I had 6 fields in a document and I updated only 4 fields then `set()` method
- * removed 2 fields and their information from that document on firestore.
+ * NOTE: "If you are using [DocumentReference.set] to update document fields then be careful, it kills
+ * non-updated fields in the document. eg. I had 6 fields in a document and I updated only 4 fields then
+ * `set()` method removed 2 fields and their information from that document on firestore."
  *
  * (How to add Document with Custom ID to firestore)[https://stackoverflow.com/a/48544954/4596649]
  * */
-open class FirestoreWorkoutLogsRepository(
-    appController: AppController,
-    private val firestore: FirebaseFirestore,
+sealed class FirestoreWorkoutLogsRepository(
+    applicationScope: CoroutineScope,
     private val authenticator: Authenticator
 ) : WorkoutLogsRepository {
 
@@ -37,12 +39,16 @@ open class FirestoreWorkoutLogsRepository(
         const val TAG = "FirestoreWorkoutHistoryRepo"
     }
 
-    private val _metaData = FirestoreMetaData(appController.applicationScope)
+//    /**
+//     * ID string for the root collection (the users collection), which contains all the data this repository
+//     * will retrieve. Override this property in a class to specify an ID for this collection. This
+//     * allows for different root collections to be used depending on the circumstances, e.g. production,
+//     * debugging, testing etc.
+//     * */
+//    protected abstract val usersCollectionId: String
 
-    /**
-     * TODO: Is this required to be open for testing or should it also be made final?
-     * */
-    override val metaData: MetaData<LocalDate> = _metaData
+    private val _metaData = FirestoreMetaData(applicationScope)
+    final override val metaData: MetaData<LocalDate> = _metaData
 
     final override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {
         return suspendCoroutine { continuation ->
@@ -124,32 +130,31 @@ open class FirestoreWorkoutLogsRepository(
     }
 
     /**
-     * @return the top-level collection which contains all users,
-     * can be overridden by a child class to change where users are stored.
+     * @return the top-level collection, which contains all users (and their data)
      * */
-    @VisibleForTesting
-    protected open fun users() = firestore.collection("users")
+    protected abstract fun users(): CollectionReference
 
     /**
      * @param[userId] The user's ID
      *
-     * @return a collection containing all the workout logs for the specified user
+     * @return a collection containing all the data (including workout logs) for the specified user
      * */
-    @VisibleForTesting
-    protected fun workoutLogs(userId: String): CollectionReference {
-        return users().document(userId).collection("workout-logs")
-    }
+    private fun workoutLogs(userId: String) = users().document(userId).collection("workout-logs")
 
     /**
-     * a collection containing all the workout logs for the current user
+     * @return a collection containing all the data (including workout logs) for the current user
      *
      * @throws NullPointerException if no user is currently signed in
      * */
-    private fun workoutLogs() = workoutLogs(authenticator.getSignedInUser()!!.id)
+    @VisibleForTesting
+    protected fun workoutLogs() = workoutLogs(authenticator.getSignedInUser()!!.id)
 
-    private fun workoutLog(date: LocalDate): DocumentReference {
-        return workoutLogs().document(date.toString())
-    }
+    /**
+     * @param[date] The date of the workout logs
+     *
+     * @return a document containing the workout logs for the specified date (for the current user)
+     * */
+    private fun workoutLog(date: LocalDate) = workoutLogs().document(date.toString())
 
     private inner class FirestoreMetaData(scope: CoroutineScope) : MetaData<LocalDate> {
 
