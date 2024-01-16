@@ -2,13 +2,13 @@ package com.gravitycode.solitaryfitness.app
 
 import android.content.Context
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.di.ActivityScope
+import com.gravitycode.solitaryfitness.di.ApplicationScope
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import dagger.Module
 import dagger.Provides
 
 @Module
-object ActivityModule {
+object ApplicationModule {
 
     @Provides
     fun providesApplicationContext(activity: ComponentActivity): Context = activity.applicationContext
@@ -17,6 +17,6 @@ object ActivityModule {
     fun providesAppController(activity: ComponentActivity) = activity as AppController
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     fun providesMessenger(context: Context) = Messenger.create(context)
 }

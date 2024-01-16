@@ -3,7 +3,7 @@ package com.gravitycode.solitaryfitness.auth
 import androidx.activity.ComponentActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.gravitycode.solitaryfitness.di.ActivityScope
+import com.gravitycode.solitaryfitness.di.ApplicationScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier
@@ -24,7 +24,7 @@ object AuthModule {
     fun providesFirebaseAuthUi() = AuthUI.getInstance()
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     fun providesAuthenticator(
         activity: ComponentActivity,
         @Private auth: FirebaseAuth,

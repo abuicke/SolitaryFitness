@@ -8,9 +8,6 @@
       <entry key="FirestoreWorkoutLogsRepositoryTest">
         <State />
       </entry>
-      <entry key="GoogleSignInUiTest">
-        <State />
-      </entry>
       <entry key="RecordWorkoutOfflineUiTest">
         <State />
       </entry>
@@ -18,6 +15,9 @@
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="getInstanceReturnsTheSameInstanceEachTime()">
         <State />
       </entry>
     </value>

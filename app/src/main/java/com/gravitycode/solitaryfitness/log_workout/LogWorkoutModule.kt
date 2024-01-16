@@ -7,8 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.di.ActivityScope
-import com.gravitycode.solitaryfitness.log_workout.data.firestore.FirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.di.ApplicationScope
 import com.gravitycode.solitaryfitness.log_workout.data.LazySyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
@@ -42,7 +41,7 @@ private annotation class OnlineRepository
 object LogWorkoutModule {
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     @InternalDependency
     fun providesWorkoutLogsPreferencesStore(
         context: Context
@@ -51,7 +50,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     @OfflineRepository
     fun provideOfflineWorkoutLogsRepository(
         appController: AppController,
@@ -72,7 +71,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     @OnlineRepository
     fun provideOnlineWorkoutLogsRepository(
         appController: AppController,
@@ -88,7 +87,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     fun providesWorkoutLogsRepositoryFactory(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
@@ -97,7 +96,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ActivityScope
+    @ApplicationScope
     fun providesSyncDataService(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>

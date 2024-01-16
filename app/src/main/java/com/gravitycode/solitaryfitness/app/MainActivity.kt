@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,7 +17,7 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.di.DaggerActivityComponent
+import com.gravitycode.solitaryfitness.di.DaggerApplicationComponent
 import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
 import com.gravitycode.solitaryfitness.log_workout.data.SyncMode
 import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
@@ -64,10 +65,18 @@ class MainActivity : ComponentActivity(), AppController {
 
     private companion object {
 
+        init {
+            Log.v("MainActivity", "MainActivity class initialized")
+        }
+
         const val TAG = "MainActivity"
 
         val applicationScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
         val appState = MutableSharedFlow<AppState>(replay = 1)
+    }
+
+    init {
+        Log.v(TAG, "MainActivity.init")
     }
 
     @Inject lateinit var authenticator: Authenticator
@@ -83,14 +92,13 @@ class MainActivity : ComponentActivity(), AppController {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        DaggerActivityComponent.builder()
-            .componentActivity(this)
-            .build()
-            .inject(this)
+        Log.v(TAG, "onCreate")
 
         lifecycleScope.launch {
-            appControllerSettings = AppControllerSettings.getInstance(this@MainActivity)
+            val activity = this@MainActivity
+            (application as SolitaryFitnessApp).applicationComponent(activity).inject(activity)
+            Log.v(TAG, "AppControllerSettings.getInstance")
+            appControllerSettings = AppControllerSettings.getInstance(activity)
         }
 
         applicationScope.launch {
@@ -110,11 +118,37 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.v(TAG, "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.v(TAG, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v(TAG, "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.v(TAG, "onStop")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        Log.v(TAG, "onDestroy")
         if (!isChangingConfigurations) {
             applicationScope.cancel("MainActivity destroyed")
         }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.v(TAG, "onRestart")
     }
 
     override fun launchSignInFlow() {
@@ -231,11 +265,17 @@ class MainActivity : ComponentActivity(), AppController {
     }
 }
 
-private class AppControllerSettings private constructor(context: Context) {
+class AppControllerSettings private constructor(context: Context) {
 
     companion object {
 
+        init {
+            Log.v("AppControllerSettings", "AppControllerSettings class initialized")
+        }
+
+        private const val TAG = "AppControllerSettings"
         private val USERS_KEY = stringSetPreferencesKey("users")
+
         private val mutex = Mutex()
 
         private var instance: AppControllerSettings? = null
@@ -244,6 +284,7 @@ private class AppControllerSettings private constructor(context: Context) {
          * Return the singleton instance of [AppControllerSettings]
          * */
         suspend fun getInstance(context: Context): AppControllerSettings {
+            Log.v(TAG, "instance = $instance")
             return instance ?: mutex.withLock {
                 instance ?: AppControllerSettings(context).apply {
                     try {
@@ -266,6 +307,14 @@ private class AppControllerSettings private constructor(context: Context) {
 
     private val preferencesStore = createPreferencesStoreFromFile(context, "app_controller")
     private val users: MutableSet<String> = mutableSetOf()
+
+    init {
+        Log.v(TAG, "init \n${Log.getStackTraceString(Throwable())}")
+    }
+
+    protected fun finalize() {
+        Log.v(TAG, "object destroyed")
+    }
 
     suspend fun addUserToSignInHistory(user: User): Result<Unit> {
         return runCatching {

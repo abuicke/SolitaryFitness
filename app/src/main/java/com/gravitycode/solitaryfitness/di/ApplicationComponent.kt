@@ -1,29 +1,29 @@
 package com.gravitycode.solitaryfitness.di
 
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.app.ActivityModule
+import com.gravitycode.solitaryfitness.app.ApplicationModule
 import com.gravitycode.solitaryfitness.app.MainActivity
 import com.gravitycode.solitaryfitness.auth.AuthModule
 import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
 import dagger.BindsInstance
 import dagger.Component
 
-@ActivityScope
+@ApplicationScope
 @Component(
     modules = [
-        ActivityModule::class,
+        ApplicationModule::class,
         AuthModule::class,
         LogWorkoutModule::class
     ]
 )
-interface ActivityComponent {
+interface ApplicationComponent {
 
     @Component.Builder
     interface Builder {
 
         @BindsInstance fun componentActivity(activity: ComponentActivity): Builder
 
-        fun build(): ActivityComponent
+        fun build(): ApplicationComponent
     }
 
     fun inject(activity: MainActivity)
