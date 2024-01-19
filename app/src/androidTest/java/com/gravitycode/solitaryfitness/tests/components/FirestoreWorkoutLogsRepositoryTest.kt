@@ -2,13 +2,15 @@ package com.gravitycode.solitaryfitness.tests.components
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
-import com.gravitycode.solitaryfitness.test_implementations.TestFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.LogWorkoutModule
+import com.gravitycode.solitaryfitness.logworkout.data.firestore.TestingFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.test_implementations.TestUsers
 import com.gravitycode.solitaryfitness.test_utils.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import org.junit.AfterClass
 import org.junit.Assert.*
@@ -25,11 +27,10 @@ class FirestoreWorkoutLogsRepositoryTest {
     private companion object {
 
         private val firestore = LogWorkoutModule.providesFirebaseFirestore()
-        private val repository = TestFirestoreWorkoutLogsRepository(
+        private val repository = TestingFirestoreWorkoutLogsRepository(
+            TestScope(),
+            TestUsers.ADAM_BUICKE,
             firestore,
-            "Adam Buicke",
-            "buickea@gmail.com",
-            "https://lh3.googleusercontent.com/a/ACg8ocL8p9etpQsdZNTxhdbz_lVknHmZY44d2QE6landGS3Lbws=s96-c"
         )
 
         @AfterClass
@@ -37,7 +38,7 @@ class FirestoreWorkoutLogsRepositoryTest {
         @JvmName("staticClearTestRecords")
         fun clearTestRecords() {
             runBlocking {
-                repository.clearTestRecords()
+                repository.deleteAll()
             }
         }
     }

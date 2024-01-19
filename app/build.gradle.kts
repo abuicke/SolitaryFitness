@@ -32,6 +32,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -60,19 +61,19 @@ dependencies {
 
     // Compose
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Multi Dex
-    implementation("androidx.multidex:multidex:2.0.1")
+    // implementation("androidx.multidex:multidex:2.0.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
+    // implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
 
     // Dagger 2
     implementation("com.google.dagger:dagger:2.48")
@@ -106,7 +107,7 @@ dependencies {
     // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
-    // JUnit
+    // Unit Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     // Optional -- Robolectric environment
@@ -118,25 +119,19 @@ dependencies {
     // Optional -- Mockk framework
     // testImplementation("io.mockk:mockk:1.13.8")
 
-    // Android Instrumentation Testing
+    // Instrumentation Testing
     androidTestImplementation("androidx.test:runner:1.5.2")
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     // noinspection GradleDependency - versions 1.7.0 -> 1.7.3 causes NoClassDefFoundError
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
-    // UI Testing
-//    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    // I don't know what this is, there's another another compose library specified in
-    // https://developer.android.com/training/testing/instrumented-tests, which is below
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-
+    // UI Testing (Compose)
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // Optional -- UI testing with Espresso
-    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    // Optional -- UI testing with UI Automator
-    // androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
-    // Optional -- UI testing with Compose
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+    // UI Testing (Espresso and UI Automator)
+    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
 }

@@ -11,13 +11,8 @@ interface Messenger {
         fun create(context: Context): Messenger = MessengerImpl(context)
     }
 
-    @UiThread
     fun toast(text: String, duration: ToastDuration = ToastDuration.SHORT)
 
-    /**
-     * TODO: Verify that this also needs to be called from the UI Thread or if it's implementation varies.
-     * */
-    @UiThread
     fun snackbar(text: String, action: String)
 }
 

@@ -2,13 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="All Tests">
+        <State />
+      </entry>
+      <entry key="FirestoreWorkoutLogsRepositoryTest">
+        <State />
+      </entry>
       <entry key="RecordWorkoutOfflineUiTest">
         <State />
       </entry>
-      <entry key="addReps()">
+      <entry key="Tests in 'com.gravitycode.solitaryfitness.tests.ui'">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="getInstanceReturnsTheSameInstanceEachTime()">
         <State />
       </entry>
     </value>

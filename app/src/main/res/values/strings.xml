@@ -10,4 +10,8 @@
         Would you like to copy the work you\'ve done so far to your account?\n\nYou can also sync later from the Settings menu.
     </string>
     <string name="transfer_in_progress_message">Syncing in progress…</string>
+
+    <!-- Custom Firebase Auth UI -->
+    <string name="sign_in_with_google">Sign In With Google</string>
+    <string name="flex_emoji_content_description">Flex emoji</string>
 </resources>
