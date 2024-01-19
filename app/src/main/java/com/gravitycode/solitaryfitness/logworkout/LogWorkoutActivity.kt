@@ -40,19 +40,8 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
+
 /**
- *
- *
- *
- *
- * TODO: Test internet connection stuff next
- *
- *
- *
- *
- *
- *
- *
  * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
  *  handles the Application component stuff?
  *
@@ -66,6 +55,7 @@ import javax.inject.Inject
  * TODO: Write test for [AppControllerSettings]
  * TODO: Are there any places where it would be more profitable to us async/await? (Anywhere a result is
  *  waited for, what about logging in and out?)
+ * TODO: `onEvent(DateSelected)` still being called 3 times
  * */
 class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
@@ -97,9 +87,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     /**
      *
      *
-     *
-     * TODO: Need to make sure components are garbage collected when no longer used.
-     *
+     * TODO: Test internet connection stuff next
      *
      *
      *

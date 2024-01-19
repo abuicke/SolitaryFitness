@@ -1,7 +1,6 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
-import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
 import dagger.BindsInstance
 import dagger.Component
 

@@ -2,7 +2,6 @@ package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.UiThread
 
 interface Messenger {
 

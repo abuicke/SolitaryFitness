@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData

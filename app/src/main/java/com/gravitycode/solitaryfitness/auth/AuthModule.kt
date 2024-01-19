@@ -5,7 +5,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.app.ActivityScope
 import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
-import com.gravitycode.solitaryfitness.logworkout.LogWorkoutScope
+import com.gravitycode.solitaryfitness.util.android.temporarilyDisableStrictMode
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier
@@ -22,7 +22,11 @@ object AuthModule {
 
     @Provides
     @InternalDependency
-    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
+    fun providesFirebaseAuth(): FirebaseAuth {
+        return temporarilyDisableStrictMode {
+            FirebaseAuth.getInstance()
+        }
+    }
 
     @Provides
     @InternalDependency
