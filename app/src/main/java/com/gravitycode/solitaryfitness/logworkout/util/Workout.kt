@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.log_workout.util
+package com.gravitycode.solitaryfitness.logworkout.util
 
 enum class Workout(val string: String) {
 

@@ -1,6 +1,6 @@
-package com.gravitycode.solitaryfitness.log_workout.presentation
+package com.gravitycode.solitaryfitness.logworkout.presentation
 
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import java.time.LocalDate
 
 sealed class LogWorkoutEvent {

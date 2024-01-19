@@ -2,24 +2,28 @@ package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.di.ApplicationComponent
-import com.gravitycode.solitaryfitness.di.DaggerApplicationComponent
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.flow.SharedFlow
 
 class SolitaryFitnessApp : Application() {
 
-    private val mutex = Mutex()
+    private lateinit var applicationComponent: ApplicationComponent
 
-    private var applicationComponent: ApplicationComponent? = null
+    override fun onCreate() {
+        super.onCreate()
+        applicationComponent = DaggerApplicationComponent.builder()
+            .application(this)
+            .build()
+    }
 
-    suspend fun applicationComponent(activity: ComponentActivity): ApplicationComponent {
-        return applicationComponent ?: mutex.withLock {
-            applicationComponent ?: DaggerApplicationComponent.builder()
-                .componentActivity(activity)
-                .build().apply {
-                    applicationComponent = this
-                }
-        }
+    fun activityComponent(
+        activity: ComponentActivity,
+        appStateFlow: SharedFlow<AppState>,
+        flowLauncher: FlowLauncher
+    ): ActivityComponent {
+        return applicationComponent.activityComponentBuilder()
+            .componentActivity(activity)
+            .appStateFlow(appStateFlow)
+            .flowLauncher(flowLauncher)
+            .build()
     }
 }

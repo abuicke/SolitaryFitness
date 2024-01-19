@@ -1,18 +1,14 @@
-package com.gravitycode.solitaryfitness.log_workout.data.firestore
+package com.gravitycode.solitaryfitness.logworkout.data.firestore
 
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.gravitycode.solitaryfitness.BuildConfig
-import com.gravitycode.solitaryfitness.app.AppController
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData
-import com.gravitycode.solitaryfitness.util.error.IllegalStateError
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

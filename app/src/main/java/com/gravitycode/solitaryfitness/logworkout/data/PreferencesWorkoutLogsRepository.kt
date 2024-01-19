@@ -1,12 +1,12 @@
-package com.gravitycode.solitaryfitness.log_workout.data
+package com.gravitycode.solitaryfitness.logworkout.data
 
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.app.AppController
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.app.FlowLauncher
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class PreferencesWorkoutLogsRepository(
-    appController: AppController,
+    applicationScope: CoroutineScope,
     private val preferencesStore: DataStore<Preferences>
 ) : WorkoutLogsRepository {
 
-    private val _metaData = PreferencesMetaData(appController.applicationScope, preferencesStore)
+    private val _metaData = PreferencesMetaData(applicationScope, preferencesStore)
     override val metaData: MetaData<LocalDate> = _metaData
 
     override suspend fun readWorkoutLog(date: LocalDate): Result<WorkoutLog?> {

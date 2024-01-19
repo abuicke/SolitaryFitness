@@ -3,32 +3,37 @@ package com.gravitycode.solitaryfitness.auth
 import androidx.activity.ComponentActivity
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.gravitycode.solitaryfitness.di.ApplicationScope
+import com.gravitycode.solitaryfitness.app.ActivityScope
+import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
+import com.gravitycode.solitaryfitness.logworkout.LogWorkoutScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-private annotation class Private
+private annotation class InternalDependency
 
-@Module
+/**
+ * TODO: If a more general module (like an ActivityModule) becomes available, move this there.
+ * */
+@Module(subcomponents = [LogWorkoutComponent::class])
 object AuthModule {
 
-    @Private
     @Provides
+    @InternalDependency
     fun providesFirebaseAuth() = FirebaseAuth.getInstance()
 
-    @Private
     @Provides
+    @InternalDependency
     fun providesFirebaseAuthUi() = AuthUI.getInstance()
 
     @Provides
-    @ApplicationScope
+    @ActivityScope
     fun providesAuthenticator(
         activity: ComponentActivity,
-        @Private auth: FirebaseAuth,
-        @Private ui: AuthUI
+        @InternalDependency auth: FirebaseAuth,
+        @InternalDependency ui: AuthUI
     ): Authenticator {
         return FirebaseAuthenticator(activity, auth, ui)
     }

@@ -1,12 +1,10 @@
-package com.gravitycode.solitaryfitness.app
+package com.gravitycode.solitaryfitness.logworkout
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,22 +12,23 @@ import androidx.compose.ui.Modifier
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.R
+import com.gravitycode.solitaryfitness.app.AppState
+import com.gravitycode.solitaryfitness.app.FlowLauncher
+import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.di.DaggerApplicationComponent
-import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
-import com.gravitycode.solitaryfitness.log_workout.data.SyncMode
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutScreen
-import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
+import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.SyncMode
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
+import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitness.util.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -42,6 +41,21 @@ import java.io.IOException
 import javax.inject.Inject
 
 /**
+ *
+ *
+ *
+ *
+ * TODO: Test internet connection stuff next
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
+ *  handles the Application component stuff?
+ *
  * TODO: Add a test that signs out on UIAutomator.
  * TODO: Figure out DataStore issue.
  * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
@@ -53,7 +67,7 @@ import javax.inject.Inject
  * TODO: Are there any places where it would be more profitable to us async/await? (Anywhere a result is
  *  waited for, what about logging in and out?)
  * */
-class MainActivity : ComponentActivity(), AppController {
+class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
     /**
      *
@@ -65,40 +79,43 @@ class MainActivity : ComponentActivity(), AppController {
 
     private companion object {
 
-        init {
-            Log.v("MainActivity", "MainActivity class initialized")
-        }
-
         const val TAG = "MainActivity"
-
-        val applicationScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-        val appState = MutableSharedFlow<AppState>(replay = 1)
     }
 
-    init {
-        Log.v(TAG, "MainActivity.init")
-    }
-
+    @Inject lateinit var applicationScope: CoroutineScope
+    @Inject lateinit var dataStoreManager: DataStoreManager
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var messenger: Messenger
     @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    override val applicationScope = Companion.applicationScope
-    override val appState = Companion.appState
+    private val appState = MutableSharedFlow<AppState>(replay = 1)
 
     private lateinit var appControllerSettings: AppControllerSettings
 
+    /**
+     *
+     *
+     *
+     * TODO: Need to make sure components are garbage collected when no longer used.
+     *
+     *
+     *
+     *
+     * */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.v(TAG, "onCreate")
+
+        val app = application as SolitaryFitnessApp
+        app.activityComponent(this, appState, this)
+            .logWorkoutComponentBuilder()
+            .build()
+            .inject(this)
 
         lifecycleScope.launch {
-            val activity = this@MainActivity
-            (application as SolitaryFitnessApp).applicationComponent(activity).inject(activity)
-            Log.v(TAG, "AppControllerSettings.getInstance")
-            appControllerSettings = AppControllerSettings.getInstance(activity)
+            appControllerSettings = AppControllerSettings.getInstance(dataStoreManager)
         }
 
         applicationScope.launch {
@@ -118,37 +135,11 @@ class MainActivity : ComponentActivity(), AppController {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.v(TAG, "onStart")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.v(TAG, "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.v(TAG, "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.v(TAG, "onStop")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        Log.v(TAG, "onDestroy")
         if (!isChangingConfigurations) {
             applicationScope.cancel("MainActivity destroyed")
         }
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.v(TAG, "onRestart")
     }
 
     override fun launchSignInFlow() {
@@ -226,7 +217,7 @@ class MainActivity : ComponentActivity(), AppController {
             .setPositiveButton(R.string.yes) { dialog, _ ->
                 dialog.dismiss()
                 lifecycleScope.launch {
-                    val progressDialog = AlertDialog.Builder(this@MainActivity)
+                    val progressDialog = AlertDialog.Builder(this@LogWorkoutActivity)
                         .setView(R.layout.sync_progress_dialog)
                         .setCancelable(false)
                         .setOnDismissListener {
@@ -265,15 +256,10 @@ class MainActivity : ComponentActivity(), AppController {
     }
 }
 
-class AppControllerSettings private constructor(context: Context) {
+class AppControllerSettings private constructor(dataStoreManager: DataStoreManager) {
 
     companion object {
 
-        init {
-            Log.v("AppControllerSettings", "AppControllerSettings class initialized")
-        }
-
-        private const val TAG = "AppControllerSettings"
         private val USERS_KEY = stringSetPreferencesKey("users")
 
         private val mutex = Mutex()
@@ -283,10 +269,9 @@ class AppControllerSettings private constructor(context: Context) {
         /**
          * Return the singleton instance of [AppControllerSettings]
          * */
-        suspend fun getInstance(context: Context): AppControllerSettings {
-            Log.v(TAG, "instance = $instance")
+        suspend fun getInstance(dataStoreManager: DataStoreManager): AppControllerSettings {
             return instance ?: mutex.withLock {
-                instance ?: AppControllerSettings(context).apply {
+                instance ?: AppControllerSettings(dataStoreManager).apply {
                     try {
                         val preferences = withContext(Dispatchers.IO) {
                             preferencesStore.data.first()
@@ -305,16 +290,8 @@ class AppControllerSettings private constructor(context: Context) {
         }
     }
 
-    private val preferencesStore = createPreferencesStoreFromFile(context, "app_controller")
+    private val preferencesStore = dataStoreManager.datastore("app_controller")
     private val users: MutableSet<String> = mutableSetOf()
-
-    init {
-        Log.v(TAG, "init \n${Log.getStackTraceString(Throwable())}")
-    }
-
-    protected fun finalize() {
-        Log.v(TAG, "object destroyed")
-    }
 
     suspend fun addUserToSignInHistory(user: User): Result<Unit> {
         return runCatching {

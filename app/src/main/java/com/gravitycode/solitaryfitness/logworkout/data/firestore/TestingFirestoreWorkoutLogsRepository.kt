@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.log_workout.data.firestore
+package com.gravitycode.solitaryfitness.logworkout.data.firestore
 
 import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore

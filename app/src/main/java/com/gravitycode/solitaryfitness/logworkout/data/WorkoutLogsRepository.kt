@@ -1,7 +1,7 @@
-package com.gravitycode.solitaryfitness.log_workout.data
+package com.gravitycode.solitaryfitness.logworkout.data
 
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData
 import java.time.LocalDate
 

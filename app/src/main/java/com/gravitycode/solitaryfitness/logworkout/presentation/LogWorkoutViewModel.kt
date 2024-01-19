@@ -1,18 +1,20 @@
-package com.gravitycode.solitaryfitness.log_workout.presentation
+package com.gravitycode.solitaryfitness.logworkout.presentation
 
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.app.AppState
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -37,7 +39,8 @@ import java.time.LocalDate
  * [https://developer.android.com/kotlin/coroutines/coroutines-best-practices#viewmodel-coroutines]
  * */
 class LogWorkoutViewModel(
-    private val appController: AppController,
+    private val appStateFlow: SharedFlow<AppState>,
+    private val flowLauncher: FlowLauncher,
     private val messenger: Messenger,
     private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>() {
@@ -59,7 +62,7 @@ class LogWorkoutViewModel(
          *  injecting the ViewModel directly and using the same pattern I have right here with the repo.
          * */
         viewModelScope.launch {
-            appController.appState.collect { appState ->
+            appStateFlow.collect { appState ->
                 Log.d(TAG, "app state collected: $appState")
                 _state.value = _state.value.copy(user = appState.user)
                 repository = if (appState.isUserSignedIn()) {
@@ -75,8 +78,8 @@ class LogWorkoutViewModel(
     override fun onEvent(event: AppEvent) {
         Log.v(TAG, "onEvent($event)")
         when (event) {
-            is AppEvent.SignIn -> appController.launchSignInFlow()
-            is AppEvent.SignOut -> appController.launchSignOutFlow()
+            is AppEvent.SignIn -> flowLauncher.launchSignInFlow()
+            is AppEvent.SignOut -> flowLauncher.launchSignOutFlow()
         }
     }
 

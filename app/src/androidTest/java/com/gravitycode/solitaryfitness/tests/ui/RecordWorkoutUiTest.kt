@@ -11,8 +11,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.app.MainActivity
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.LogWorkoutActivity
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +26,7 @@ import kotlin.random.Random
 class RecordWorkoutUiTest {
 
     @get:Rule
-    val rule = createAndroidComposeRule<MainActivity>()
+    val rule = createAndroidComposeRule<LogWorkoutActivity>()
 
     private lateinit var overflow: SemanticsNodeInteraction
     private lateinit var signIn: SemanticsNodeInteraction

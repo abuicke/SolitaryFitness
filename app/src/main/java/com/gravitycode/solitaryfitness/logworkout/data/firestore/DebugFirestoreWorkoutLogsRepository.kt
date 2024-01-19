@@ -1,14 +1,14 @@
-package com.gravitycode.solitaryfitness.log_workout.data.firestore
+package com.gravitycode.solitaryfitness.logworkout.data.firestore
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import kotlinx.coroutines.CoroutineScope
 
-class ProductionFirestoreWorkoutLogsRepository(
+class DebugFirestoreWorkoutLogsRepository(
     applicationScope: CoroutineScope,
     authenticator: Authenticator,
     private val firestore: FirebaseFirestore,
 ) : FirestoreWorkoutLogsRepository(applicationScope, authenticator) {
 
-    override fun users() = firestore.collection("users")
+    override fun users() = firestore.collection("debug-users")
 }

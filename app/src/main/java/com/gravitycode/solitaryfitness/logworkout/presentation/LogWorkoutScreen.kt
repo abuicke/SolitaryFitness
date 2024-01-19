@@ -7,7 +7,7 @@
  *
  * [Restoring state in Compose](https://developer.android.com/jetpack/compose/state#restore-ui-state)
  * */
-package com.gravitycode.solitaryfitness.log_workout.presentation
+package com.gravitycode.solitaryfitness.logworkout.presentation
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -44,7 +44,7 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid

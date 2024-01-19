@@ -2,10 +2,10 @@ package com.gravitycode.solitaryfitness.tests.components
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.log_workout.LogWorkoutModule
-import com.gravitycode.solitaryfitness.log_workout.data.firestore.TestingFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.log_workout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.LogWorkoutModule
+import com.gravitycode.solitaryfitness.logworkout.data.firestore.TestingFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.test_implementations.TestUsers
 import com.gravitycode.solitaryfitness.test_utils.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi

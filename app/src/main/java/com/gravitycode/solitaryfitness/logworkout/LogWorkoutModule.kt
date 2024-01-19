@@ -1,28 +1,29 @@
-package com.gravitycode.solitaryfitness.log_workout
+package com.gravitycode.solitaryfitness.logworkout
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.BuildConfig
-import com.gravitycode.solitaryfitness.app.AppController
+import com.gravitycode.solitaryfitness.app.AppState
+import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.di.ApplicationScope
-import com.gravitycode.solitaryfitness.log_workout.data.LazySyncDataService
-import com.gravitycode.solitaryfitness.log_workout.data.LazyWorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitness.log_workout.data.PreferencesWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.data.SyncDataService
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.data.WorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitness.log_workout.data.firestore.DebugFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.data.firestore.ProductionFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.log_workout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.data.createPreferencesStoreFromFile
+import com.gravitycode.solitaryfitness.logworkout.data.LazySyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.LazyWorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.PreferencesWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.firestore.DebugFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.firestore.ProductionFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitness.util.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.data.firestoreSettings
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Qualifier
 
 @Qualifier
@@ -41,22 +42,19 @@ private annotation class OnlineRepository
 object LogWorkoutModule {
 
     @Provides
-    @ApplicationScope
     @InternalDependency
-    fun providesWorkoutLogsPreferencesStore(
-        context: Context
-    ): DataStore<Preferences> {
-        return createPreferencesStoreFromFile(context, "workout_logs")
+    fun providesWorkoutLogsPreferencesStore(dataStoreManager: DataStoreManager): DataStore<Preferences> {
+        return dataStoreManager.datastore("workout_logs")
     }
 
     @Provides
-    @ApplicationScope
+    @LogWorkoutScope
     @OfflineRepository
     fun provideOfflineWorkoutLogsRepository(
-        appController: AppController,
+        applicationScope: CoroutineScope,
         @InternalDependency preferencesStore: DataStore<Preferences>
     ): WorkoutLogsRepository {
-        return PreferencesWorkoutLogsRepository(appController, preferencesStore)
+        return PreferencesWorkoutLogsRepository(applicationScope, preferencesStore)
     }
 
     @Provides
@@ -71,14 +69,13 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ApplicationScope
+    @LogWorkoutScope
     @OnlineRepository
     fun provideOnlineWorkoutLogsRepository(
-        appController: AppController,
+        applicationScope: CoroutineScope,
         authenticator: Authenticator,
         @InternalDependency firestore: FirebaseFirestore
     ): WorkoutLogsRepository {
-        val applicationScope = appController.applicationScope
         return if (BuildConfig.DEBUG) {
             DebugFirestoreWorkoutLogsRepository(applicationScope, authenticator, firestore)
         } else {
@@ -87,7 +84,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ApplicationScope
+    @LogWorkoutScope
     fun providesWorkoutLogsRepositoryFactory(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
@@ -96,7 +93,7 @@ object LogWorkoutModule {
     }
 
     @Provides
-    @ApplicationScope
+    @LogWorkoutScope
     fun providesSyncDataService(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
@@ -104,13 +101,12 @@ object LogWorkoutModule {
         return LazySyncDataService(offlineRepository, onlineRepository)
     }
 
-    /**
-     * TODO: This shouldn't necessarily be kept alive for the duration of the activity.
-     * */
     @Provides
+    @LogWorkoutScope
     fun providesLogWorkoutViewModel(
-        appController: AppController,
+        appStateFlow: SharedFlow<AppState>,
+        flowLauncher: FlowLauncher,
         messenger: Messenger,
         factory: WorkoutLogsRepositoryFactory
-    ) = LogWorkoutViewModel(appController, messenger, factory)
+    ) = LogWorkoutViewModel(appStateFlow, flowLauncher, messenger, factory)
 }

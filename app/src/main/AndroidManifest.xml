@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SolitaryFitness"
         tools:targetApi="31">
         <activity
-            android:name=".app.MainActivity"
+            android:name=".logworkout.LogWorkoutActivity"
             android:exported="true"
             android:theme="@style/Theme.SolitaryFitness">
             <intent-filter>

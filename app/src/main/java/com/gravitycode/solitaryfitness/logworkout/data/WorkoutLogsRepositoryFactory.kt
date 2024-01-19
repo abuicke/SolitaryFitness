@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.log_workout.data
+package com.gravitycode.solitaryfitness.logworkout.data
 
 interface WorkoutLogsRepositoryFactory {
 

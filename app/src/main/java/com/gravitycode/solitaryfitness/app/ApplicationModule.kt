@@ -1,20 +1,27 @@
 package com.gravitycode.solitaryfitness.app
 
+import android.app.Application
 import android.content.Context
-import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.di.ApplicationScope
+import com.gravitycode.solitaryfitness.util.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
-@Module
+@Module(subcomponents = [ActivityComponent::class])
 object ApplicationModule {
 
     @Provides
-    fun providesApplicationContext(activity: ComponentActivity): Context = activity.applicationContext
+    fun providesApplicationContext(app: Application): Context = app.applicationContext
 
     @Provides
-    fun providesAppController(activity: ComponentActivity) = activity as AppController
+    @ApplicationScope
+    fun providesApplicationScope() = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    @Provides
+    fun providesDataStoreManager(context: Context) = DataStoreManager.getInstance(context)
 
     @Provides
     @ApplicationScope
