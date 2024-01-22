@@ -2,6 +2,7 @@ package com.gravitycode.solitaryfitness.util.ui
 
 import android.content.Context
 import android.widget.Toast
+import com.gravitycode.solitaryfitness.util.android.temporarilyDisableStrictMode
 
 interface Messenger {
 
@@ -18,7 +19,9 @@ interface Messenger {
 private class MessengerImpl(private val context: Context): Messenger {
 
     override fun toast(text: String, duration: ToastDuration) {
-        Toast.makeText(context, text, duration.toInt()).show()
+        temporarilyDisableStrictMode {
+            Toast.makeText(context, text, duration.toInt()).show()
+        }
     }
 
     /**

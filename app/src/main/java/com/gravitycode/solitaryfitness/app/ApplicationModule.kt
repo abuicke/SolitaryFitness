@@ -9,12 +9,18 @@ import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 @Module(subcomponents = [ActivityComponent::class])
 object ApplicationModule {
 
     @Provides
     fun providesApplicationContext(app: Application): Context = app.applicationContext
+
+    @Provides
+    @ApplicationScope
+    fun providesApplicationExecutor(): Executor = Executors.newSingleThreadExecutor()
 
     @Provides
     @ApplicationScope

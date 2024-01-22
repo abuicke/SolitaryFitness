@@ -8,11 +8,11 @@ import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.logworkout.data.LazySyncDataService
-import com.gravitycode.solitaryfitness.logworkout.data.LazyWorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.LazyWorkoutLogsRepositoryManager
 import com.gravitycode.solitaryfitness.logworkout.data.PreferencesWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
 import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
 import com.gravitycode.solitaryfitness.logworkout.data.firestore.DebugFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.data.firestore.ProductionFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
@@ -88,8 +88,8 @@ object LogWorkoutModule {
     fun providesWorkoutLogsRepositoryFactory(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
-    ): WorkoutLogsRepositoryFactory {
-        return LazyWorkoutLogsRepositoryFactory(offlineRepository, onlineRepository)
+    ): WorkoutLogsRepositoryManager {
+        return LazyWorkoutLogsRepositoryManager(offlineRepository, onlineRepository)
     }
 
     @Provides
@@ -107,6 +107,6 @@ object LogWorkoutModule {
         appStateFlow: SharedFlow<AppState>,
         flowLauncher: FlowLauncher,
         messenger: Messenger,
-        factory: WorkoutLogsRepositoryFactory
+        factory: WorkoutLogsRepositoryManager
     ) = LogWorkoutViewModel(appStateFlow, flowLauncher, messenger, factory)
 }

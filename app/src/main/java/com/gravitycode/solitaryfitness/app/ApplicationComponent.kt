@@ -18,5 +18,5 @@ interface ApplicationComponent {
 
     fun activityComponentBuilder(): ActivityComponent.Builder
 
-    // fun inject(activity: MainActivity)
+    fun inject(app: SolitaryFitnessApp)
 }

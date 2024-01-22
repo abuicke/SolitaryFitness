@@ -8,7 +8,7 @@ import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.error.debugError
@@ -42,7 +42,7 @@ class LogWorkoutViewModel(
     private val appStateFlow: SharedFlow<AppState>,
     private val flowLauncher: FlowLauncher,
     private val messenger: Messenger,
-    private val repositoryFactory: WorkoutLogsRepositoryFactory
+    private val repositoryFactory: WorkoutLogsRepositoryManager
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>() {
 
     private companion object {

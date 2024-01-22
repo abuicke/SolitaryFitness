@@ -4,10 +4,10 @@ import dagger.Lazy
 import javax.annotation.concurrent.ThreadSafe
 
 @ThreadSafe
-class LazyWorkoutLogsRepositoryFactory(
+class LazyWorkoutLogsRepositoryManager(
     private val offlineRepository: Lazy<WorkoutLogsRepository>,
     private val onlineRepository: Lazy<WorkoutLogsRepository>
-) : WorkoutLogsRepositoryFactory {
+) : WorkoutLogsRepositoryManager {
 
     override fun getOfflineRepository(): WorkoutLogsRepository = offlineRepository.get()
 

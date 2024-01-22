@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.logworkout.data
 
-interface WorkoutLogsRepositoryFactory {
+interface WorkoutLogsRepositoryManager {
 
     fun getOfflineRepository(): WorkoutLogsRepository
 

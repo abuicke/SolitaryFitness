@@ -20,7 +20,7 @@ import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
 import com.gravitycode.solitaryfitness.logworkout.data.SyncMode
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.data.DataStoreManager
@@ -34,10 +34,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
 
@@ -45,6 +44,7 @@ import javax.inject.Inject
  * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
  *  handles the Application component stuff?
  *
+ * TODO: Add Log.v everywhere
  * TODO: Add a test that signs out on UIAutomator.
  * TODO: Figure out DataStore issue.
  * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
@@ -59,14 +59,6 @@ import javax.inject.Inject
  * */
 class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
-    /**
-     *
-     *
-     * TODO: Test internet connection stuff next
-     *
-     *
-     * */
-
     private companion object {
 
         const val TAG = "MainActivity"
@@ -77,7 +69,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var messenger: Messenger
     @Inject lateinit var syncDataService: SyncDataService
-    @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
+    @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryManager
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
     private val appState = MutableSharedFlow<AppState>(replay = 1)
@@ -87,7 +79,12 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     /**
      *
      *
-     * TODO: Test internet connection stuff next
+     * TODO: Test internet connection stuff
+     * TODO: What happens when I'm connected to the internet on sign-in, but not when adding logs or on sign
+     *  out? Is Firebase able to save the logs added offline and then upload them when there's a connection?
+     *  I may need to use something like com.github.pwittchen:reactivenetwork-rx2:3.0.0 so I can emit the
+     *  connection state via the [AppState] if it ever changes.
+     *
      *
      *
      *
@@ -103,21 +100,19 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             .inject(this)
 
         lifecycleScope.launch {
-            appControllerSettings = AppControllerSettings.getInstance(dataStoreManager)
-        }
-
-        applicationScope.launch {
             val currentUser = authenticator.getSignedInUser()
             appState.emit(AppState(currentUser))
-        }
 
-        setContent {
-            SolitaryFitnessTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LogWorkoutScreen(logWorkoutViewModel)
+            appControllerSettings = AppControllerSettings.getInstance(dataStoreManager)
+
+            setContent {
+                SolitaryFitnessTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        LogWorkoutScreen(logWorkoutViewModel)
+                    }
                 }
             }
         }
@@ -244,13 +239,12 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     }
 }
 
-class AppControllerSettings private constructor(dataStoreManager: DataStoreManager) {
+@NotThreadSafe
+private class AppControllerSettings private constructor(dataStoreManager: DataStoreManager) {
 
     companion object {
 
         private val USERS_KEY = stringSetPreferencesKey("users")
-
-        private val mutex = Mutex()
 
         private var instance: AppControllerSettings? = null
 
@@ -258,22 +252,20 @@ class AppControllerSettings private constructor(dataStoreManager: DataStoreManag
          * Return the singleton instance of [AppControllerSettings]
          * */
         suspend fun getInstance(dataStoreManager: DataStoreManager): AppControllerSettings {
-            return instance ?: mutex.withLock {
-                instance ?: AppControllerSettings(dataStoreManager).apply {
-                    try {
-                        val preferences = withContext(Dispatchers.IO) {
-                            preferencesStore.data.first()
-                        }
-                        val userIds: Set<String>? = preferences[USERS_KEY]
-                        if (userIds != null) {
-                            users.addAll(userIds)
-                        }
-                    } catch (ioe: IOException) {
-                        debugError("failed to read app controller settings from preferences store", ioe)
+            return instance ?: AppControllerSettings(dataStoreManager).apply {
+                try {
+                    val preferences = withContext(Dispatchers.IO) {
+                        preferencesStore.data.first()
                     }
-
-                    instance = this
+                    val userIds: Set<String>? = preferences[USERS_KEY]
+                    if (userIds != null) {
+                        users.addAll(userIds)
+                    }
+                } catch (ioe: IOException) {
+                    debugError("failed to read app controller settings from preferences store", ioe)
                 }
+
+                instance = this
             }
         }
     }

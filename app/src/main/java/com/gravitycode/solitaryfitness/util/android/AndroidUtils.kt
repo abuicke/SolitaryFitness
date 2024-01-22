@@ -3,13 +3,18 @@
 package com.gravitycode.solitaryfitness.util.android
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Process
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
+import android.os.strictmode.Violation
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.gravitycode.solitaryfitness.BuildConfig
+import com.gravitycode.solitaryfitness.util.error.assertState
+import java.util.concurrent.Executor
 
 /**
  * Only run the selected code if in debug, i.e. [BuildConfig.DEBUG] is set to `true`.
@@ -39,57 +44,37 @@ fun disableLogcatThrottling() {
 }
 
 /**
- * Enable all strict mode policies for both [ThreadPolicy] and
- * [VmPolicy] that are available for the current minimum API level.
+ * Enable all available strict mode policies for both [ThreadPolicy] and [VmPolicy].
  *
- * NOTE: Needs to be updated with each new API release as long as (this bug)[https://issuetracker.google.com/issues/298834690]
- * exists and [VmPolicy.Builder.detectAll] cannot simply be used. If the aforementioned bug is fixed then
- * switch to [VmPolicy.Builder.detectAll] in the implementation.
+ * Only throws an exception if the root package of this application is included in the
+ * stacktrace, otherwise just prints the relevant stacktrace with log level [Log.ERROR].
  * */
-@RequiresApi(Build.VERSION_CODES.GINGERBREAD)
-fun enableStrictMode() {
+@RequiresApi(Build.VERSION_CODES.P)
+fun enableStrictMode(context: Context, listenerExecutor: Executor) {
+
+    val penaltyListener: (Violation) -> Unit = { violation ->
+        val violationOriginatesFromApp = violation.stackTrace.fold(true) { acc, stackTraceElement ->
+            acc && stackTraceElement.toString().contains(context.packageName)
+        }
+
+        if (violationOriginatesFromApp) {
+            throw violation
+        } else {
+            Log.e("policy violation", Log.getStackTraceString(violation))
+        }
+    }
+
     StrictMode.setThreadPolicy(
         ThreadPolicy.Builder()
             .detectAll()
-            .penaltyLog()
-            .penaltyDialog()
+            .penaltyListener(listenerExecutor, penaltyListener)
             .build()
     )
 
     StrictMode.setVmPolicy(
-        VmPolicy.Builder().apply {
-            detectLeakedSqlLiteObjects()
-            sdk(Build.VERSION_CODES.HONEYCOMB) {
-                detectActivityLeaks()
-                // Disabled due to this bug https://issuetracker.google.com/issues/298834690
-                // detectLeakedClosableObjects()
-            }
-            sdk(Build.VERSION_CODES.JELLY_BEAN) {
-                detectLeakedRegistrationObjects()
-            }
-            sdk(Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                detectFileUriExposure()
-            }
-            sdk(Build.VERSION_CODES.M) {
-                detectCleartextNetwork()
-            }
-            sdk(Build.VERSION_CODES.O) {
-                detectUntaggedSockets()
-                detectContentUriWithoutPermission()
-            }
-            sdk(Build.VERSION_CODES.P) {
-                detectNonSdkApiUsage()
-            }
-            sdk(Build.VERSION_CODES.Q) {
-                detectCredentialProtectedWhileLocked()
-                detectImplicitDirectBoot()
-            }
-            sdk(Build.VERSION_CODES.S) {
-                detectIncorrectContextUse()
-                detectUnsafeIntentLaunch()
-            }
-            penaltyLog()
-            penaltyDeath()
-        }.build()
+        VmPolicy.Builder()
+            .penaltyListener(listenerExecutor, penaltyListener)
+            .detectAll()
+            .build()
     )
 }

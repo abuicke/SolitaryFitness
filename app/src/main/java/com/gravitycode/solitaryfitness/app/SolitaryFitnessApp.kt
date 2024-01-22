@@ -1,24 +1,40 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
-import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
-import android.os.StrictMode.VmPolicy
+import android.os.Build
 import androidx.activity.ComponentActivity
-import com.gravitycode.solitaryfitness.BuildConfig
+import com.gravitycode.solitaryfitness.util.android.debug
+import com.gravitycode.solitaryfitness.util.android.enableStrictMode
+import com.gravitycode.solitaryfitness.util.android.sdk
 import kotlinx.coroutines.flow.SharedFlow
-
+import java.util.concurrent.Executor
+import javax.inject.Inject
 
 class SolitaryFitnessApp : Application() {
+
+    companion object {
+
+        const val CRASH_ON_DEBUG_ERROR = false
+    }
+
+    @Inject lateinit var applicationExecutor: Executor
 
     private lateinit var applicationComponent: ApplicationComponent
 
     override fun onCreate() {
         super.onCreate()
-        enableStrictModeIfDebug()
+
         applicationComponent = DaggerApplicationComponent.builder()
             .application(this)
             .build()
+
+        applicationComponent.inject(this)
+
+        debug {
+            sdk(Build.VERSION_CODES.P) {
+                enableStrictMode(this, applicationExecutor)
+            }
+        }
     }
 
     fun activityComponent(
@@ -31,25 +47,5 @@ class SolitaryFitnessApp : Application() {
             .appStateFlow(appStateFlow)
             .flowLauncher(flowLauncher)
             .build()
-    }
-
-    private fun enableStrictModeIfDebug() {
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(
-                ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyDialog()
-                    .build()
-            )
-
-            StrictMode.setVmPolicy(
-                VmPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build()
-            )
-        }
     }
 }
