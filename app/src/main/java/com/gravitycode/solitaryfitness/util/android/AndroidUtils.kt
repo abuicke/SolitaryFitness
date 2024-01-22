@@ -58,7 +58,6 @@ fun enableStrictMode() {
 
     StrictMode.setVmPolicy(
         VmPolicy.Builder().apply {
-            detectAll()
             detectLeakedSqlLiteObjects()
             sdk(Build.VERSION_CODES.HONEYCOMB) {
                 detectActivityLeaks()
