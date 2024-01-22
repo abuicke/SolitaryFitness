@@ -15,6 +15,7 @@ interface DataStoreManager {
 
         private val LOCK = Any()
 
+        @Volatile
         private var instance: DataStoreManager? = null
 
         fun getInstance(context: Context): DataStoreManager {

@@ -5,7 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [ApplicationModule::class])
+@Component(modules = [AndroidModule::class, ApplicationModule::class])
 interface ApplicationComponent {
 
     @Component.Builder

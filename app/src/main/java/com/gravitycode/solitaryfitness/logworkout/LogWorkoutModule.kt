@@ -23,6 +23,7 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Qualifier
 
@@ -104,7 +105,7 @@ object LogWorkoutModule {
     @Provides
     @LogWorkoutScope
     fun providesLogWorkoutViewModel(
-        appStateFlow: SharedFlow<AppState>,
+        appStateFlow: Flow<AppState>,
         flowLauncher: FlowLauncher,
         messenger: Messenger,
         factory: WorkoutLogsRepositoryManager

@@ -13,7 +13,6 @@ import android.os.strictmode.Violation
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.gravitycode.solitaryfitness.BuildConfig
-import com.gravitycode.solitaryfitness.util.error.assertState
 import java.util.concurrent.Executor
 
 /**

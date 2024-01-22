@@ -26,6 +26,8 @@ import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewMod
 import com.gravitycode.solitaryfitness.util.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.net.NetworkState
+import com.gravitycode.solitaryfitness.util.net.NetworkStateObservable
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +46,15 @@ import javax.inject.Inject
  * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
  *  handles the Application component stuff?
  *
+ * TODO: Do I need to redo how I write the getInstance pattern?
+ *  [https://stackoverflow.com/questions/35587652/kotlin-thread-safe-native-lazy-singleton-with-parameter]
+ *  [https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#Example_Java_Implementation]
+ *  [https://stackoverflow.com/questions/17799976/why-is-static-inner-class-singleton-thread-safe/17800038]
+ *  [https://stackoverflow.com/questions/6109896/singleton-pattern-bill-pughs-solution]
+ *
+ * TODO: Is `@Volatile` required on singleton pattern?
+ *  [https://stackoverflow.com/questions/59208041/do-we-need-volatile-when-implementing-singleton-using-double-check-locking]
+ *
  * TODO: Add Log.v everywhere
  * TODO: Add a test that signs out on UIAutomator.
  * TODO: Figure out DataStore issue.
@@ -56,6 +67,7 @@ import javax.inject.Inject
  * TODO: Are there any places where it would be more profitable to us async/await? (Anywhere a result is
  *  waited for, what about logging in and out?)
  * TODO: `onEvent(DateSelected)` still being called 3 times
+ * TODO: Am I nesting a `withContext` inside a `launch` anywhere? Replace with `launch(Dispatchers...)`
  * */
 class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
@@ -68,11 +80,12 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var dataStoreManager: DataStoreManager
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var messenger: Messenger
+    @Inject lateinit var networkStateObservable: NetworkStateObservable
     @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryManager
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    private val appState = MutableSharedFlow<AppState>(replay = 1)
+    private val appState = MutableSharedFlow<AppState>(1)
 
     private lateinit var appControllerSettings: AppControllerSettings
 
@@ -98,6 +111,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             .logWorkoutComponentBuilder()
             .build()
             .inject(this)
+
+        networkStateObservable.observe().collect {
+
+        }
 
         lifecycleScope.launch {
             val currentUser = authenticator.getSignedInUser()

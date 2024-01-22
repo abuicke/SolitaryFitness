@@ -12,7 +12,7 @@ import java.net.Socket
  *
  * See: [https://stackoverflow.com/questions/1560788/]
  * */
-suspend fun isOnline(timeout: Int): Boolean {
+suspend fun isOnline(timeout: Int = 1500): Boolean {
     return try {
         Socket().use { sock ->
             withContext(Dispatchers.IO) {

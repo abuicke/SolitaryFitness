@@ -14,7 +14,7 @@ import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.Messenger
 import com.gravitycode.solitaryfitness.util.ui.ViewModel
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -39,7 +39,7 @@ import java.time.LocalDate
  * [https://developer.android.com/kotlin/coroutines/coroutines-best-practices#viewmodel-coroutines]
  * */
 class LogWorkoutViewModel(
-    private val appStateFlow: SharedFlow<AppState>,
+    private val appStateFlow: Flow<AppState>,
     private val flowLauncher: FlowLauncher,
     private val messenger: Messenger,
     private val repositoryFactory: WorkoutLogsRepositoryManager
