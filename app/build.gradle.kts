@@ -107,8 +107,8 @@ dependencies {
     // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
-    // Leak Canary
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
+    // Leak Canary - enable when needed, as it conflicts with StrictMode
+    // debugImplementation("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
