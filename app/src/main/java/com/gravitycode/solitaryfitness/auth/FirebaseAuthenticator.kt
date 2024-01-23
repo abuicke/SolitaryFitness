@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.auth
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.activity.ComponentActivity
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI

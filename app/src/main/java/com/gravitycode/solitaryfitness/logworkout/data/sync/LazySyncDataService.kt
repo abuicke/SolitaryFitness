@@ -1,6 +1,7 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.sync
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.util.ResultOf
 import com.gravitycode.solitaryfitness.util.data.DataCorruptionError
 import com.gravitycode.solitaryfitness.util.error.IllegalStateError

@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.util.error
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 

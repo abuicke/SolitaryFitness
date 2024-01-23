@@ -1,13 +1,15 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.repo
 
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import dagger.Lazy
 import javax.annotation.concurrent.ThreadSafe
 
 @ThreadSafe
-class LazyWorkoutLogsRepositoryManager(
+class LazyWorkoutLogsRepositoryFactory(
     private val offlineRepository: Lazy<WorkoutLogsRepository>,
     private val onlineRepository: Lazy<WorkoutLogsRepository>
-) : WorkoutLogsRepositoryManager {
+) : WorkoutLogsRepositoryFactory {
 
     override fun getOfflineRepository(): WorkoutLogsRepository = offlineRepository.get()
 

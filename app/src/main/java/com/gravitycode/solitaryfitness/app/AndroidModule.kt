@@ -3,11 +3,12 @@ package com.gravitycode.solitaryfitness.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import com.gravitycode.solitaryfitness.util.data.DataStoreManager
+import com.gravitycode.solitaryfitness.util.android.DataStoreManager
 import com.gravitycode.solitaryfitness.util.net.NetworkStateObservable
-import com.gravitycode.solitaryfitness.util.ui.Messenger
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
 
 @Module
 object AndroidModule {
@@ -21,8 +22,11 @@ object AndroidModule {
     }
 
     @Provides
-    fun providesNetworkStateObservable(connectivityManager: ConnectivityManager): NetworkStateObservable {
-        return NetworkStateObservable.getInstance(connectivityManager)
+    fun providesNetworkStateObservable(
+        applicationScope: CoroutineScope,
+        connectivityManager: ConnectivityManager
+    ): NetworkStateObservable {
+        return NetworkStateObservable.getInstance(applicationScope, connectivityManager)
     }
 
     @Provides

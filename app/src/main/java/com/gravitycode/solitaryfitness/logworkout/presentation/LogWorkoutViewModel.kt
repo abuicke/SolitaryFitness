@@ -1,19 +1,19 @@
 package com.gravitycode.solitaryfitness.logworkout.presentation
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.util.error.debugError
-import com.gravitycode.solitaryfitness.util.ui.Messenger
-import com.gravitycode.solitaryfitness.util.ui.ViewModel
+import com.gravitycode.solitaryfitness.util.android.Messenger
+import com.gravitycode.solitaryfitness.util.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -42,7 +42,7 @@ class LogWorkoutViewModel(
     private val appStateFlow: Flow<AppState>,
     private val flowLauncher: FlowLauncher,
     private val messenger: Messenger,
-    private val repositoryFactory: WorkoutLogsRepositoryManager
+    private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>() {
 
     private companion object {
@@ -56,11 +56,6 @@ class LogWorkoutViewModel(
     private lateinit var repository: WorkoutLogsRepository
 
     init {
-        /**
-         * TODO: Need to make sure this job is canceled when I no longer need to observe this state.
-         *  This would probably be resolved by simply using a ViewModel factory in MainActivity instead of
-         *  injecting the ViewModel directly and using the same pattern I have right here with the repo.
-         * */
         viewModelScope.launch {
             appStateFlow.collect { appState ->
                 Log.d(TAG, "app state collected: $appState")
@@ -91,6 +86,10 @@ class LogWorkoutViewModel(
             is LogWorkoutEvent.Reset -> resetReps()
             is LogWorkoutEvent.Edit -> editReps(event.mode)
         }
+    }
+
+    override fun onCleared() {
+        Log.v(TAG, "$this cleared")
     }
 
     private suspend fun loadWorkoutLog() {

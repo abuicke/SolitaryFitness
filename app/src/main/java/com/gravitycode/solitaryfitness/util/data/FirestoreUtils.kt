@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.util.data
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot

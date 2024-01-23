@@ -1,8 +1,8 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.repo
 
-import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
 import com.gravitycode.solitaryfitness.util.data.MetaData
+import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import java.time.LocalDate
 
 interface WorkoutLogsRepository {

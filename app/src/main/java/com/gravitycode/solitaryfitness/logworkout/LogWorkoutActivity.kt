@@ -2,7 +2,7 @@ package com.gravitycode.solitaryfitness.logworkout
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
+import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +18,16 @@ import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
-import com.gravitycode.solitaryfitness.logworkout.data.SyncMode
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
+import com.gravitycode.solitaryfitness.util.android.DataStoreManager
+import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncMode
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.data.DataStoreManager
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
-import com.gravitycode.solitaryfitness.util.net.NetworkState
 import com.gravitycode.solitaryfitness.util.net.NetworkStateObservable
-import com.gravitycode.solitaryfitness.util.ui.Messenger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -82,7 +81,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var messenger: Messenger
     @Inject lateinit var networkStateObservable: NetworkStateObservable
     @Inject lateinit var syncDataService: SyncDataService
-    @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryManager
+    @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
     private val appState = MutableSharedFlow<AppState>(1)
@@ -105,16 +104,13 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.v(TAG, "onCreate")
 
         val app = application as SolitaryFitnessApp
         app.activityComponent(this, appState, this)
             .logWorkoutComponentBuilder()
             .build()
             .inject(this)
-
-        networkStateObservable.observe().collect {
-
-        }
 
         lifecycleScope.launch {
             val currentUser = authenticator.getSignedInUser()
@@ -137,8 +133,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.v(TAG, "onDestroy")
         if (!isChangingConfigurations) {
             applicationScope.cancel("MainActivity destroyed")
+            Log.v(TAG, "cancelled application coroutine scope")
         }
     }
 
@@ -190,7 +188,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     }
 
     override fun launchSignOutFlow() {
-        check(authenticator.isUserSignedIn()) { "no user is signed in" }
+        if(!authenticator.isUserSignedIn()) {
+            messenger.toast("Can't sign out, you're not signed in")
+            debugError("no user is signed in")
+        }
 
         lifecycleScope.launch {
             val result = withContext(Dispatchers.IO) {

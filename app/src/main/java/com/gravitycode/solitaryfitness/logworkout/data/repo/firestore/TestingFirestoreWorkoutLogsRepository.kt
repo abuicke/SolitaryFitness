@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.logworkout.data.firestore
+package com.gravitycode.solitaryfitness.logworkout.data.repo.firestore
 
 import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,7 +32,7 @@ class TestingFirestoreWorkoutLogsRepository(
 /**
  * Firestore authentication is disabled for the `test-users` collection.
  * */
-class TestAuthenticator(private val user: User) : Authenticator {
+private class TestAuthenticator(private val user: User) : Authenticator {
 
     override suspend fun signIn() = Result.success(user)
 

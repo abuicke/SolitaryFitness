@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.sync
 
 import com.gravitycode.solitaryfitness.util.ResultOf
 import kotlinx.coroutines.flow.Flow

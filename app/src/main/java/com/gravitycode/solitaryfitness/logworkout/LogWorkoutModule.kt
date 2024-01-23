@@ -7,24 +7,23 @@ import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.logworkout.data.LazySyncDataService
-import com.gravitycode.solitaryfitness.logworkout.data.LazyWorkoutLogsRepositoryManager
-import com.gravitycode.solitaryfitness.logworkout.data.PreferencesWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.SyncDataService
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepositoryManager
-import com.gravitycode.solitaryfitness.logworkout.data.firestore.DebugFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.firestore.ProductionFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.sync.LazySyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.repo.LazyWorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.repo.preferences.PreferencesWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncDataService
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
+import com.gravitycode.solitaryfitness.logworkout.data.repo.firestore.DebugFirestoreWorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.repo.firestore.ProductionFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.data.DataStoreManager
+import com.gravitycode.solitaryfitness.util.android.DataStoreManager
 import com.gravitycode.solitaryfitness.util.data.firestoreSettings
-import com.gravitycode.solitaryfitness.util.ui.Messenger
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import javax.inject.Qualifier
 
 @Qualifier
@@ -89,8 +88,8 @@ object LogWorkoutModule {
     fun providesWorkoutLogsRepositoryFactory(
         @OfflineRepository offlineRepository: Lazy<WorkoutLogsRepository>,
         @OnlineRepository onlineRepository: Lazy<WorkoutLogsRepository>
-    ): WorkoutLogsRepositoryManager {
-        return LazyWorkoutLogsRepositoryManager(offlineRepository, onlineRepository)
+    ): WorkoutLogsRepositoryFactory {
+        return LazyWorkoutLogsRepositoryFactory(offlineRepository, onlineRepository)
     }
 
     @Provides
@@ -108,6 +107,6 @@ object LogWorkoutModule {
         appStateFlow: Flow<AppState>,
         flowLauncher: FlowLauncher,
         messenger: Messenger,
-        factory: WorkoutLogsRepositoryManager
+        factory: WorkoutLogsRepositoryFactory
     ) = LogWorkoutViewModel(appStateFlow, flowLauncher, messenger, factory)
 }

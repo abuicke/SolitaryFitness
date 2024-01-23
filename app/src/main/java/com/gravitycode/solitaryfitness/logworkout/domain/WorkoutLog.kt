@@ -1,7 +1,5 @@
 package com.gravitycode.solitaryfitness.logworkout.domain
 
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
-
 data class WorkoutLog(
     val handstandPressUps: Int = 0,
     val pressUps: Int = 0,

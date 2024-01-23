@@ -1,8 +1,7 @@
-package com.gravitycode.solitaryfitness.util.ui
+package com.gravitycode.solitaryfitness.util.android
 
 import android.content.Context
 import android.widget.Toast
-import com.gravitycode.solitaryfitness.util.android.temporarilyDisableStrictMode
 
 interface Messenger {
 
