@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Build
 import androidx.activity.ComponentActivity
 import com.gravitycode.solitaryfitness.util.android.debug
+import com.gravitycode.solitaryfitness.util.android.disableLogcatThrottling
 import com.gravitycode.solitaryfitness.util.android.enableStrictMode
 import com.gravitycode.solitaryfitness.util.android.sdk
 import kotlinx.coroutines.flow.SharedFlow
@@ -31,6 +32,7 @@ class SolitaryFitnessApp : Application() {
         applicationComponent.inject(this)
 
         debug {
+            disableLogcatThrottling()
             sdk(Build.VERSION_CODES.P) {
                 enableStrictMode(this, applicationExecutor)
             }

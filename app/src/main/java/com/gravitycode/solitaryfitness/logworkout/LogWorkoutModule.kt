@@ -16,8 +16,8 @@ import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositor
 import com.gravitycode.solitaryfitness.logworkout.data.repo.firestore.DebugFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.data.repo.firestore.ProductionFirestoreWorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.android.DataStoreManager
-import com.gravitycode.solitaryfitness.util.data.firestoreSettings
+import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
+import com.gravitycode.solitaryfitness.util.firebase.firestoreSettings
 import com.gravitycode.solitaryfitness.util.android.Messenger
 import dagger.Lazy
 import dagger.Module

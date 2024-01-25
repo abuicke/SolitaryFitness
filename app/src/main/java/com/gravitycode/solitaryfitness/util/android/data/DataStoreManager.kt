@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util.android
+package com.gravitycode.solitaryfitness.util.android.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -15,14 +15,6 @@ interface DataStoreManager {
 
         private val LOCK = Any()
 
-        /**
-         *
-         *
-         * TODO: Does this need to be @Volatile?
-         *
-         *
-         *
-         * */
         @Volatile
         private var instance: DataStoreManager? = null
 

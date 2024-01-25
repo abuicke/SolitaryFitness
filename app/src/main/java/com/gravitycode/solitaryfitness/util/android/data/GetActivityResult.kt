@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util.data
+package com.gravitycode.solitaryfitness.util.android.data
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback

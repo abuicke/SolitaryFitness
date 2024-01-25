@@ -1,8 +1,5 @@
-@file:SuppressLint("ObsoleteSdkInt")
-
 package com.gravitycode.solitaryfitness.util.android
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Process
@@ -10,10 +7,11 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.os.strictmode.Violation
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.gravitycode.solitaryfitness.BuildConfig
 import java.util.concurrent.Executor
+
+private const val TAG = "AndroidUtils"
 
 /**
  * Only run the selected code if in debug, i.e. [BuildConfig.DEBUG] is set to `true`.
@@ -52,14 +50,15 @@ fun disableLogcatThrottling() {
 fun enableStrictMode(context: Context, listenerExecutor: Executor) {
 
     val penaltyListener: (Violation) -> Unit = { violation ->
-        val violationOriginatesFromApp = violation.stackTrace.fold(true) { acc, stackTraceElement ->
-            acc && stackTraceElement.toString().contains(context.packageName)
+        val violationOriginatesFromApp = violation.stackTrace.fold(false) { acc, stackTraceElement ->
+            val containsPackageName = stackTraceElement.toString().contains(context.packageName)
+            acc || containsPackageName
         }
 
         if (violationOriginatesFromApp) {
             throw violation
         } else {
-            Log.e("policy violation", Log.getStackTraceString(violation))
+            Log.e("policy violation", android.util.Log.getStackTraceString(violation))
         }
     }
 
@@ -78,6 +77,8 @@ fun enableStrictMode(context: Context, listenerExecutor: Executor) {
     )
 }
 
+private val DISABLE_STRICT_MODE_LOCK = Any()
+
 /**
  * All strict mode policies will be disabled while @param[block] executes.
  * */
@@ -86,17 +87,25 @@ fun <T> temporarilyDisableStrictMode(block: () -> T): T {
         return block()
     }
 
-    val savedThreadPolicy = StrictMode.getThreadPolicy()
-    val savedVmPolicy = StrictMode.getVmPolicy()
+    synchronized(DISABLE_STRICT_MODE_LOCK) {
+        val savedThreadPolicy = StrictMode.getThreadPolicy()
+        val savedVmPolicy = StrictMode.getVmPolicy()
 
-    StrictMode.setThreadPolicy(ThreadPolicy.Builder().permitAll().build())
-    // TODO: No permitAll() for VmPolicy.Builder. Not sure if this is the same thing.
-    StrictMode.setVmPolicy(VmPolicy.Builder().build())
+        Log.v(TAG, "temporarily disabling strict mode (${Thread.currentThread().id})")
 
-    val t = block()
+        StrictMode.setThreadPolicy(ThreadPolicy.Builder().permitAll().build())
+        // TODO: No permitAll() for VmPolicy.Builder. Not sure if this is the same thing.
+        StrictMode.setVmPolicy(VmPolicy.Builder().build())
 
-    StrictMode.setThreadPolicy(savedThreadPolicy)
-    StrictMode.setVmPolicy(savedVmPolicy)
+        Log.v(TAG, "strict mode disabled (${Thread.currentThread().id})")
 
-    return t
+        val t = block()
+
+        StrictMode.setThreadPolicy(savedThreadPolicy)
+        StrictMode.setVmPolicy(savedVmPolicy)
+
+        Log.v(TAG, "strict mode re-enabled (${Thread.currentThread().id})")
+
+        return t
+    }
 }

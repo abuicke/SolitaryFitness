@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitness.util.net
 
-enum class NetworkState {
+enum class InternetState {
 
     NO_CONNECTION,
 
@@ -8,7 +8,9 @@ enum class NetworkState {
 
     LOSING_CONNECTION,
 
-    CONNECTED_NETWORK,
+    CHECKING_CONNECTION,
+
+    CONNECTED_NO_INTERNET,
 
     CONNECTED_INTERNET
 }

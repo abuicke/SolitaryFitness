@@ -7,7 +7,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.R
-import com.gravitycode.solitaryfitness.util.data.GetActivityResult
+import com.gravitycode.solitaryfitness.util.android.data.GetActivityResult
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

@@ -18,16 +18,16 @@ import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.util.android.DataStoreManager
+import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncDataService
 import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncMode
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.android.Messenger
-import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
+import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
-import com.gravitycode.solitaryfitness.util.net.NetworkStateObservable
+import com.gravitycode.solitaryfitness.util.net.InternetMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -54,6 +54,11 @@ import javax.inject.Inject
  * TODO: Is `@Volatile` required on singleton pattern?
  *  [https://stackoverflow.com/questions/59208041/do-we-need-volatile-when-implementing-singleton-using-double-check-locking]
  *
+ * TODO: [lifecycleScope] on cancels jobs when the activity is destroyed. What is the point of this? (I guess
+ *  it's for moving between activities, but with something like the [InternetMonitor] in continues to
+ *  observe the state even when the activity is off-screen and in the `STOPPED` state) What scope cancels the
+ *  couroutines when the activity goes off-screen?
+ *
  * TODO: Add Log.v everywhere
  * TODO: Add a test that signs out on UIAutomator.
  * TODO: Figure out DataStore issue.
@@ -79,7 +84,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var dataStoreManager: DataStoreManager
     @Inject lateinit var authenticator: Authenticator
     @Inject lateinit var messenger: Messenger
-    @Inject lateinit var networkStateObservable: NetworkStateObservable
+    @Inject lateinit var internetMonitor: InternetMonitor
     @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
@@ -97,8 +102,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
      *  I may need to use something like com.github.pwittchen:reactivenetwork-rx2:3.0.0 so I can emit the
      *  connection state via the [AppState] if it ever changes.
      *
+     * TODO: Complete [Messenger] next
      *
      *
+     * TODO: Is System.currentTimeMillis() the current way to get the current time?
      *
      * */
 
@@ -111,6 +118,12 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             .logWorkoutComponentBuilder()
             .build()
             .inject(this)
+
+        applicationScope.launch {
+            internetMonitor.observe().collect { networkState ->
+                messenger.toast(networkState.toString())
+            }
+        }
 
         lifecycleScope.launch {
             val currentUser = authenticator.getSignedInUser()
@@ -129,6 +142,21 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.v(TAG, "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.v(TAG, "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.v(TAG, "onStop")
     }
 
     override fun onDestroy() {
