@@ -9,7 +9,6 @@
  * */
 package com.gravitycode.solitaryfitness.logworkout.presentation
 
-import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +44,9 @@ import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.logworkout.domain.Workout
-import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ViewModel
+import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate

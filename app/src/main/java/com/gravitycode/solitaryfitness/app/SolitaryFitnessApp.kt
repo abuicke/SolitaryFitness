@@ -24,18 +24,13 @@ class SolitaryFitnessApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         applicationComponent = DaggerApplicationComponent.builder()
             .application(this)
             .build()
-
         applicationComponent.inject(this)
 
         debug {
             disableLogcatThrottling()
-            sdk(Build.VERSION_CODES.P) {
-                enableStrictMode(this, applicationExecutor)
-            }
         }
     }
 

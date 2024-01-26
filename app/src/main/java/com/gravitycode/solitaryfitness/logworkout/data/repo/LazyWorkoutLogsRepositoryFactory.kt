@@ -1,7 +1,5 @@
 package com.gravitycode.solitaryfitness.logworkout.data.repo
 
-import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import dagger.Lazy
 import javax.annotation.concurrent.ThreadSafe
 

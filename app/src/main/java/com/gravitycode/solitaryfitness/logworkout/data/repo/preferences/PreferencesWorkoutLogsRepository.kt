@@ -1,15 +1,15 @@
 package com.gravitycode.solitaryfitness.logworkout.data.repo.preferences
 
-import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.android.data.intPreferencesKey
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
+import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

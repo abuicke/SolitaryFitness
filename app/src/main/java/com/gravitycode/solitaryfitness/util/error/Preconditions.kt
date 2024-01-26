@@ -1,8 +1,8 @@
 package com.gravitycode.solitaryfitness.util.error
 
-import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.BuildConfig
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
+import com.gravitycode.solitaryfitness.util.android.Log
 
 fun debugError(message: String, throwable: Throwable? = null) {
     if (BuildConfig.DEBUG && SolitaryFitnessApp.CRASH_ON_DEBUG_ERROR) {

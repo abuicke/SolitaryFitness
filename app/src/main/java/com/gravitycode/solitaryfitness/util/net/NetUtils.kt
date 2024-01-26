@@ -1,7 +1,6 @@
 package com.gravitycode.solitaryfitness.util.net
 
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.android.temporarilyDisableStrictMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
@@ -26,16 +25,14 @@ suspend fun isOnline(timeout: Int = 1500, hostname: String = "8.8.8.8"): Boolean
     return try {
         Socket().use { sock ->
             withContext(Dispatchers.IO) {
-                temporarilyDisableStrictMode {
-                    Log.i(TAG, "attempting to connect to $hostname")
-                    // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP, etc.)
-                    val socketAddress = InetSocketAddress(hostname, 53)
-                    val startTimeMs = System.currentTimeMillis()
-                    sock.connect(socketAddress, timeout)
-                    val endTimeMs = System.currentTimeMillis()
-                    val elapsedTimeSeconds = (endTimeMs - startTimeMs).toFloat().div(1000)
-                    Log.i(TAG, "connection to $hostname succeeded after $elapsedTimeSeconds seconds")
-                }
+                Log.i(TAG, "attempting to connect to $hostname")
+                // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP, etc.)
+                val socketAddress = InetSocketAddress(hostname, 53)
+                val startTimeMs = System.currentTimeMillis()
+                sock.connect(socketAddress, timeout)
+                val endTimeMs = System.currentTimeMillis()
+                val elapsedTimeSeconds = (endTimeMs - startTimeMs).toFloat().div(1000)
+                Log.i(TAG, "connection to $hostname succeeded after $elapsedTimeSeconds seconds")
             }
             true
         }

@@ -15,12 +15,10 @@ interface Messenger {
     fun snackbar(text: String, action: String)
 }
 
-private class MessengerImpl(private val context: Context): Messenger {
+private class MessengerImpl(private val context: Context) : Messenger {
 
     override fun toast(text: String, duration: ToastDuration) {
-        temporarilyDisableStrictMode {
-            Toast.makeText(context, text, duration.toInt()).show()
-        }
+        Toast.makeText(context, text, duration.toInt()).show()
     }
 
     /**

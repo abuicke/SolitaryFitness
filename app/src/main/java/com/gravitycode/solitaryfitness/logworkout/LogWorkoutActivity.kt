@@ -2,7 +2,6 @@ package com.gravitycode.solitaryfitness.logworkout
 
 import android.app.AlertDialog
 import android.os.Bundle
-import com.gravitycode.solitaryfitness.util.android.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,13 +17,14 @@ import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncDataService
 import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncMode
-import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.android.Messenger
+import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import com.gravitycode.solitaryfitness.util.net.InternetMonitor
@@ -40,10 +40,13 @@ import java.io.IOException
 import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
-
 /**
  * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
  *  handles the Application component stuff?
+ *
+ * TODO: What happens if I kill the internet mid-sync or when uploading a workout log? Should have
+ *  [SyncDataService] observe [InternetMonitor], I think firestore has an option to manage this itself,
+ *  how does it work and does it need to be enabled?
  *
  * TODO: Do I need to redo how I write the getInstance pattern?
  *  [https://stackoverflow.com/questions/35587652/kotlin-thread-safe-native-lazy-singleton-with-parameter]
@@ -104,9 +107,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
      *
      * TODO: Complete [Messenger] next
      *
-     *
-     * TODO: Is System.currentTimeMillis() the current way to get the current time?
-     *
      * */
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +120,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             .inject(this)
 
         applicationScope.launch {
-            internetMonitor.observe().collect { networkState ->
+            internetMonitor.subscribe().collect { networkState ->
                 messenger.toast(networkState.toString())
             }
         }

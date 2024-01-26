@@ -3,9 +3,9 @@ package com.gravitycode.solitaryfitness.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.net.InternetMonitor
-import com.gravitycode.solitaryfitness.util.android.Messenger
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope

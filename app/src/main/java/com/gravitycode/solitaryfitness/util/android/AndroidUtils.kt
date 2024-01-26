@@ -81,7 +81,12 @@ private val DISABLE_STRICT_MODE_LOCK = Any()
 
 /**
  * All strict mode policies will be disabled while @param[block] executes.
+ *
+ * Doesn't seem to be thread-safe and I don't know why. I don't currently have time to deal with it, and
+ * thus far strict mode has caused me nothing but problems and provided no actual value. So I'm abandoning
+ * it for now, but keeping the code here in case I want to take this back up in the future.
  * */
+@Deprecated("potentially broken")
 fun <T> temporarilyDisableStrictMode(block: () -> T): T {
     if (!BuildConfig.DEBUG) {
         return block()
