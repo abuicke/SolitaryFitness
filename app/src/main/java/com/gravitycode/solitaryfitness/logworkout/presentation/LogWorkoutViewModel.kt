@@ -58,7 +58,7 @@ class LogWorkoutViewModel(
     init {
         viewModelScope.launch {
             appStateFlow.collect { appState ->
-                Log.v(TAG, "app state collected: $appState")
+                Log.i(TAG, "app state collected: $appState")
                 _state.value = _state.value.copy(user = appState.user)
                 repository = if (appState.isUserSignedIn()) {
                     repositoryFactory.getOnlineRepository()
@@ -143,7 +143,7 @@ class LogWorkoutViewModel(
                 messenger.toast("Couldn't save reps")
                 debugError("Failed to write workout log to repository", result)
             } else {
-                Log.v(TAG, "incrementWorkout(${workout.string}, $quantity)")
+                Log.i(TAG, "incrementWorkout(${workout.string}, $quantity)")
             }
         }
     }
@@ -161,7 +161,7 @@ class LogWorkoutViewModel(
                 messenger.toast("Couldn't reset reps")
                 debugError("Failed to reset reps and write to repository", result)
             } else {
-                Log.v(TAG, "reps reset successfully")
+                Log.i(TAG, "reps reset successfully")
             }
         }
     }

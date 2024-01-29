@@ -51,7 +51,7 @@ sealed class FirestoreWorkoutLogsRepository(
             workoutLog(date).get()
                 .addOnSuccessListener { document ->
                     val data = document.data
-                    Log.v(TAG, "readWorkoutLog($date): $data")
+                    Log.i(TAG, "readWorkoutLog($date): $data")
 
                     val result = if (data != null) {
                         val map = HashMap<Workout, Int>(Workout.values().size)

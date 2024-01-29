@@ -207,7 +207,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                     appState.emit(AppState(user))
                 }
                 messenger.toast("Signed in: ${user.email}")
-                Log.v(TAG, "signed in as user: $user")
+                Log.i(TAG, "signed in as user: $user")
             } else {
                 messenger.toast("Failed to sign in")
                 debugError("Sign in failed", result)
@@ -229,7 +229,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             if (result.isSuccess) {
                 appState.emit(AppState(null))
                 messenger.toast("Signed out")
-                Log.v(TAG, "signed out")
+                Log.i(TAG, "signed out")
             } else {
                 messenger.toast("Failed to sign out")
                 debugError("Sign out failed", result)
@@ -262,7 +262,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                                         messenger.toast("Sync failed for ${resultOf.subject}")
                                     }
                                 } else {
-                                    Log.v(TAG, "successfully synced ${resultOf.subject}")
+                                    Log.i(TAG, "successfully synced ${resultOf.subject}")
                                 }
                             }
                         }

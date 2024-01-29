@@ -65,7 +65,7 @@ class LazySyncDataService(
                         result = ResultOf.success(date)
                     } else {
                         if (i < retryAttempts) {
-                            Log.w(TAG, "Sync failed for $date, retrying...")
+                            Log.d(TAG, "Sync failed for $date, retrying...")
                         } else {
                             debugError("Failed to sync record for $date", writeResult)
                             result = ResultOf.failure(date, writeResult.exceptionOrNull()!!)
@@ -73,7 +73,7 @@ class LazySyncDataService(
                     }
                 } while (writeResult.isFailure && i++ < retryAttempts)
             } else {
-                Log.v(TAG, "skipped $date")
+                Log.d(TAG, "skipped $date")
                 result = ResultOf.success(date)
             }
 

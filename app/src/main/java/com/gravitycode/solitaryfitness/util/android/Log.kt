@@ -3,8 +3,11 @@ package com.gravitycode.solitaryfitness.util.android
 import com.gravitycode.solitaryfitness.BuildConfig
 
 /**
- * Verbose: An event occurred. A piece of functionality (e.g. function, service, network call) has just
- * begun executing, or is in the process of performing some work but has not yet completed.
+ * Verbose: A non-critical event has succeeded. Also covers any event which does not belong at another level,
+ * such as intermediate events (events which occur while a procedure is running which has not completed or
+ * failed yet), or the initial execution of a procedure such as the beginning of a function call.
+ *
+ * Debug: A non-critical event has failed, e.g. a condition which is expected to not be met at times has not been.
  *
  * Info: An app critical event (one which will effect the user experience if it fails) has completed successfully.
  *
@@ -18,15 +21,22 @@ object Log {
     private const val META_TAG = "sf-app: "
 
     /**
-     * Log events which do not belong to any other log level.
-     *
-     * Used to create an overall picture of the app's functioning without needing to use other tools such as
-     * a debugger. Useful in monitoring the consequences of changes to the overall functioning of the app and
-     * for catching situation where events aren't occurring where expected, in wrong order or too many times.
+     * Log events which do not belong to any other log level; non-critical conditions succeeding, the state
+     * of a particular procedure or module across time, lifecycle events, initial function calls etc.
      * */
     fun v(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
             android.util.Log.v("$META_TAG$tag", message, throwable)
+        }
+    }
+
+    /**
+     * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
+     * condition not being met.
+     * */
+    fun d(tag: String, message: String, throwable: Throwable? = null) {
+        if (BuildConfig.DEBUG) {
+            android.util.Log.d("$META_TAG$tag", message, throwable)
         }
     }
 

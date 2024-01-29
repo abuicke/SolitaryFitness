@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.net.SocketTimeoutException
 
 private const val TAG = "NetUtils"
 
@@ -36,8 +37,11 @@ suspend fun isOnline(timeout: Int = 1500, hostname: String = "8.8.8.8"): Boolean
             }
             true
         }
+    } catch (ste: SocketTimeoutException) {
+        Log.e(TAG, "connection to $hostname timed out after ${timeout.toFloat().div(1000)} seconds", ste)
+        false
     } catch (t: Throwable) {
-        Log.w(TAG, "connection to $hostname failed, timed out after ${timeout.toFloat().div(1000)} seconds")
+        Log.e(TAG, "connection to $hostname failed", t)
         false
     }
 }

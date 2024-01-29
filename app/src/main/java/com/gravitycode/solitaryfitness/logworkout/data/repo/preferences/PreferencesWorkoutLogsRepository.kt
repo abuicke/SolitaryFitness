@@ -142,7 +142,7 @@ private class PreferencesMetaData(
             val success = records.add(date.toString())
             if (success) {
                 preferences[DATES_KEY] = records
-                Log.v(TAG, "successfully added record $date to meta data")
+                Log.i(TAG, "successfully added record $date to meta data")
             } else {
                 debugError("failed to add record $date to meta data")
             }
@@ -154,7 +154,7 @@ private class PreferencesMetaData(
             val success = records.remove(date.toString())
             if (success) {
                 preferences[DATES_KEY] = records
-                Log.v(TAG, "successfully removed record $date from meta data")
+                Log.i(TAG, "successfully removed record $date from meta data")
             } else {
                 debugError("failed to remove record $date from meta data")
             }

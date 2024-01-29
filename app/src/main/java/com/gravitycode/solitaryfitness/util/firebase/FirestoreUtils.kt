@@ -62,9 +62,9 @@ suspend fun CollectionReference.deleteDocuments() {
                     document.reference.delete().addOnCompleteListener { deleteTask ->
                         completed[i] = true
                         if (deleteTask.isSuccessful) {
-                            Log.i(TAG, "deleted document successfully")
+                            Log.v(TAG, "deleted document ${document.id} successfully")
                         } else {
-                            Log.e(TAG, "failed to delete document", deleteTask.exception)
+                            Log.e(TAG, "failed to delete document ${document.id}", deleteTask.exception)
                         }
 
                         if (completed.reduce { acc, next -> acc && next }) {
