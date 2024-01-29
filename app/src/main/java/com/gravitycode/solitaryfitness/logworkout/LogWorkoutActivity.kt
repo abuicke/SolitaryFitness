@@ -192,7 +192,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                 if (!hasUserPreviouslySignedIn) {
                     val historyResult = appControllerSettings.addUserToSignInHistory(user)
                     if (historyResult.isSuccess) {
-                        Log.d(TAG, "successfully added user ${user.email} to sign in history")
+                        Log.i(TAG, "successfully added user ${user.email} to sign in history")
                     } else {
                         debugError("failed to add user ${user.email} to sign in history")
                     }
@@ -207,7 +207,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                     appState.emit(AppState(user))
                 }
                 messenger.toast("Signed in: ${user.email}")
-                Log.d(TAG, "signed in as user: $user")
+                Log.v(TAG, "signed in as user: $user")
             } else {
                 messenger.toast("Failed to sign in")
                 debugError("Sign in failed", result)

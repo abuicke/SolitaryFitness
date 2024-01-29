@@ -58,17 +58,17 @@ suspend fun CollectionReference.deleteDocuments() {
             } else {
                 for (i in 0 until query.documents.size) {
                     val document = query.documents[i]
-                    Log.d(TAG, "deleting document ${document.id}")
+                    Log.v(TAG, "deleting document ${document.id}")
                     document.reference.delete().addOnCompleteListener { deleteTask ->
                         completed[i] = true
                         if (deleteTask.isSuccessful) {
-                            Log.d(TAG, "deleted document successfully")
+                            Log.i(TAG, "deleted document successfully")
                         } else {
                             Log.e(TAG, "failed to delete document", deleteTask.exception)
                         }
 
                         if (completed.reduce { acc, next -> acc && next }) {
-                            Log.d(TAG, "all documents have been deleted")
+                            Log.i(TAG, "all documents have been deleted")
                             continuation.resume(Unit)
                         }
                     }

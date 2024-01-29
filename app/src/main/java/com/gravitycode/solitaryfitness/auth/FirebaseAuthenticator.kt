@@ -59,7 +59,7 @@ class FirebaseAuthenticator(
         val currentFirebaseUser = firebaseAuth.currentUser
         if (currentFirebaseUser != null) {
             this.user = User(currentFirebaseUser)
-            Log.d(TAG, "user already signed in as: $user")
+            Log.w(TAG, "user already signed in as: $user")
         }
     }
 
@@ -74,7 +74,7 @@ class FirebaseAuthenticator(
         val response = result.idpResponse
 
         return if (result.resultCode == ComponentActivity.RESULT_OK) {
-            Log.d(TAG, "sign in successful\n$response")
+            Log.v(TAG, "sign in successful\n$response")
             val firebaseUser = firebaseAuth.currentUser!!
             val user = User(firebaseUser)
             this.user = user

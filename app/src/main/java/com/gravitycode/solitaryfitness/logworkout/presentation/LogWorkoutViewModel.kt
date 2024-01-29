@@ -58,7 +58,7 @@ class LogWorkoutViewModel(
     init {
         viewModelScope.launch {
             appStateFlow.collect { appState ->
-                Log.d(TAG, "app state collected: $appState")
+                Log.v(TAG, "app state collected: $appState")
                 _state.value = _state.value.copy(user = appState.user)
                 repository = if (appState.isUserSignedIn()) {
                     repositoryFactory.getOnlineRepository()

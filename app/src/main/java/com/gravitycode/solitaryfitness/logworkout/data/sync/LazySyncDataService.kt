@@ -22,6 +22,8 @@ class LazySyncDataService(
     }
 
     override suspend fun sync(mode: SyncMode, retryAttempts: Int): Flow<ResultOf<LocalDate>> {
+        Log.v(TAG, "sync($mode, $retryAttempts)")
+
         val sourceRepository = sourceRepository.get()
         val destinationRepository = destinationRepository.get()
 
@@ -71,7 +73,7 @@ class LazySyncDataService(
                     }
                 } while (writeResult.isFailure && i++ < retryAttempts)
             } else {
-                Log.d(TAG, "skipped $date")
+                Log.v(TAG, "skipped $date")
                 result = ResultOf.success(date)
             }
 

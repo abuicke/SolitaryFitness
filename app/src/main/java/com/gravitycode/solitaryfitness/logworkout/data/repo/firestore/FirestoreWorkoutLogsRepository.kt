@@ -79,7 +79,7 @@ sealed class FirestoreWorkoutLogsRepository(
 
             workoutLog(date).set(serializableMap)
                 .addOnSuccessListener {
-                    Log.d(TAG, "successfully wrote workout logs to firestore")
+                    Log.i(TAG, "successfully wrote workout logs to firestore")
                     _metaData.add(date)
                     val result = Result.success(Unit)
                     continuation.resume(result)

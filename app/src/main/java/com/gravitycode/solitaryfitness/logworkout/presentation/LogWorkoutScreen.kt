@@ -107,7 +107,7 @@ fun LogWorkoutScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val logWorkoutState = viewModel.state.value
-        Log.d(TAG, "view model state updated: $logWorkoutState")
+        Log.v(TAG, "view model state updated: $logWorkoutState")
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {
