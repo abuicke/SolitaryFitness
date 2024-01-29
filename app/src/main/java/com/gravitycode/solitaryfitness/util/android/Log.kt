@@ -30,6 +30,12 @@ object Log {
         }
     }
 
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun v(tag: String, message: () -> String) {
+        v(tag, message())
+    }
+
     /**
      * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
      * condition not being met.
@@ -38,6 +44,12 @@ object Log {
         if (BuildConfig.DEBUG) {
             android.util.Log.d("$META_TAG$tag", message, throwable)
         }
+    }
+
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun d(tag: String, message: () -> String) {
+        d(tag, message())
     }
 
     /**
@@ -49,6 +61,12 @@ object Log {
         }
     }
 
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun i(tag: String, message: () -> String) {
+        i(tag, message())
+    }
+
     /**
      * Log events which could be indicative of an error, but which have not actually raised an exception.
      * */
@@ -56,6 +74,12 @@ object Log {
         if (BuildConfig.DEBUG) {
             android.util.Log.w("$META_TAG$tag", message, throwable)
         }
+    }
+
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun w(tag: String, message: () -> String) {
+        w(tag, message())
     }
 
     /**
@@ -67,6 +91,12 @@ object Log {
         }
     }
 
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun e(tag: String, message: () -> String) {
+        e(tag, message())
+    }
+
     /**
      * Log system critical events which have not occurred as the result of a bug in code, but as a result of
      * a failure of the framework, the virtual machine, or some other external tool or dependency.
@@ -75,5 +105,11 @@ object Log {
         if (BuildConfig.DEBUG) {
             android.util.Log.wtf("$META_TAG$tag", message, throwable)
         }
+    }
+
+    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
+    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    fun wtf(tag: String, message: () -> String) {
+        wtf(tag, message())
     }
 }
