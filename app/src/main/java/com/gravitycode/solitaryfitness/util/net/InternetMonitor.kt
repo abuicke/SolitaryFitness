@@ -6,12 +6,12 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.android.sdk
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.annotation.concurrent.ThreadSafe
 
 private const val TAG = "InternetMonitor"
@@ -43,62 +43,103 @@ interface InternetMonitor {
     fun subscribe(): Flow<InternetState>
 }
 
+/**
+ * This naive solution is the only thing I've found that works under all circumstances, including using an
+ * always-on VPN. Every time there is a change in the network related to internet, I check to see if the
+ * device is online. If multiple calls are made in quick succession they will all cause an online check, but
+ * the checks will occur sequentially, one after another.
+ *
+ * TODO: (FROM [NetworkRequest] DOCUMENTATION) Also, starting with [Build.VERSION_CODES.UPSIDE_DOWN_CAKE],
+ *  some capabilities require the application to self-certify by explicitly adding the
+ *  [android.content.pm.PackageManager.PROPERTY_SELF_CERTIFIED_NETWORK_CAPABILITIES] property in the
+ *  AndroidManifest.xml, which points to an XML resource file. In the XML resource file, the application
+ *  declares what kind of network capabilities the application wants to have.
+ */
 private class InternetMonitorImpl(
     private val applicationScope: CoroutineScope,
-    private val connectivityManager: ConnectivityManager
+    connectivityManager: ConnectivityManager
 ) : InternetMonitor {
 
+    private val mutex = Mutex()
     private val sharedFlow = MutableSharedFlow<InternetState>(1)
 
     init {
-        sdk(Build.VERSION_CODES.S) {
-            val internetRequest = NetworkRequest.Builder()
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-                .build()
+        val internetRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            // .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
+            .build()
 
-            val internetCallback = object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    applicationScope.launch(Dispatchers.IO) {
-                        sharedFlow.emit(InternetState.CONNECTED_INTERNET)
-                    }
-                }
-
-                override fun onLosing(network: Network, maxMsToLive: Int) {
-
-                }
-
-                override fun onLost(network: Network) {
-
-                }
-
-                override fun onUnavailable() {
-
-                }
-            }
-
-            connectivityManager.requestNetwork(internetRequest, internetCallback, 5000)
-
-            connectivityManager.registerDefaultNetworkCallback(
-                InternetCallback(applicationScope, "DEF")
-            )
+        val internetCallback = NetworkChangedCallback {
+            checkAndEmitInternetStatus()
         }
+
+        connectivityManager.registerNetworkCallback(internetRequest, internetCallback)
     }
 
     override fun subscribe() = sharedFlow
 
-    private fun emit(state: InternetState) {
+    private suspend fun emit(state: InternetState) {
         Log.v(TAG, "emit($state)")
-        val lastState = sharedFlow.replayCache[0]
+
+        val lastState = if (sharedFlow.replayCache.isNotEmpty()) {
+            sharedFlow.replayCache.last()
+        } else {
+            null
+        }
+
+        Log.v(TAG, "last emitted state is $lastState")
+
         if (lastState != state) {
-            applicationScope.launch(Dispatchers.IO) {
-                sharedFlow.emit(state)
-            }
+            sharedFlow.emit(state)
+            Log.i(TAG, "emitted $state")
         } else {
             Log.d(TAG) {
                 "not emitting state $state as it matches the last emitted state from the replay cache, " +
                         "replay cache = ${sharedFlow.replayCache}"
             }
         }
+    }
+
+    private fun checkAndEmitInternetStatus() {
+        applicationScope.launch {
+            mutex.withLock {
+                if (isOnline()) {
+                    emit(InternetState.ONLINE)
+                } else {
+                    emit(InternetState.OFFLINE)
+                }
+            }
+        }
+    }
+}
+
+private class NetworkChangedCallback(
+    private val onNetworkChanged: () -> Unit
+) : ConnectivityManager.NetworkCallback() {
+
+    private companion object {
+
+        private const val TAG = "NetworkChangedCallback"
+    }
+
+    override fun onAvailable(network: Network) {
+        Log.v(TAG, "onAvailable($network)")
+        onNetworkChanged()
+    }
+
+    override fun onLosing(network: Network, maxMsToLive: Int) {
+        Log.v(TAG, "onLosing($network, $maxMsToLive)")
+        onNetworkChanged()
+    }
+
+    override fun onLost(network: Network) {
+        Log.v(TAG, "onLost($network)")
+        onNetworkChanged()
+    }
+
+    override fun onUnavailable() {
+        Log.v(TAG, "onUnavailable()")
+        onNetworkChanged()
     }
 }

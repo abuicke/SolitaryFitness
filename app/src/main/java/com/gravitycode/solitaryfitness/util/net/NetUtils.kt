@@ -1,11 +1,12 @@
 package com.gravitycode.solitaryfitness.util.net
 
+import android.net.NetworkRequest
 import com.gravitycode.solitaryfitness.util.android.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.net.SocketTimeoutException
+import android.os.Build
 
 private const val TAG = "NetUtils"
 
@@ -37,11 +38,8 @@ suspend fun isOnline(timeout: Int = 1500, hostname: String = "8.8.8.8"): Boolean
             }
             true
         }
-    } catch (ste: SocketTimeoutException) {
-        Log.e(TAG, "connection to $hostname timed out after ${timeout.toFloat().div(1000)} seconds", ste)
-        false
     } catch (t: Throwable) {
-        Log.e(TAG, "connection to $hostname failed", t)
+        Log.e(TAG, "connection to $hostname failed\n${t.message}")
         false
     }
 }
