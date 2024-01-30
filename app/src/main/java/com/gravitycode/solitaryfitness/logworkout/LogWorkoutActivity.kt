@@ -98,8 +98,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
     /**
      *
-     *
-     * TODO: Test internet connection stuff
      * TODO: What happens when I'm connected to the internet on sign-in, but not when adding logs or on sign
      *  out? Is Firebase able to save the logs added offline and then upload them when there's a connection?
      *  I may need to use something like com.github.pwittchen:reactivenetwork-rx2:3.0.0 so I can emit the
@@ -121,7 +119,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
         applicationScope.launch {
             internetMonitor.subscribe().collect { networkState ->
-                messenger.toast(networkState.toString())
+                messenger.snackbar(networkState.toString())
             }
         }
 

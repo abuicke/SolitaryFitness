@@ -12,7 +12,7 @@ interface Messenger {
 
     fun toast(text: String, duration: ToastDuration = ToastDuration.SHORT)
 
-    fun snackbar(text: String, action: String)
+    fun snackbar(text: String, action: String? = null)
 }
 
 private class MessengerImpl(private val context: Context) : Messenger {
@@ -25,7 +25,7 @@ private class MessengerImpl(private val context: Context) : Messenger {
      * TODO: Probably need to put some kind of a SnackbarHost interface on the MainActivity and expose that
      *  privately in Dagger to pass to the Messenger provides function.
      * */
-    override fun snackbar(text: String, action: String) {
+    override fun snackbar(text: String, action: String?) {
         TODO("Not yet implemented")
     }
 }
