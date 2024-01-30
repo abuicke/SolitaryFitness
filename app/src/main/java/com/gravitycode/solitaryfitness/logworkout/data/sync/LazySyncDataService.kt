@@ -1,7 +1,8 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.sync
 
-import android.util.Log
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.util.ResultOf
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.data.DataCorruptionError
 import com.gravitycode.solitaryfitness.util.error.IllegalStateError
 import com.gravitycode.solitaryfitness.util.error.debugError
@@ -21,6 +22,8 @@ class LazySyncDataService(
     }
 
     override suspend fun sync(mode: SyncMode, retryAttempts: Int): Flow<ResultOf<LocalDate>> {
+        Log.v(TAG, "sync($mode, $retryAttempts)")
+
         val sourceRepository = sourceRepository.get()
         val destinationRepository = destinationRepository.get()
 
@@ -62,7 +65,7 @@ class LazySyncDataService(
                         result = ResultOf.success(date)
                     } else {
                         if (i < retryAttempts) {
-                            Log.w(TAG, "Sync failed for $date, retrying...")
+                            Log.d(TAG, "Sync failed for $date, retrying...")
                         } else {
                             debugError("Failed to sync record for $date", writeResult)
                             result = ResultOf.failure(date, writeResult.exceptionOrNull()!!)

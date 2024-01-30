@@ -1,11 +1,12 @@
-package com.gravitycode.solitaryfitness.util.data
+package com.gravitycode.solitaryfitness.util.firebase
 
-import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
+import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.util.data.megabytesToBytes
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -57,17 +58,17 @@ suspend fun CollectionReference.deleteDocuments() {
             } else {
                 for (i in 0 until query.documents.size) {
                     val document = query.documents[i]
-                    Log.d(TAG, "deleting document ${document.id}")
+                    Log.v(TAG, "deleting document ${document.id}")
                     document.reference.delete().addOnCompleteListener { deleteTask ->
                         completed[i] = true
                         if (deleteTask.isSuccessful) {
-                            Log.d(TAG, "deleted document successfully")
+                            Log.v(TAG, "deleted document ${document.id} successfully")
                         } else {
-                            Log.e(TAG, "failed to delete document", deleteTask.exception)
+                            Log.e(TAG, "failed to delete document ${document.id}", deleteTask.exception)
                         }
 
                         if (completed.reduce { acc, next -> acc && next }) {
-                            Log.d(TAG, "all documents have been deleted")
+                            Log.i(TAG, "all documents have been deleted")
                             continuation.resume(Unit)
                         }
                     }

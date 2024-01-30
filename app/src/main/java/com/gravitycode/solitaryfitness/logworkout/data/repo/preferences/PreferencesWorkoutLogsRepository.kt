@@ -1,15 +1,15 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.repo.preferences
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.solitaryfitness.app.FlowLauncher
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.util.android.data.intPreferencesKey
+import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.data.MetaData
-import com.gravitycode.solitaryfitness.util.data.intPreferencesKey
-import com.gravitycode.solitaryfitness.util.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -142,7 +142,7 @@ private class PreferencesMetaData(
             val success = records.add(date.toString())
             if (success) {
                 preferences[DATES_KEY] = records
-                Log.v(TAG, "successfully added record $date to meta data")
+                Log.i(TAG, "successfully added record $date to meta data")
             } else {
                 debugError("failed to add record $date to meta data")
             }
@@ -154,7 +154,7 @@ private class PreferencesMetaData(
             val success = records.remove(date.toString())
             if (success) {
                 preferences[DATES_KEY] = records
-                Log.v(TAG, "successfully removed record $date from meta data")
+                Log.i(TAG, "successfully removed record $date from meta data")
             } else {
                 debugError("failed to remove record $date from meta data")
             }

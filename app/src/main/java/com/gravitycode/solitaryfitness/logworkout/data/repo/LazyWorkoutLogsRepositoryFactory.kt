@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.logworkout.data
+package com.gravitycode.solitaryfitness.logworkout.data.repo
 
 import dagger.Lazy
 import javax.annotation.concurrent.ThreadSafe

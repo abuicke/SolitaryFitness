@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutEvent
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutState
-import com.gravitycode.solitaryfitness.util.ui.ViewModel
+import com.gravitycode.solitaryfitness.util.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.setMain
 

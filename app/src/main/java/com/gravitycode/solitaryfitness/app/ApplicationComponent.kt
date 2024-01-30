@@ -1,12 +1,11 @@
 package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
-import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
 import dagger.BindsInstance
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [ApplicationModule::class])
+@Component(modules = [AndroidModule::class, ApplicationModule::class])
 interface ApplicationComponent {
 
     @Component.Builder
@@ -19,5 +18,5 @@ interface ApplicationComponent {
 
     fun activityComponentBuilder(): ActivityComponent.Builder
 
-    // fun inject(activity: MainActivity)
+    fun inject(app: SolitaryFitnessApp)
 }

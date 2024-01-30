@@ -1,8 +1,7 @@
-package com.gravitycode.solitaryfitness.util.ui
+package com.gravitycode.solitaryfitness.util.android
 
 import android.content.Context
 import android.widget.Toast
-import androidx.annotation.UiThread
 
 interface Messenger {
 
@@ -13,10 +12,10 @@ interface Messenger {
 
     fun toast(text: String, duration: ToastDuration = ToastDuration.SHORT)
 
-    fun snackbar(text: String, action: String)
+    fun snackbar(text: String, action: String? = null)
 }
 
-private class MessengerImpl(private val context: Context): Messenger {
+private class MessengerImpl(private val context: Context) : Messenger {
 
     override fun toast(text: String, duration: ToastDuration) {
         Toast.makeText(context, text, duration.toInt()).show()
@@ -26,7 +25,7 @@ private class MessengerImpl(private val context: Context): Messenger {
      * TODO: Probably need to put some kind of a SnackbarHost interface on the MainActivity and expose that
      *  privately in Dagger to pass to the Messenger provides function.
      * */
-    override fun snackbar(text: String, action: String) {
+    override fun snackbar(text: String, action: String?) {
         TODO("Not yet implemented")
     }
 }

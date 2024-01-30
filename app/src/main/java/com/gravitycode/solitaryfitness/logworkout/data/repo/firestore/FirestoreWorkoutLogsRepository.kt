@@ -1,13 +1,13 @@
-package com.gravitycode.solitaryfitness.logworkout.data.firestore
+package com.gravitycode.solitaryfitness.logworkout.data.repo.firestore
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.gravitycode.solitaryfitness.auth.Authenticator
-import com.gravitycode.solitaryfitness.logworkout.data.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.data.MetaData
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlinx.coroutines.CoroutineScope
@@ -51,7 +51,7 @@ sealed class FirestoreWorkoutLogsRepository(
             workoutLog(date).get()
                 .addOnSuccessListener { document ->
                     val data = document.data
-                    Log.v(TAG, "readWorkoutLog($date): $data")
+                    Log.i(TAG, "readWorkoutLog($date): $data")
 
                     val result = if (data != null) {
                         val map = HashMap<Workout, Int>(Workout.values().size)
@@ -79,7 +79,7 @@ sealed class FirestoreWorkoutLogsRepository(
 
             workoutLog(date).set(serializableMap)
                 .addOnSuccessListener {
-                    Log.d(TAG, "successfully wrote workout logs to firestore")
+                    Log.i(TAG, "successfully wrote workout logs to firestore")
                     _metaData.add(date)
                     val result = Result.success(Unit)
                     continuation.resume(result)

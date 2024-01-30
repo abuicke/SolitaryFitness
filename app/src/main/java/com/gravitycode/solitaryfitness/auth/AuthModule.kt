@@ -5,7 +5,6 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.app.ActivityScope
 import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
-import com.gravitycode.solitaryfitness.logworkout.LogWorkoutScope
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier

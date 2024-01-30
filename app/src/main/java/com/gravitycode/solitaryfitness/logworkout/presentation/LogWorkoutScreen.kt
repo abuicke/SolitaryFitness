@@ -9,7 +9,6 @@
  * */
 package com.gravitycode.solitaryfitness.logworkout.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,9 +43,10 @@ import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.app.AppEvent
 import com.gravitycode.solitaryfitness.auth.User
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
+import com.gravitycode.solitaryfitness.util.ViewModel
+import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.error.debugError
-import com.gravitycode.solitaryfitness.util.ui.ViewModel
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
@@ -107,7 +107,7 @@ fun LogWorkoutScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val logWorkoutState = viewModel.state.value
-        Log.d(TAG, "view model state updated: $logWorkoutState")
+        Log.i(TAG, "view model state updated: $logWorkoutState")
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {

@@ -5,7 +5,7 @@ import com.gravitycode.solitaryfitness.auth.AuthModule
 import com.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
 import dagger.BindsInstance
 import dagger.Subcomponent
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 
 @ActivityScope
 @Subcomponent(modules = [AuthModule::class])
@@ -16,7 +16,7 @@ interface ActivityComponent {
 
         @BindsInstance fun componentActivity(app: ComponentActivity): Builder
 
-        @BindsInstance fun appStateFlow(appStateFlow: SharedFlow<AppState>): Builder
+        @BindsInstance fun appStateFlow(appStateFlow: Flow<AppState>): Builder
 
         @BindsInstance fun flowLauncher(flowLauncher: FlowLauncher): Builder
 

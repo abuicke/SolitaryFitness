@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.util.ui
+package com.gravitycode.solitaryfitness.util
 
 import androidx.compose.runtime.State
 import com.gravitycode.solitaryfitness.app.AppEvent

@@ -57,11 +57,11 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     // Compose
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -106,6 +106,9 @@ dependencies {
 
     // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
+
+    // Leak Canary - enable when needed, as it conflicts with StrictMode
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")

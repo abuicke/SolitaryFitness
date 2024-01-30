@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
 import com.gravitycode.solitaryfitness.logworkout.LogWorkoutActivity
-import com.gravitycode.solitaryfitness.logworkout.util.Workout
+import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

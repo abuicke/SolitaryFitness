@@ -1,13 +1,13 @@
 package com.gravitycode.solitaryfitness.auth
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.R
-import com.gravitycode.solitaryfitness.util.data.GetActivityResult
+import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.util.android.data.GetActivityResult
 import com.gravitycode.solitaryfitness.util.error.debugError
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -59,7 +59,7 @@ class FirebaseAuthenticator(
         val currentFirebaseUser = firebaseAuth.currentUser
         if (currentFirebaseUser != null) {
             this.user = User(currentFirebaseUser)
-            Log.d(TAG, "user already signed in as: $user")
+            Log.w(TAG, "user already signed in as: $user")
         }
     }
 
@@ -74,7 +74,7 @@ class FirebaseAuthenticator(
         val response = result.idpResponse
 
         return if (result.resultCode == ComponentActivity.RESULT_OK) {
-            Log.d(TAG, "sign in successful\n$response")
+            Log.i(TAG, "sign in successful\n$response")
             val firebaseUser = firebaseAuth.currentUser!!
             val user = User(firebaseUser)
             this.user = user
