@@ -21,11 +21,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -46,7 +48,8 @@ import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.util.ViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.android.SnackbarDuration
+import com.gravitycode.solitaryfitness.util.error
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
 import java.time.LocalDate
@@ -81,7 +84,7 @@ private enum class MenuItem(val string: String) {
 
 //@Composable
 //@Preview(showSystemUi = true)
-//private fun TrackRepsScreen() {
+// private fun TrackRepsScreen() {
 //    TrackRepsScreen(
 //        modifier = Modifier.fillMaxSize(),
 //        appState = AppState(null),
@@ -99,15 +102,31 @@ fun LogWorkoutScreen(
     viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {
+    // val context = LocalContext.current
     val workouts = Workout.values()
-    val context = LocalContext.current
+
+    // val snackbarHostState = remember { SnackbarHostState() }
+
+    val logWorkoutState = viewModel.state.value
+    Log.i(TAG, "view model state updated: $logWorkoutState")
+
+    val showSnackbar = logWorkoutState.snackbar != null
+    Log.v(TAG, "display snackbar: ${logWorkoutState.snackbar}")
+
+    // Trigger Snackbar to show
+    LaunchedEffect(showSnackbar) {
+        if (showSnackbar) {
+            val snackbar = logWorkoutState.snackbar!!
+            if (snackbar.duration != SnackbarDuration.INDEFINITE) {
+                snackbar.duration.delay()
+            }
+        }
+    }
 
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val logWorkoutState = viewModel.state.value
-        Log.i(TAG, "view model state updated: $logWorkoutState")
 
         TopBar(logWorkoutState.user) { item ->
             when (item) {
@@ -118,12 +137,14 @@ fun LogWorkoutScreen(
 //                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
             }
         }
+
         TrackRepsGrid(
             modifier = Modifier.weight(1f),
             workouts = workouts,
             logWorkoutState = logWorkoutState,
             onEvent = viewModel::onEvent
         )
+
         // Setting startDate is only necessary on initialization, after that the date picker
         // updates itself and then also gets that date sent back to it from the event trigger,
         // but no recompose happens as the value is the same.
@@ -134,10 +155,26 @@ fun LogWorkoutScreen(
         //  picker stays at the current date if you try to scroll to a future date. It should go to the max
         //  date allowed if you try to go past it.
         WheelDatePicker(
-            startDate = viewModel.state.value.date,
+            startDate = logWorkoutState.date,
             maxDate = LocalDate.now()
         ) { snappedDate ->
             viewModel.onEvent(LogWorkoutEvent.DateSelected(snappedDate))
+        }
+
+        if (logWorkoutState.snackbar != null) {
+            val snackbar = logWorkoutState.snackbar
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    if (snackbar.action != null) {
+                        TextButton(onClick = snackbar.action.onClick) {
+                            Text(snackbar.action.text)
+                        }
+                    }
+                }
+            ) {
+                Text(text = snackbar.message)
+            }
         }
     }
 }
@@ -149,7 +186,9 @@ private fun TopBar(
     onMenuItemClicked: (MenuItem) -> Unit
 ) {
     TopAppBar(
-        modifier = Modifier.height(IntrinsicSize.Max).testTag("toolbar"),
+        modifier = Modifier
+            .height(IntrinsicSize.Max)
+            .testTag("toolbar"),
         title = {
             Row(
                 modifier = Modifier.fillMaxHeight(),
@@ -172,7 +211,7 @@ private fun TopBar(
                         contentDescription = "User profile picture",
                         onSuccess = { imageLoaded.value = true },
                         onError = { state ->
-                            debugError("failed to load async image", state.result.throwable)
+                            error("failed to load async image", state.result.throwable)
                         }
                     )
                 }
@@ -182,7 +221,7 @@ private fun TopBar(
                 )
             }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
@@ -191,7 +230,6 @@ private fun TopBar(
                 when (menuItem) {
                     MenuItem.SIGN_IN_WITH_GOOGLE -> !isUserSignedIn
                     MenuItem.SIGN_OUT -> isUserSignedIn
-                    else -> true
                 }
             }.map { it.string }
 
@@ -203,7 +241,7 @@ private fun TopBar(
                 if (menuItem != null) {
                     onMenuItemClicked(menuItem)
                 } else {
-                    debugError("Couldn't return MenuItem for string '$string'")
+                    error("Couldn't return MenuItem for string '$string'")
                 }
             }
         }
@@ -309,7 +347,7 @@ private fun AddRepsGrid(
                     1 -> onClickAddReps(5)
                     2 -> onClickAddReps(10)
                     3 -> onClickAddReps(null)
-                    else -> error("invalid cell")
+                    else -> kotlin.error("invalid cell")
                 }
             }
         ) {
@@ -319,7 +357,7 @@ private fun AddRepsGrid(
                     1 -> "5"
                     2 -> "10"
                     3 -> "X"
-                    else -> error("invalid cell")
+                    else -> kotlin.error("invalid cell")
                 }
             )
         }

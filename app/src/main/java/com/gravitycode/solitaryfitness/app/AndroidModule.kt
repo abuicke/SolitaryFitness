@@ -3,7 +3,7 @@ package com.gravitycode.solitaryfitness.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import com.gravitycode.solitaryfitness.util.android.Messenger
+import com.gravitycode.solitaryfitness.util.android.Toaster
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.net.InternetMonitor
 import dagger.Module
@@ -34,5 +34,5 @@ object AndroidModule {
 
     @Provides
     @ApplicationScope
-    fun providesMessenger(context: Context) = Messenger.create(context)
+    fun providesToaster(context: Context) = Toaster.create(context)
 }

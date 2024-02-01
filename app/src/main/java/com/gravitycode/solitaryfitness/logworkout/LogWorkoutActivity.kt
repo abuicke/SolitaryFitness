@@ -23,10 +23,13 @@ import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncMode
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.android.Messenger
+import com.gravitycode.solitaryfitness.util.android.Snackbar
+import com.gravitycode.solitaryfitness.util.android.SnackbarDuration
+import com.gravitycode.solitaryfitness.util.android.ToastDuration
+import com.gravitycode.solitaryfitness.util.android.Toaster
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
-import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.error
 import com.gravitycode.solitaryfitness.util.net.InternetMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +44,16 @@ import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
 /**
+ * TODO: Need a splash screen to display, the same as the launch screen until all dependencies are finished
+ *  loading. Just set content first with the splash screen at the beginning of onCreate, and then with the
+ *  main content again at the end. Or maybe put it in onResume? I don't know
+ *
+ * TODO: Need to gracefully recover from exceptions anywhere they're thrown. Look through the source code
+ *  and look for anywhere there's an explicit `throw` and change this.
+ *
+ * TODO: What happens when I'm connected to the internet on sign-in but not when adding logs or on sign out?
+ *  Is Firebase able to save the logs added offline and then upload them when there's a connection?
+ *
  * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
  *  handles the Application component stuff?
  *
@@ -86,7 +99,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var applicationScope: CoroutineScope
     @Inject lateinit var dataStoreManager: DataStoreManager
     @Inject lateinit var authenticator: Authenticator
-    @Inject lateinit var messenger: Messenger
+    @Inject lateinit var toaster: Toaster
     @Inject lateinit var internetMonitor: InternetMonitor
     @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
@@ -95,17 +108,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     private val appState = MutableSharedFlow<AppState>(1)
 
     private lateinit var appControllerSettings: AppControllerSettings
-
-    /**
-     *
-     * TODO: What happens when I'm connected to the internet on sign-in, but not when adding logs or on sign
-     *  out? Is Firebase able to save the logs added offline and then upload them when there's a connection?
-     *  I may need to use something like com.github.pwittchen:reactivenetwork-rx2:3.0.0 so I can emit the
-     *  connection state via the [AppState] if it ever changes.
-     *
-     * TODO: Complete [Messenger] next
-     *
-     * */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +121,13 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
         applicationScope.launch {
             internetMonitor.subscribe().collect { networkState ->
-                messenger.snackbar(networkState.toString())
+                // toaster.toast(networkState.toString())
+                logWorkoutViewModel.showSnackbar(
+                    Snackbar(
+                        message = networkState.toString(),
+                        duration = SnackbarDuration.SHORT
+                    )
+                )
             }
         }
 
@@ -170,8 +178,8 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
         if (authenticator.isUserSignedIn()) {
             val currentUser = authenticator.getSignedInUser()!!
             val name = currentUser.name ?: currentUser.email ?: currentUser.id
-            messenger.toast("You are already signed in as $name")
-            debugError("user is already signed in as $name")
+            toaster.toast("You are already signed in as $name")
+            error("user is already signed in as $name")
             return
         }
 
@@ -192,7 +200,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                     if (historyResult.isSuccess) {
                         Log.i(TAG, "successfully added user ${user.email} to sign in history")
                     } else {
-                        debugError("failed to add user ${user.email} to sign in history")
+                        error("failed to add user ${user.email} to sign in history")
                     }
                     if (hasOfflineData) {
                         launchSyncOfflineDataFlow {
@@ -204,19 +212,19 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                 } else {
                     appState.emit(AppState(user))
                 }
-                messenger.toast("Signed in: ${user.email}")
+                toaster.toast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
             } else {
-                messenger.toast("Failed to sign in")
-                debugError("Sign in failed", result)
+                toaster.toast("Failed to sign in")
+                error("Sign in failed", result)
             }
         }
     }
 
     override fun launchSignOutFlow() {
-        if(!authenticator.isUserSignedIn()) {
-            messenger.toast("Can't sign out, you're not signed in")
-            debugError("no user is signed in")
+        if (!authenticator.isUserSignedIn()) {
+            toaster.toast("Can't sign out, you're not signed in")
+            error("no user is signed in")
         }
 
         lifecycleScope.launch {
@@ -226,11 +234,11 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
             if (result.isSuccess) {
                 appState.emit(AppState(null))
-                messenger.toast("Signed out")
+                toaster.toast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
-                messenger.toast("Failed to sign out")
-                debugError("Sign out failed", result)
+                toaster.toast("Failed to sign out")
+                error("Sign out failed", result)
             }
         }
     }
@@ -248,7 +256,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                         .setView(R.layout.sync_progress_dialog)
                         .setCancelable(false)
                         .setOnDismissListener {
-                            messenger.toast("Sync complete")
+                            toaster.toast("Sync complete")
                         }
                         .show()
 
@@ -257,7 +265,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                             syncDataService.sync(SyncMode.OVERWRITE).collect { resultOf ->
                                 if (resultOf.isFailure) {
                                     withContext(Dispatchers.Main) {
-                                        messenger.toast("Sync failed for ${resultOf.subject}")
+                                        toaster.toast("Sync failed for ${resultOf.subject}")
                                     }
                                 } else {
                                     Log.i(TAG, "successfully synced ${resultOf.subject}")
@@ -265,8 +273,11 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                             }
                         }
                     } catch (t: Throwable) {
-                        messenger.toast("Sync failed...")
-                        debugError("sync data service failed: ${t.message}", t)
+                        toaster.toast("Sync failed...")
+                        error(
+                            "sync data service failed: ${t.message}",
+                            t
+                        )
                     } finally {
                         progressDialog.dismiss()
                         onComplete?.invoke()
@@ -306,7 +317,10 @@ private class AppControllerSettings private constructor(dataStoreManager: DataSt
                         users.addAll(userIds)
                     }
                 } catch (ioe: IOException) {
-                    debugError("failed to read app controller settings from preferences store", ioe)
+                    error(
+                        "failed to read app controller settings from preferences store",
+                        ioe
+                    )
                 }
 
                 instance = this

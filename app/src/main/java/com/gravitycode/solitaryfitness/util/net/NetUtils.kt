@@ -1,12 +1,10 @@
 package com.gravitycode.solitaryfitness.util.net
 
-import android.net.NetworkRequest
 import com.gravitycode.solitaryfitness.util.android.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetSocketAddress
 import java.net.Socket
-import android.os.Build
 
 private const val TAG = "NetUtils"
 

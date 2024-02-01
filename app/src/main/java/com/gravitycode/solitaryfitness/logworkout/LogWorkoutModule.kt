@@ -16,7 +16,7 @@ import com.gravitycode.solitaryfitness.logworkout.data.repo.preferences.Preferen
 import com.gravitycode.solitaryfitness.logworkout.data.sync.LazySyncDataService
 import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncDataService
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitness.util.android.Messenger
+import com.gravitycode.solitaryfitness.util.android.Toaster
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.firebase.firestoreSettings
 import dagger.Lazy
@@ -106,7 +106,7 @@ object LogWorkoutModule {
     fun providesLogWorkoutViewModel(
         appStateFlow: Flow<AppState>,
         flowLauncher: FlowLauncher,
-        messenger: Messenger,
+        toaster: Toaster,
         factory: WorkoutLogsRepositoryFactory
-    ) = LogWorkoutViewModel(appStateFlow, flowLauncher, messenger, factory)
+    ) = LogWorkoutViewModel(appStateFlow, flowLauncher, toaster, factory)
 }

@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.gravitycode.solitaryfitness"
         minSdk = 26
-        //noinspection OldTargetApi
+        // noinspection OldTargetApi
         targetSdk = 33
         versionCode = 5
         versionName = "0.3.0-alpha"
@@ -24,8 +24,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("boolean", "CRASH_ON_ERROR", "false")
+        }
         release {
             isMinifyEnabled = false
+            buildConfigField("boolean", "CRASH_ON_ERROR", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -76,12 +80,12 @@ dependencies {
     // implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
 
     // Dagger 2
-    implementation("com.google.dagger:dagger:2.48")
-    kapt("com.google.dagger:dagger-compiler:2.48")
-    implementation("com.google.dagger:dagger-android:2.48")
+    implementation("com.google.dagger:dagger:2.50")
+    kapt("com.google.dagger:dagger-compiler:2.50")
+    implementation("com.google.dagger:dagger-android:2.50")
     // if you use the support libraries
     // implementation("com.google.dagger:dagger-android-support:2.x")
-    kapt("com.google.dagger:dagger-android-processor:2.48")
+    kapt("com.google.dagger:dagger-android-processor:2.50")
 
     // Data Store
     implementation("androidx.datastore:datastore-preferences:1.0.0")

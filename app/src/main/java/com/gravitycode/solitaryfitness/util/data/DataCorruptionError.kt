@@ -1,3 +1,3 @@
 package com.gravitycode.solitaryfitness.util.data
 
-class DataCorruptionError(message: String, cause: Throwable? = null): Error(message, cause)
+class DataCorruptionError(message: String, cause: Throwable? = null) : Error(message, cause)
