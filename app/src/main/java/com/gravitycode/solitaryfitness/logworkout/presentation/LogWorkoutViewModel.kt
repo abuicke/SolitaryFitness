@@ -84,10 +84,6 @@ class LogWorkoutViewModel(
         }
     }
 
-    override fun showSnackbar(snackbar: Snackbar) {
-        updateState(state.value.copy(snackbar = snackbar))
-    }
-
     override fun onCleared() {
         Log.v(TAG, "$this cleared")
     }

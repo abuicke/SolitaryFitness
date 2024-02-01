@@ -1,13 +1,28 @@
 package com.gravitycode.solitaryfitness.logworkout
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.R
@@ -24,8 +39,6 @@ import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.android.Snackbar
-import com.gravitycode.solitaryfitness.util.android.SnackbarDuration
-import com.gravitycode.solitaryfitness.util.android.ToastDuration
 import com.gravitycode.solitaryfitness.util.android.Toaster
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
@@ -106,6 +119,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
     private val appState = MutableSharedFlow<AppState>(1)
+    private val snackbar = mutableStateOf<Snackbar?>(null)
 
     private lateinit var appControllerSettings: AppControllerSettings
 
@@ -121,11 +135,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
         applicationScope.launch {
             internetMonitor.subscribe().collect { networkState ->
-                // toaster.toast(networkState.toString())
-                logWorkoutViewModel.showSnackbar(
+                showSnackbar(
                     Snackbar(
                         message = networkState.toString(),
-                        duration = SnackbarDuration.SHORT
+                        duration = SnackbarDuration.Short
                     )
                 )
             }
@@ -139,12 +152,60 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
             setContent {
                 SolitaryFitnessTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        LogWorkoutScreen(logWorkoutViewModel)
+                    SnackbarHost {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            LogWorkoutScreen(logWorkoutViewModel)
+                        }
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    @SuppressLint("ComposableNaming")
+    private fun SnackbarHost(content: @Composable () -> Unit) {
+
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { snackbarData: SnackbarData ->
+                    Snackbar(
+                        modifier = Modifier.padding(22.dp),
+                        action = {
+                            if (snackbar.value!!.action != null) {
+                                Button(
+                                    onClick = snackbar.value!!.action!!.onClick
+                                ) {
+                                    Text(snackbar.value!!.action!!.text)
+                                }
+                            }
+                        }
+                    ) {
+                        if (snackbar.value != null) {
+                            Text(snackbar.value!!.message)
+                        }
+                    }
+                }
+            }
+        ) { padding ->
+            Log.d(TAG, "ignoring padding from scaffold $padding")
+            content()
+        }
+
+        if (snackbar.value != null) {
+            LaunchedEffect(snackbar.value) {
+                Log.v(TAG, "launched effect on ${snackbar.value}")
+                lifecycleScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "",
+                        duration = snackbar.value!!.duration
+                    )
                 }
             }
         }
@@ -244,6 +305,10 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     }
 
     override fun launchSyncOfflineDataFlow() = launchSyncOfflineDataFlow(null)
+
+    private fun showSnackbar(snackbar: Snackbar) {
+        this.snackbar.value = snackbar
+    }
 
     private fun launchSyncOfflineDataFlow(onComplete: (suspend () -> (Unit))?) {
         AlertDialog.Builder(this)
