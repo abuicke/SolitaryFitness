@@ -21,14 +21,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,7 +45,6 @@ import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.util.ViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.android.SnackbarDuration
 import com.gravitycode.solitaryfitness.util.error
 import com.gravitycode.solitaryfitness.util.ui.compose.Grid
 import com.gravitycode.solitaryfitness.util.ui.compose.OverflowMenu
@@ -105,23 +101,8 @@ fun LogWorkoutScreen(
     // val context = LocalContext.current
     val workouts = Workout.values()
 
-    // val snackbarHostState = remember { SnackbarHostState() }
-
     val logWorkoutState = viewModel.state.value
     Log.i(TAG, "view model state updated: $logWorkoutState")
-
-    val showSnackbar = logWorkoutState.snackbar != null
-    Log.v(TAG, "display snackbar: ${logWorkoutState.snackbar}")
-
-    // Trigger Snackbar to show
-    LaunchedEffect(showSnackbar) {
-        if (showSnackbar) {
-            val snackbar = logWorkoutState.snackbar!!
-            if (snackbar.duration != SnackbarDuration.INDEFINITE) {
-                snackbar.duration.delay()
-            }
-        }
-    }
 
     Column(
         modifier,
@@ -159,22 +140,6 @@ fun LogWorkoutScreen(
             maxDate = LocalDate.now()
         ) { snappedDate ->
             viewModel.onEvent(LogWorkoutEvent.DateSelected(snappedDate))
-        }
-
-        if (logWorkoutState.snackbar != null) {
-            val snackbar = logWorkoutState.snackbar
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                action = {
-                    if (snackbar.action != null) {
-                        TextButton(onClick = snackbar.action.onClick) {
-                            Text(snackbar.action.text)
-                        }
-                    }
-                }
-            ) {
-                Text(text = snackbar.message)
-            }
         }
     }
 }
