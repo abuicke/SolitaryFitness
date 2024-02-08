@@ -1,6 +1,5 @@
 package com.gravitycode.solitaryfitness.logworkout
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -57,18 +55,11 @@ import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
 /**
- * TODO: Need a splash screen to display, the same as the launch screen until all dependencies are finished
- *  loading. Just set content first with the splash screen at the beginning of onCreate, and then with the
- *  main content again at the end. Or maybe put it in onResume? I don't know
- *
  * TODO: Need to gracefully recover from exceptions anywhere they're thrown. Look through the source code
  *  and look for anywhere there's an explicit `throw` and change this.
  *
  * TODO: What happens when I'm connected to the internet on sign-in but not when adding logs or on sign out?
  *  Is Firebase able to save the logs added offline and then upload them when there's a connection?
- *
- * TODO: Should make an abstract activity that handles ActivityComponent stuff the same way Application
- *  handles the Application component stuff?
  *
  * TODO: What happens if I kill the internet mid-sync or when uploading a workout log? Should have
  *  [SyncDataService] observe [InternetMonitor], I think firestore has an option to manage this itself,
@@ -165,52 +156,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
         }
     }
 
-    @Composable
-    @SuppressLint("ComposableNaming")
-    private fun SnackbarHost(content: @Composable () -> Unit) {
-
-        val snackbarHostState = remember { SnackbarHostState() }
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState) { snackbarData: SnackbarData ->
-                    Snackbar(
-                        modifier = Modifier.padding(22.dp),
-                        action = {
-                            if (snackbar.value!!.action != null) {
-                                Button(
-                                    onClick = snackbar.value!!.action!!.onClick
-                                ) {
-                                    Text(snackbar.value!!.action!!.text)
-                                }
-                            }
-                        }
-                    ) {
-                        if (snackbar.value != null) {
-                            Text(snackbar.value!!.message)
-                        }
-                    }
-                }
-            }
-        ) { padding ->
-            Log.d(TAG, "ignoring padding from scaffold $padding")
-            content()
-        }
-
-        if (snackbar.value != null) {
-            LaunchedEffect(snackbar.value) {
-                Log.v(TAG, "launched effect on ${snackbar.value}")
-                lifecycleScope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "",
-                        duration = snackbar.value!!.duration
-                    )
-                }
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         Log.v(TAG, "onResume")
@@ -229,10 +174,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     override fun onDestroy() {
         super.onDestroy()
         Log.v(TAG, "onDestroy")
-        if (!isChangingConfigurations) {
-            applicationScope.cancel("MainActivity destroyed")
-            Log.v(TAG, "cancelled application coroutine scope")
-        }
     }
 
     override fun launchSignInFlow() {
@@ -306,10 +247,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
 
     override fun launchSyncOfflineDataFlow() = launchSyncOfflineDataFlow(null)
 
-    private fun showSnackbar(snackbar: Snackbar) {
-        this.snackbar.value = snackbar
-    }
-
     private fun launchSyncOfflineDataFlow(onComplete: (suspend () -> (Unit))?) {
         AlertDialog.Builder(this)
             .setTitle(R.string.transfer_dialog_title)
@@ -356,6 +293,55 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                 }
             }
             .show()
+    }
+
+    private fun showSnackbar(snackbar: Snackbar) {
+        this.snackbar.value = snackbar
+    }
+
+    @Composable
+    private fun SnackbarHost(content: @Composable () -> Unit) {
+
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) {
+                    Snackbar(
+                        modifier = Modifier.padding(22.dp),
+                        action = {
+                            if (snackbar.value!!.action != null) {
+                                Button(
+                                    onClick = snackbar.value!!.action!!.onClick
+                                ) {
+                                    Text(snackbar.value!!.action!!.text)
+                                }
+                            }
+                        }
+                    ) {
+                        if (snackbar.value != null) {
+                            Text(snackbar.value!!.message)
+                        }
+                    }
+                }
+            }
+        ) { padding ->
+            Log.d(TAG, "ignoring padding from scaffold $padding")
+            content()
+        }
+
+        if (snackbar.value != null) {
+            LaunchedEffect(snackbar.value) {
+                Log.v(TAG, "launched effect on ${snackbar.value}")
+                lifecycleScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "",
+                        duration = snackbar.value!!.duration
+                    )
+                }
+            }
+        }
     }
 }
 
