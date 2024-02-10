@@ -84,7 +84,8 @@ class WorkoutLogTest {
             IllegalArgumentException::class.java
         ) {
             val log = WorkoutLog()
-            val logCopy = log.copy(squatThrusts = -10)
+            @Suppress("UnusedDataClassCopyResult")
+            log.copy(squatThrusts = -10)
         }
     }
 

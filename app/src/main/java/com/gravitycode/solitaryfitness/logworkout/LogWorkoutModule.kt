@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitness.BuildConfig
-import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
+import com.gravitycode.solitaryfitness.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.logworkout.data.repo.LazyWorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
@@ -23,7 +23,6 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Qualifier
 
 @Qualifier
@@ -104,9 +103,9 @@ object LogWorkoutModule {
     @Provides
     @LogWorkoutScope
     fun providesLogWorkoutViewModel(
-        appStateFlow: Flow<AppState>,
-        flowLauncher: FlowLauncher,
         messenger: Messenger,
+        authenticationObservable: AuthenticationObservable,
+        flowLauncher: FlowLauncher,
         factory: WorkoutLogsRepositoryFactory
-    ) = LogWorkoutViewModel(appStateFlow, flowLauncher, messenger, factory)
+    ) = LogWorkoutViewModel(messenger, authenticationObservable, flowLauncher, factory)
 }

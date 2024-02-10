@@ -1,21 +1,39 @@
 package com.gravitycode.solitaryfitness.app
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
+import com.gravitycode.solitaryfitness.util.net.InternetMonitor
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
-@Module(subcomponents = [ActivityComponent::class])
+@Module
 object ApplicationModule {
 
     @Provides
-    @ApplicationScope
-    fun providesApplicationExecutor(): Executor = Executors.newSingleThreadExecutor()
+    fun providesApplicationContext(app: Application): Context = app.applicationContext
 
     @Provides
     @ApplicationScope
     fun providesApplicationScope() = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    @Provides
+    fun providesConnectivityManager(context: Context): ConnectivityManager {
+        return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Provides
+    fun providesInternetMonitor(
+        applicationScope: CoroutineScope,
+        connectivityManager: ConnectivityManager
+    ): InternetMonitor {
+        return InternetMonitor.getInstance(applicationScope, connectivityManager)
+    }
+
+    @Provides
+    fun providesDataStoreManager(context: Context) = DataStoreManager.getInstance(context)
 }

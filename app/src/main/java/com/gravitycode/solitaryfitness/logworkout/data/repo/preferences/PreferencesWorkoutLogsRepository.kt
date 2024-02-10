@@ -10,7 +10,7 @@ import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.android.data.intPreferencesKey
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitness.util.data.MetaData
-import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.error
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -144,7 +144,7 @@ private class PreferencesMetaData(
                 preferences[DATES_KEY] = records
                 Log.i(TAG, "successfully added record $date to meta data")
             } else {
-                debugError("failed to add record $date to meta data")
+                error("failed to add record $date to meta data")
             }
         }
     }
@@ -156,7 +156,7 @@ private class PreferencesMetaData(
                 preferences[DATES_KEY] = records
                 Log.i(TAG, "successfully removed record $date from meta data")
             } else {
-                debugError("failed to remove record $date from meta data")
+                error("failed to remove record $date from meta data")
             }
         }
     }

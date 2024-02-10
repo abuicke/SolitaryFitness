@@ -4,8 +4,7 @@ import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositor
 import com.gravitycode.solitaryfitness.util.ResultOf
 import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.data.DataCorruptionError
-import com.gravitycode.solitaryfitness.util.error.IllegalStateError
-import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.error
 import dagger.Lazy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -67,7 +66,10 @@ class LazySyncDataService(
                         if (i < retryAttempts) {
                             Log.d(TAG, "Sync failed for $date, retrying...")
                         } else {
-                            debugError("Failed to sync record for $date", writeResult)
+                            error(
+                                "Failed to sync record for $date",
+                                writeResult
+                            )
                             result = ResultOf.failure(date, writeResult.exceptionOrNull()!!)
                         }
                     }
@@ -80,7 +82,7 @@ class LazySyncDataService(
             if (result != null) {
                 return@map result
             } else {
-                throw IllegalStateError("no result generated for $date")
+                throw IllegalStateException("no result generated for $date")
             }
         }
     }

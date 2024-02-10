@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitness.R
 import com.gravitycode.solitaryfitness.util.android.Log
 import com.gravitycode.solitaryfitness.util.android.data.GetActivityResult
-import com.gravitycode.solitaryfitness.util.error.debugError
+import com.gravitycode.solitaryfitness.util.error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -66,7 +66,7 @@ class FirebaseAuthenticator(
     override suspend fun signIn(): Result<User> {
         if (user != null) {
             val errMsg = "already signed in as: $user"
-            debugError(errMsg)
+            error(errMsg)
             return Result.failure(IllegalStateException(errMsg))
         }
 
@@ -96,20 +96,20 @@ class FirebaseAuthenticator(
         return suspendCoroutine { continuation ->
             if (user == null) {
                 val errMsg = "no user signed in"
-                debugError(errMsg)
+                error(errMsg)
                 continuation.resume(Result.failure(IllegalStateException(errMsg)))
             }
 
             firebaseAuthUi.signOut(activity)
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
                     val errMsg = "failed to sign out user: $user"
-                    Log.d(TAG, errMsg)
-                    val exception = AuthenticationException(errMsg)
+                    Log.e(TAG, errMsg, e)
+                    val exception = AuthenticationException(errMsg, e)
                     val result = Result.failure<Unit>(exception)
                     continuation.resume(result)
                 }
                 .addOnSuccessListener {
-                    Log.d(TAG, "signed out user: $user")
+                    Log.v(TAG, "signed out user: $user")
                     user = null
                     val result = Result.success(Unit)
                     continuation.resume(result)
