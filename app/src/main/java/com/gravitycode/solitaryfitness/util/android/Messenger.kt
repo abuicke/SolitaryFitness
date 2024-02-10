@@ -1,8 +1,12 @@
 package com.gravitycode.solitaryfitness.util.android
 
+import androidx.compose.material3.SnackbarDuration
+
 interface Messenger {
 
-    fun showToast(text: String, duration: ToastDuration = ToastDuration.SHORT)
+    fun showToast(message: String, duration: ToastDuration = ToastDuration.SHORT)
 
     fun showSnackbar(snackbar: Snackbar)
+
+    fun showSnackbar(message: String, duration: SnackbarDuration = SnackbarDuration.Short)
 }

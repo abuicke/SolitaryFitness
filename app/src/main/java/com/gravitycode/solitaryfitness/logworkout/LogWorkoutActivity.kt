@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -162,19 +163,23 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
         }
     }
 
-    override fun showToast(text: String, duration: ToastDuration) {
-        toaster.toast(text, duration)
+    override fun showToast(message: String, duration: ToastDuration) {
+        toaster.toast(message, duration)
     }
 
     override fun showSnackbar(snackbar: Snackbar) {
         this.snackbar.value = snackbar
     }
 
+    override fun showSnackbar(message: String, duration: SnackbarDuration) {
+        showSnackbar(Snackbar(message, duration))
+    }
+
     override fun launchSignInFlow() {
         if (authenticator.isUserSignedIn()) {
             val currentUser = authenticator.getSignedInUser()!!
             val name = currentUser.name ?: currentUser.email ?: currentUser.id
-            toaster.toast("You are already signed in as $name")
+            showToast("You are already signed in as $name")
             error("user is already signed in as $name")
             return
         }
@@ -208,10 +213,10 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 } else {
                     authState.emit(AuthState(user))
                 }
-                toaster.toast("Signed in: ${user.email}")
+                showToast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
             } else {
-                toaster.toast("Failed to sign in")
+                showToast("Failed to sign in")
                 error("Sign in failed", result)
             }
         }
@@ -219,7 +224,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
 
     override fun launchSignOutFlow() {
         if (!authenticator.isUserSignedIn()) {
-            toaster.toast("Can't sign out, you're not signed in")
+            showToast("Can't sign out, you're not signed in")
             error("no user is signed in")
         }
 
@@ -230,10 +235,10 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
 
             if (result.isSuccess) {
                 authState.emit(AuthState(null))
-                toaster.toast("Signed out")
+                showToast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
-                toaster.toast("Failed to sign out")
+                showToast("Failed to sign out")
                 error("Sign out failed", result)
             }
         }
@@ -252,7 +257,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                         .setView(R.layout.sync_progress_dialog)
                         .setCancelable(false)
                         .setOnDismissListener {
-                            toaster.toast("Sync complete")
+                            showToast("Sync complete")
                         }
                         .show()
 
@@ -261,7 +266,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                             syncDataService.sync(SyncMode.OVERWRITE).collect { resultOf ->
                                 if (resultOf.isFailure) {
                                     withContext(Dispatchers.Main) {
-                                        toaster.toast("Sync failed for ${resultOf.subject}")
+                                        showToast("Sync failed for ${resultOf.subject}")
                                     }
                                 } else {
                                     Log.i(TAG, "successfully synced ${resultOf.subject}")
@@ -269,7 +274,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                             }
                         }
                     } catch (t: Throwable) {
-                        toaster.toast("Sync failed...")
+                        showToast("Sync failed...")
                         error(
                             "sync data service failed: ${t.message}",
                             t
