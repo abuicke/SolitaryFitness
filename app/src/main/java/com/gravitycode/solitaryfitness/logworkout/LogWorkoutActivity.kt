@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -24,10 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import com.gravitycode.solitaryfitness.R
-import com.gravitycode.solitaryfitness.app.AppState
+import com.gravitycode.solitaryfitness.auth.AuthState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
 import com.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import com.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
+import com.gravitycode.solitaryfitness.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitness.auth.Authenticator
 import com.gravitycode.solitaryfitness.auth.User
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
@@ -36,7 +36,9 @@ import com.gravitycode.solitaryfitness.logworkout.data.sync.SyncMode
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutScreen
 import com.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import com.gravitycode.solitaryfitness.util.android.Snackbar
+import com.gravitycode.solitaryfitness.util.android.ToastDuration
 import com.gravitycode.solitaryfitness.util.android.Toaster
 import com.gravitycode.solitaryfitness.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitness.util.android.data.stringSetPreferencesKey
@@ -44,7 +46,6 @@ import com.gravitycode.solitaryfitness.util.error
 import com.gravitycode.solitaryfitness.util.net.InternetMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -55,6 +56,23 @@ import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
 /**
+ * TODO: Need to recheck the functioning of application scope. I'm basically relying on Android killing the
+ *  app process to cancel the scope for me, otherwise it runs indefinitely and has all the same drawbacks
+ *  as using [kotlinx.coroutines.GlobalScope]. Is there a use case for an activity level scope that the activity
+ *  is responsible for cancelling? I do not want to use [lifecycleScope] because that will kill the coroutines
+ *  whenever the activity is off screen (i.e. paused) which may not ne the desired behavior. This would make
+ *  an even better case for a base activity that handles common logic I want across all activities such as
+ *  showing the snackbar etc.
+ *
+ * TODO: Actually make use of [InternetMonitor]
+ *
+ * TODO: There's a lot of logic that would be fragile to repeat across multiple activities, i.e. setting up
+ *  the authentication state, launching flows, providing [Messenger] functionality, specifically Snackbar,
+ *  but there is also an opportunity to provide a convenient `toast` function in the child activities.
+ *
+ * TODO: I need to refactor AppState flow to make more sense. A sign in can only occur from an Activity, so
+ *  it makes sense that it's emitted from there. But it needs to be called something else.
+ *
  * TODO: Need to gracefully recover from exceptions anywhere they're thrown. Look through the source code
  *  and look for anywhere there's an explicit `throw` and change this.
  *
@@ -81,7 +99,6 @@ import javax.inject.Inject
  *
  * TODO: Add Log.v everywhere
  * TODO: Add a test that signs out on UIAutomator.
- * TODO: Figure out DataStore issue.
  * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
  * TODO: Use Mockito for Firestore: https://softwareengineering.stackexchange.com/questions/450508
  * TODO: Test no internet connection
@@ -93,7 +110,7 @@ import javax.inject.Inject
  * TODO: `onEvent(DateSelected)` still being called 3 times
  * TODO: Am I nesting a `withContext` inside a `launch` anywhere? Replace with `launch(Dispatchers...)`
  * */
-class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
+class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObservable, FlowLauncher {
 
     private companion object {
 
@@ -103,41 +120,30 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
     @Inject lateinit var applicationScope: CoroutineScope
     @Inject lateinit var dataStoreManager: DataStoreManager
     @Inject lateinit var authenticator: Authenticator
-    @Inject lateinit var toaster: Toaster
     @Inject lateinit var internetMonitor: InternetMonitor
     @Inject lateinit var syncDataService: SyncDataService
     @Inject lateinit var repositoryFactory: WorkoutLogsRepositoryFactory
     @Inject lateinit var logWorkoutViewModel: LogWorkoutViewModel
 
-    private val appState = MutableSharedFlow<AppState>(1)
+    override val authState = MutableSharedFlow<AuthState>(1)
+
+    private val toaster = Toaster.create(this)
     private val snackbar = mutableStateOf<Snackbar?>(null)
 
     private lateinit var appControllerSettings: AppControllerSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.v(TAG, "onCreate")
 
         val app = application as SolitaryFitnessApp
-        app.activityComponent(this, appState, this)
+        app.activityComponent(this)
             .logWorkoutComponentBuilder()
             .build()
             .inject(this)
 
-        applicationScope.launch {
-            internetMonitor.subscribe().collect { networkState ->
-                showSnackbar(
-                    Snackbar(
-                        message = networkState.toString(),
-                        duration = SnackbarDuration.Short
-                    )
-                )
-            }
-        }
-
         lifecycleScope.launch {
             val currentUser = authenticator.getSignedInUser()
-            appState.emit(AppState(currentUser))
+            authState.emit(AuthState(currentUser))
 
             appControllerSettings = AppControllerSettings.getInstance(dataStoreManager)
 
@@ -156,24 +162,12 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.v(TAG, "onResume")
+    override fun showToast(text: String, duration: ToastDuration) {
+        toaster.toast(text, duration)
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.v(TAG, "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.v(TAG, "onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.v(TAG, "onDestroy")
+    override fun showSnackbar(snackbar: Snackbar) {
+        this.snackbar.value = snackbar
     }
 
     override fun launchSignInFlow() {
@@ -206,13 +200,13 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                     }
                     if (hasOfflineData) {
                         launchSyncOfflineDataFlow {
-                            appState.emit(AppState(user))
+                            authState.emit(AuthState(user))
                         }
                     } else {
-                        appState.emit(AppState(user))
+                        authState.emit(AuthState(user))
                     }
                 } else {
-                    appState.emit(AppState(user))
+                    authState.emit(AuthState(user))
                 }
                 toaster.toast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
@@ -235,7 +229,7 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
             }
 
             if (result.isSuccess) {
-                appState.emit(AppState(null))
+                authState.emit(AuthState(null))
                 toaster.toast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
@@ -293,10 +287,6 @@ class LogWorkoutActivity : ComponentActivity(), FlowLauncher {
                 }
             }
             .show()
-    }
-
-    private fun showSnackbar(snackbar: Snackbar) {
-        this.snackbar.value = snackbar
     }
 
     @Composable

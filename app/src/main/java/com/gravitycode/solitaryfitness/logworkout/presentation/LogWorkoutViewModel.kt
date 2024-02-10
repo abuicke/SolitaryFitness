@@ -2,18 +2,16 @@ package com.gravitycode.solitaryfitness.logworkout.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.gravitycode.solitaryfitness.app.AppEvent
-import com.gravitycode.solitaryfitness.app.AppState
 import com.gravitycode.solitaryfitness.app.FlowLauncher
+import com.gravitycode.solitaryfitness.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import com.gravitycode.solitaryfitness.logworkout.domain.Workout
 import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitness.util.ViewModel
 import com.gravitycode.solitaryfitness.util.android.Log
-import com.gravitycode.solitaryfitness.util.android.Snackbar
-import com.gravitycode.solitaryfitness.util.android.Toaster
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import com.gravitycode.solitaryfitness.util.error
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -38,9 +36,9 @@ import java.time.LocalDate
  * [https://developer.android.com/kotlin/coroutines/coroutines-best-practices#viewmodel-coroutines]
  * */
 class LogWorkoutViewModel(
-    private val appStateFlow: Flow<AppState>,
+    private val messenger: Messenger,
+    private val authenticationObservable: AuthenticationObservable,
     private val flowLauncher: FlowLauncher,
-    private val toaster: Toaster,
     private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>(LogWorkoutState()) {
 
@@ -53,7 +51,7 @@ class LogWorkoutViewModel(
 
     init {
         viewModelScope.launch {
-            appStateFlow.collect { appState ->
+            authenticationObservable.authState.collect { appState ->
                 Log.i(TAG, "app state collected: $appState")
                 updateState(state.value.copy(user = appState.user))
                 repository = if (appState.isUserSignedIn()) {
@@ -137,7 +135,7 @@ class LogWorkoutViewModel(
 
             if (result.isFailure) {
                 updateState(oldState)
-                toaster.toast("Couldn't save reps")
+                messenger.showToast("Couldn't save reps")
                 error("Failed to write workout log to repository", result)
             } else {
                 Log.i(TAG, "incrementWorkout(${workout.string}, $quantity)")
@@ -155,7 +153,7 @@ class LogWorkoutViewModel(
             val result = repository.writeWorkoutLog(state.value.date, log)
             if (result.isFailure) {
                 updateState(oldState)
-                toaster.toast("Couldn't reset reps")
+                messenger.showToast("Couldn't reset reps")
                 error("Failed to reset reps and write to repository", result)
             } else {
                 Log.i(TAG, "reps reset successfully")

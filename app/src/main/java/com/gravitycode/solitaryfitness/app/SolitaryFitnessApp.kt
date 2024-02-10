@@ -2,15 +2,12 @@ package com.gravitycode.solitaryfitness.app
 
 import android.app.Application
 import androidx.activity.ComponentActivity
+import com.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import com.gravitycode.solitaryfitness.util.android.Messenger
 import com.gravitycode.solitaryfitness.util.android.debug
 import com.gravitycode.solitaryfitness.util.android.disableLogcatThrottling
-import kotlinx.coroutines.flow.SharedFlow
-import java.util.concurrent.Executor
-import javax.inject.Inject
 
 class SolitaryFitnessApp : Application() {
-
-    @Inject lateinit var applicationExecutor: Executor
 
     private lateinit var applicationComponent: ApplicationComponent
 
@@ -29,13 +26,22 @@ class SolitaryFitnessApp : Application() {
 
     fun activityComponent(
         activity: ComponentActivity,
-        appStateFlow: SharedFlow<AppState>,
+        messenger: Messenger,
+        authenticationObservable: AuthenticationObservable,
         flowLauncher: FlowLauncher
     ): ActivityComponent {
         return applicationComponent.activityComponentBuilder()
             .componentActivity(activity)
-            .appStateFlow(appStateFlow)
+            .messenger(messenger)
+            .authenticationObservable(authenticationObservable)
             .flowLauncher(flowLauncher)
             .build()
     }
+
+    fun activityComponent(activity: ComponentActivity) = activityComponent(
+        activity,
+        activity as Messenger,
+        activity as AuthenticationObservable,
+        activity as FlowLauncher
+    )
 }

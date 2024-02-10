@@ -22,6 +22,9 @@ fun debug(block: () -> Unit) {
     }
 }
 
+/**
+ * Run the specified [block] only if the build version is at least [sdk]
+ * */
 fun sdk(sdk: Int, block: () -> Unit) {
     if (Build.VERSION.SDK_INT >= sdk) {
         block()
@@ -44,7 +47,7 @@ fun disableLogcatThrottling() {
  * Enable all available strict mode policies for both [ThreadPolicy] and [VmPolicy].
  *
  * Only throws an exception if the root package of this application is included in the
- * stacktrace, otherwise just prints the relevant stacktrace with log level [Log.ERROR].
+ * stacktrace, otherwise just prints the relevant stacktrace with log level [android.util.Log.ERROR].
  * */
 @RequiresApi(Build.VERSION_CODES.P)
 fun enableStrictMode(context: Context, listenerExecutor: Executor) {
@@ -80,7 +83,7 @@ fun enableStrictMode(context: Context, listenerExecutor: Executor) {
 private val DISABLE_STRICT_MODE_LOCK = Any()
 
 /**
- * All strict mode policies will be disabled while @param[block] executes.
+ * All strict mode policies will be disabled while [block] executes.
  *
  * Doesn't seem to be thread-safe and I don't know why. I don't currently have time to deal with it, and
  * thus far strict mode has caused me nothing but problems and provided no actual value. So I'm abandoning
