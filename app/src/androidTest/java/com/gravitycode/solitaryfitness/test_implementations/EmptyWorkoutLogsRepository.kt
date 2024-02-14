@@ -1,9 +1,9 @@
-package com.gravitycode.solitaryfitness.test_implementations
+package com.gravitycode.solitaryfitnessapp.test_implementations
 
-import com.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
-import com.gravitycode.solitaryfitness.logworkout.domain.Workout
-import com.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitness.util.data.MetaData
+import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.WorkoutLogsRepository
+import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
+import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
+import com.gravitycode.solitaryfitnessapp.util.data.MetaData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate

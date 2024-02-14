@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.tests.ui
+package com.gravitycode.solitaryfitnessapp.tests.ui
 
 import android.content.Context
 import android.content.Intent
@@ -37,7 +37,7 @@ class GoogleSignInUiTest {
         // Launch the app
         val context = ApplicationProvider.getApplicationContext<Context>()
         val intent = context.packageManager.getLaunchIntentForPackage(
-            "com.gravitycode.solitaryfitness"
+            "com.gravitycode.solitaryfitnessapp"
         ).apply {
             // Clear out any previous instances
             this!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -45,7 +45,7 @@ class GoogleSignInUiTest {
         context.startActivity(intent)
 
         // Wait for the app to appear
-        device.wait(Until.hasObject(By.pkg("com.gravitycode.solitaryfitness").depth(0)), 5000)
+        device.wait(Until.hasObject(By.pkg("com.gravitycode.solitaryfitnessapp").depth(0)), 5000)
     }
 
     @Test

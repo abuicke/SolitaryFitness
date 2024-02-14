@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.tests.components
+package com.gravitycode.solitaryfitnessapp.tests.components
 
 //@MediumTest
 //@RunWith(AndroidJUnit4::class)

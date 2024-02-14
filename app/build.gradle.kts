@@ -6,16 +6,16 @@ plugins {
 }
 
 android {
-    namespace = "com.gravitycode.solitaryfitness"
+    namespace = "com.gravitycode.solitaryfitnessapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.gravitycode.solitaryfitness"
+        applicationId = "com.gravitycode.solitaryfitnessapp"
         minSdk = 26
         // noinspection OldTargetApi
         targetSdk = 33
-        versionCode = 5
-        versionName = "0.3.0-alpha"
+        versionCode = 6
+        versionName = "1.0.0"
         multiDexEnabled = false
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

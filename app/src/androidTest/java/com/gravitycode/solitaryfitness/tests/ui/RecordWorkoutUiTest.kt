@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitness.tests.ui
+package com.gravitycode.solitaryfitnessapp.tests.ui
 
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
@@ -11,8 +11,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.filters.FlakyTest
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitness.logworkout.LogWorkoutActivity
-import com.gravitycode.solitaryfitness.logworkout.domain.Workout
+import com.gravitycode.solitaryfitnessapp.logworkout.LogWorkoutActivity
+import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
