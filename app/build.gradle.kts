@@ -99,7 +99,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     // Not part of the BoM, so requires an explicit version
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 
     // Coil - Image Loading
     // implementation("io.coil-kt:coil:2.5.0")
@@ -111,8 +111,8 @@ dependencies {
     // kotlinx.collections.immutable - https://github.com/Kotlin/kotlinx.collections.immutable
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
-    // Leak Canary - enable when needed, as it conflicts with StrictMode
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
+    // Leak Canary
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.13")
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
