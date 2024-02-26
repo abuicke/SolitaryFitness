@@ -9,6 +9,7 @@
  * */
 package com.gravitycode.solitaryfitnessapp.logworkout.presentation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +45,7 @@ import com.gravitycode.solitaryfitnessapp.R
 import com.gravitycode.solitaryfitnessapp.app.AppEvent
 import com.gravitycode.solitaryfitnessapp.auth.User
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
+import com.gravitycode.solitaryfitnessapp.util.IllegalStateError
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.error
@@ -58,11 +61,11 @@ private enum class MenuItem(val string: String) {
 
     SIGN_OUT("Sign Out");
 
-//    RESET_REPS("Reset Reps"),
-//
-//    EDIT_REPS("Edit Reps"),
-//
-//    SETTINGS("Settings");
+    // RESET_REPS("Reset Reps"),
+    //
+    // EDIT_REPS("Edit Reps"),
+    //
+    // SETTINGS("Settings");
 
     companion object {
 
@@ -98,49 +101,60 @@ fun LogWorkoutScreen(
     viewModel: ViewModel<LogWorkoutState, LogWorkoutEvent>,
     modifier: Modifier = Modifier
 ) {
-    // val context = LocalContext.current
+    val configuration = LocalConfiguration.current
     val workouts = Workout.values()
-
     val logWorkoutState = viewModel.state.value
-    Log.i(TAG, "view model state updated: $logWorkoutState")
 
-    Column(
-        modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Log.i(TAG, "rendering view model state: $logWorkoutState")
 
-        TopBar(logWorkoutState.user) { item ->
-            when (item) {
-                MenuItem.SIGN_IN_WITH_GOOGLE -> viewModel.onEvent(AppEvent.SignIn)
-                MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
-//                MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
-//                MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
-//                MenuItem.SETTINGS -> Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show() //something to do with NavController
-            }
-        }
-
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         TrackRepsGrid(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxSize(),
             workouts = workouts,
             logWorkoutState = logWorkoutState,
             onEvent = viewModel::onEvent
         )
+    } else if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        Column(
+            modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        // Setting startDate is only necessary on initialization, after that the date picker
-        // updates itself and then also gets that date sent back to it from the event trigger,
-        // but no recompose happens as the value is the same.
-        // TODO: Make sure recompose doesn't happen twice when the date is changed, and test to see if the
-        //  picker really is being set by the LogWorkoutState by setting the date to something earlier.
-        //  What also happens if I set a date in the future on the LogWorkoutState? Should an exception be
-        //  thrown in this instance if it's not already? I really don't like the behavior of how the date
-        //  picker stays at the current date if you try to scroll to a future date. It should go to the max
-        //  date allowed if you try to go past it.
-        WheelDatePicker(
-            startDate = logWorkoutState.date,
-            maxDate = LocalDate.now()
-        ) { snappedDate ->
-            viewModel.onEvent(LogWorkoutEvent.DateSelected(snappedDate))
+            TopBar(logWorkoutState.user) { item ->
+                when (item) {
+                    MenuItem.SIGN_IN_WITH_GOOGLE -> viewModel.onEvent(AppEvent.SignIn)
+                    MenuItem.SIGN_OUT -> viewModel.onEvent(AppEvent.SignOut)
+                    // MenuItem.RESET_REPS -> viewModel.onEvent(LogWorkoutEvent.Reset)
+                    // MenuItem.EDIT_REPS -> viewModel.onEvent(LogWorkoutEvent.Edit(LogWorkoutEvent.Edit.Mode.START))
+                    // MenuItem.SETTINGS -> TODO() // something to do with NavController
+                }
+            }
+
+            TrackRepsGrid(
+                modifier = Modifier.weight(1f),
+                workouts = workouts,
+                logWorkoutState = logWorkoutState,
+                onEvent = viewModel::onEvent
+            )
+
+            // Setting startDate is only necessary on initialization, after that the date picker
+            // updates itself and then also gets that date sent back to it from the event trigger,
+            // but no recompose happens as the value is the same.
+            // TODO: Make sure recompose doesn't happen twice when the date is changed, and test to see if the
+            //  picker really is being set by the LogWorkoutState by setting the date to something earlier.
+            //  What also happens if I set a date in the future on the LogWorkoutState? Should an exception be
+            //  thrown in this instance if it's not already? I really don't like the behavior of how the date
+            //  picker stays at the current date if you try to scroll to a future date. It should go to the max
+            //  date allowed if you try to go past it.
+            WheelDatePicker(
+                startDate = logWorkoutState.date,
+                maxDate = LocalDate.now()
+            ) { snappedDate ->
+                viewModel.onEvent(LogWorkoutEvent.DateSelected(snappedDate))
+            }
         }
+    } else {
+        throw IllegalStateError("invalid orientation ${configuration.orientation}")
     }
 }
 
