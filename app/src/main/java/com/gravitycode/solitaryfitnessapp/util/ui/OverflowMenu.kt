@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class)
 
-package com.gravitycode.solitaryfitnessapp.util.ui.compose
+package com.gravitycode.solitaryfitnessapp.util.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert

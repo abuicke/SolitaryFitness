@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitnessapp.util.ui.compose
+package com.gravitycode.solitaryfitnessapp.util.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement

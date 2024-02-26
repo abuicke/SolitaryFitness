@@ -49,8 +49,8 @@ import com.gravitycode.solitaryfitnessapp.util.IllegalStateError
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.error
-import com.gravitycode.solitaryfitnessapp.util.ui.compose.Grid
-import com.gravitycode.solitaryfitnessapp.util.ui.compose.OverflowMenu
+import com.gravitycode.solitaryfitnessapp.util.ui.Grid
+import com.gravitycode.solitaryfitnessapp.util.ui.OverflowMenu
 import java.time.LocalDate
 
 private const val TAG = "LogWorkoutScreen"
@@ -119,7 +119,6 @@ fun LogWorkoutScreen(
             modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             TopBar(logWorkoutState.user) { item ->
                 when (item) {
                     MenuItem.SIGN_IN_WITH_GOOGLE -> viewModel.onEvent(AppEvent.SignIn)
@@ -129,14 +128,12 @@ fun LogWorkoutScreen(
                     // MenuItem.SETTINGS -> TODO() // something to do with NavController
                 }
             }
-
             TrackRepsGrid(
                 modifier = Modifier.weight(1f),
                 workouts = workouts,
                 logWorkoutState = logWorkoutState,
                 onEvent = viewModel::onEvent
             )
-
             // Setting startDate is only necessary on initialization, after that the date picker
             // updates itself and then also gets that date sent back to it from the event trigger,
             // but no recompose happens as the value is the same.
