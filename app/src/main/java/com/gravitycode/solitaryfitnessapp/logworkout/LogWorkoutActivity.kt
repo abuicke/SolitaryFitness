@@ -44,6 +44,7 @@ import com.gravitycode.solitaryfitnessapp.util.android.Toaster
 import com.gravitycode.solitaryfitnessapp.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitnessapp.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import com.gravitycode.solitaryfitnessapp.util.net.InternetMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -124,6 +125,17 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
     private val snackbar = mutableStateOf<Snackbar?>(null)
 
     private lateinit var appControllerSettings: AppControllerSettings
+
+    /**
+     *
+     *
+     * TODO: Check the use of error() everywhere and see if errorWithRecovery() should be used instead.
+     *
+     * TODO: Make sure the correct error() function is being used everywhere.
+     *
+     *
+     *
+     * */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -208,8 +220,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
             } else {
-                showToast("Failed to sign in")
-                error("Sign in failed", result)
+                errorWithRecovery("Sign in failed", result) {
+                    showToast("Failed to sign in")
+                }
             }
         }
     }
@@ -230,8 +243,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
-                showToast("Failed to sign out")
-                error("Sign out failed", result)
+                errorWithRecovery("Sign out failed", result) {
+                    showToast("Failed to sign out")
+                }
             }
         }
     }
@@ -266,11 +280,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                             }
                         }
                     } catch (t: Throwable) {
-                        showToast("Sync failed...")
-                        error(
-                            "sync data service failed: ${t.message}",
-                            t
-                        )
+                        errorWithRecovery("sync data service failed: ${t.message}", t) {
+                            showToast("Sync failed...")
+                        }
                     } finally {
                         progressDialog.dismiss()
                         onComplete?.invoke()
@@ -355,10 +367,7 @@ private class AppControllerSettings private constructor(dataStoreManager: DataSt
                         users.addAll(userIds)
                     }
                 } catch (ioe: IOException) {
-                    error(
-                        "failed to read app controller settings from preferences store",
-                        ioe
-                    )
+                    error("failed to read app controller settings from preferences store", ioe)
                 }
 
                 instance = this

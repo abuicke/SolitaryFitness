@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitnessapp.R
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.android.data.GetActivityResult
-import com.gravitycode.solitaryfitnessapp.util.error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

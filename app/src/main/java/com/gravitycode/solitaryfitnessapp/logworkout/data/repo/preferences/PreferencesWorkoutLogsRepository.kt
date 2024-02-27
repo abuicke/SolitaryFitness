@@ -10,7 +10,6 @@ import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.android.data.intPreferencesKey
 import com.gravitycode.solitaryfitnessapp.util.android.data.stringSetPreferencesKey
 import com.gravitycode.solitaryfitnessapp.util.data.MetaData
-import com.gravitycode.solitaryfitnessapp.util.error
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

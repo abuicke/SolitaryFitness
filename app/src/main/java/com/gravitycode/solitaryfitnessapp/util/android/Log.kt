@@ -1,3 +1,8 @@
+/*
+* TODO: Remove when this and the other util classes are placed into a library module.
+* */
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.gravitycode.solitaryfitnessapp.util.android
 
 import com.gravitycode.solitaryfitnessapp.BuildConfig
@@ -18,11 +23,17 @@ import com.gravitycode.solitaryfitnessapp.BuildConfig
  * */
 object Log {
 
-    private const val META_TAG = "sf-app: "
+    const val META_TAG = "sf-app: "
 
     /**
      * Log events which do not belong to any other log level; non-critical conditions succeeding, the state
      * of a particular procedure or module across time, lifecycle events, initial function calls etc.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun v(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -30,8 +41,19 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log events which do not belong to any other log level; non-critical conditions succeeding, the state
+     * of a particular procedure or module across time, lifecycle events, initial function calls etc.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun v(tag: String, message: () -> String) {
         v(tag, message())
     }
@@ -39,6 +61,12 @@ object Log {
     /**
      * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
      * condition not being met.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun d(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -46,14 +74,31 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
+     * condition not being met.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun d(tag: String, message: () -> String) {
         d(tag, message())
     }
 
     /**
      * Log events which are crucial to the functioning of the application which have executed correctly.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun i(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -61,14 +106,30 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log events which are crucial to the functioning of the application which have executed correctly.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun i(tag: String, message: () -> String) {
         i(tag, message())
     }
 
     /**
      * Log events which could be indicative of an error, but which have not actually raised an exception.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun w(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -76,14 +137,30 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log events which could be indicative of an error, but which have not actually raised an exception.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun w(tag: String, message: () -> String) {
         w(tag, message())
     }
 
     /**
      * Log events which have or could have raised an exception if not intercepted.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun e(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -91,8 +168,18 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log events which have or could have raised an exception if not intercepted.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun e(tag: String, message: () -> String) {
         e(tag, message())
     }
@@ -100,6 +187,12 @@ object Log {
     /**
      * Log system critical events which have not occurred as the result of a bug in code, but as a result of
      * a failure of the framework, the virtual machine, or some other external tool or dependency.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * @param throwable An exception to log
      * */
     fun wtf(tag: String, message: String, throwable: Throwable? = null) {
         if (BuildConfig.DEBUG) {
@@ -107,8 +200,19 @@ object Log {
         }
     }
 
-    // message: () -> String allows for better formatting of long log messages in code. Not sure if there's
-    // another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    /**
+     * Log system critical events which have not occurred as the result of a bug in code, but as a result of
+     * a failure of the framework, the virtual machine, or some other external tool or dependency.
+     *
+     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     *
+     * @param tag The log tag, which will be prepended with [META_TAG]
+     * @param message The log message
+     * */
+    /*
+    * `message: () -> String` allows for better formatting of long log messages in code. Not sure if there's
+    * another reason Kotlin uses this pattern in it's standard libraries, but it's useful for this purpose.
+    * */
     fun wtf(tag: String, message: () -> String) {
         wtf(tag, message())
     }

@@ -49,6 +49,7 @@ import com.gravitycode.solitaryfitnessapp.util.IllegalStateError
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import com.gravitycode.solitaryfitnessapp.util.ui.Grid
 import com.gravitycode.solitaryfitnessapp.util.ui.OverflowMenu
 import java.time.LocalDate
@@ -310,30 +311,32 @@ private fun AddRepsGrid(
     modifier: Modifier,
     onClickAddReps: (Int?) -> Unit
 ) {
+    // `null` is used to signify a button click has occurred but no
+    // reps have been added, i.e. the close option has been selected
+    val repValues = arrayOf(1, 5, 10, null)
+
     Grid(
         modifier = modifier,
         columns = 2,
-        items = 4,
+        items = 4
     ) { cell ->
         TextButton(
             modifier = Modifier.fillMaxSize(),
             onClick = {
                 when (cell) {
-                    0 -> onClickAddReps(1)
-                    1 -> onClickAddReps(5)
-                    2 -> onClickAddReps(10)
-                    3 -> onClickAddReps(null)
-                    else -> kotlin.error("invalid cell")
+                    in 0..3 -> onClickAddReps(repValues[cell])
+                    else -> errorWithRecovery("invalid cell") {
+                        onClickAddReps(null)
+                    }
                 }
             }
         ) {
             Text(
-                text = when (cell) {
-                    0 -> "1"
-                    1 -> "5"
-                    2 -> "10"
-                    3 -> "X"
-                    else -> kotlin.error("invalid cell")
+                when (cell) {
+                    in 0..3 -> repValues[cell].toString()
+                    else -> errorWithRecovery("invalid cell") {
+                        "X"
+                    }
                 }
             )
         }

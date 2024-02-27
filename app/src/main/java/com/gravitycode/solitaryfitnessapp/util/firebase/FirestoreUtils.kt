@@ -7,7 +7,7 @@ import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.megabytesToBytes
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -48,7 +48,7 @@ suspend fun CollectionReference.deleteDocuments() {
             /**
              * TODO: I seem to be going on to use the `queryTask.result` even if `queryTask.isSuccessful` is false?
              * */
-            if (!queryTask.isSuccessful) error("query firestore task failed", queryTask.exception)
+            if (!queryTask.isSuccessful) errorWithRecovery("query firestore task failed", queryTask.exception)
             val query: QuerySnapshot = queryTask.result
             val documents = query.documents
             val completed = Array(documents.size) { false }

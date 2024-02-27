@@ -11,8 +11,8 @@ private const val TAG = "NetUtils"
 /**
  * Test if this device currently has access to the internet.
  *
- * @param[timeout] Length of time in milliseconds to wait before aborting the attempt.
- * @param[hostname] The host to connect to, to verify internet accessibility. Should be reliably available.
+ * @param timeout Length of time in milliseconds to wait before aborting the attempt.
+ * @param hostname The host to connect to, to verify internet accessibility. Should be reliably available.
  *
  * @return `true` if this device is connected to the internet, otherwise `false`
  *

@@ -9,7 +9,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.MetaData
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
@@ -131,7 +131,7 @@ sealed class FirestoreWorkoutLogsRepository(
     protected abstract fun users(): CollectionReference
 
     /**
-     * @param[userId] The user's ID
+     * @param userId The user's ID
      *
      * @return a collection containing all the data (including workout logs) for the specified user
      * */
@@ -146,7 +146,7 @@ sealed class FirestoreWorkoutLogsRepository(
     protected fun workoutLogs() = workoutLogs(authenticator.getSignedInUser()!!.id)
 
     /**
-     * @param[date] The date of the workout logs
+     * @param date The date of the workout logs
      *
      * @return a document containing the workout logs for the specified date (for the current user)
      * */
@@ -167,7 +167,7 @@ sealed class FirestoreWorkoutLogsRepository(
                         records.addAll(documents.map { document -> LocalDate.parse(document.id) })
                     }
                     .addOnFailureListener { exception ->
-                        error("failed to retrieve document IDs", exception)
+                        errorWithRecovery("failed to retrieve document IDs", exception)
                     }
             }
         }
