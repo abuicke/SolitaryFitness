@@ -9,7 +9,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.MetaData
-import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
+import com.gravitycode.solitaryfitnessapp.util.error
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
@@ -84,9 +84,10 @@ sealed class FirestoreWorkoutLogsRepository(
                     val result = Result.success(Unit)
                     continuation.resume(result)
                 }.addOnFailureListener { e ->
-                    error("error writing workout logs to firestore")
-                    val result = Result.failure<Unit>(e)
-                    continuation.resume(result)
+                    error("error writing workout logs to firestore", e) { _, _ ->
+                        val result = Result.failure<Unit>(e)
+                        continuation.resume(result)
+                    }
                 }
         }
     }
@@ -167,7 +168,7 @@ sealed class FirestoreWorkoutLogsRepository(
                         records.addAll(documents.map { document -> LocalDate.parse(document.id) })
                     }
                     .addOnFailureListener { exception ->
-                        errorWithRecovery("failed to retrieve document IDs", exception)
+                        error("failed to retrieve document IDs", exception)
                     }
             }
         }

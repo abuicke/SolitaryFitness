@@ -45,11 +45,9 @@ import com.gravitycode.solitaryfitnessapp.R
 import com.gravitycode.solitaryfitnessapp.app.AppEvent
 import com.gravitycode.solitaryfitnessapp.auth.User
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
-import com.gravitycode.solitaryfitnessapp.util.IllegalStateError
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.error
-import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import com.gravitycode.solitaryfitnessapp.util.ui.Grid
 import com.gravitycode.solitaryfitnessapp.util.ui.OverflowMenu
 import java.time.LocalDate
@@ -152,7 +150,7 @@ fun LogWorkoutScreen(
             }
         }
     } else {
-        throw IllegalStateError("invalid orientation ${configuration.orientation}")
+        throw IllegalStateException("invalid orientation ${configuration.orientation}")
     }
 }
 
@@ -325,7 +323,7 @@ private fun AddRepsGrid(
             onClick = {
                 when (cell) {
                     in 0..3 -> onClickAddReps(repValues[cell])
-                    else -> errorWithRecovery("invalid cell") {
+                    else -> error("invalid cell") { _, _ ->
                         onClickAddReps(null)
                     }
                 }
@@ -334,7 +332,7 @@ private fun AddRepsGrid(
             Text(
                 when (cell) {
                     in 0..3 -> repValues[cell].toString()
-                    else -> errorWithRecovery("invalid cell") {
+                    else -> error("invalid cell") { _, _ ->
                         "X"
                     }
                 }

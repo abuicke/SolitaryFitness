@@ -4,7 +4,6 @@ import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.WorkoutLogsReposi
 import com.gravitycode.solitaryfitnessapp.util.ResultOf
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.DataCorruptionError
-import com.gravitycode.solitaryfitnessapp.util.errorWithRecovery
 import dagger.Lazy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

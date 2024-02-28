@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.gravitycode.solitaryfitnessapp.R
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.android.data.GetActivityResult
+import com.gravitycode.solitaryfitnessapp.util.error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -64,9 +65,9 @@ class FirebaseAuthenticator(
 
     override suspend fun signIn(): Result<User> {
         if (user != null) {
-            val errMsg = "already signed in as: $user"
-            error(errMsg)
-            return Result.failure(IllegalStateException(errMsg))
+            return error("already signed in as: $user") { message, _ ->
+                Result.failure(IllegalStateException(message))
+            }
         }
 
         val result = getFirebaseSignInResult(signInIntent)
@@ -94,9 +95,9 @@ class FirebaseAuthenticator(
     override suspend fun signOut(): Result<Unit> {
         return suspendCoroutine { continuation ->
             if (user == null) {
-                val errMsg = "no user signed in"
-                error(errMsg)
-                continuation.resume(Result.failure(IllegalStateException(errMsg)))
+                error("no user signed in") { message, _ ->
+                    continuation.resume(Result.failure(IllegalStateException(message)))
+                }
             }
 
             firebaseAuthUi.signOut(activity)
