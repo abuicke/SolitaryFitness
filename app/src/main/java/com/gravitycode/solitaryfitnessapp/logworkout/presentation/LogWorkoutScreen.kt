@@ -10,6 +10,7 @@
 package com.gravitycode.solitaryfitnessapp.logworkout.presentation
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,7 @@ import com.gravitycode.solitaryfitnessapp.auth.User
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
+import com.gravitycode.solitaryfitnessapp.util.android.Toaster
 import com.gravitycode.solitaryfitnessapp.util.error
 import com.gravitycode.solitaryfitnessapp.util.ui.Grid
 import com.gravitycode.solitaryfitnessapp.util.ui.OverflowMenu
@@ -160,6 +163,8 @@ private fun TopBar(
     user: User?,
     onMenuItemClicked: (MenuItem) -> Unit
 ) {
+    val toaster = Toaster.create(LocalContext.current)
+
     TopAppBar(
         modifier = Modifier
             .height(IntrinsicSize.Max)
@@ -217,10 +222,7 @@ private fun TopBar(
                     onMenuItemClicked(menuItem)
                 } else {
                     error("Couldn't return MenuItem for string '$string'") { _, _ ->
-                        /**
-                         * TODO: Create parent class Screen that implements Messenger
-                         * */
-                        // toast("Failed to open $string")
+                        toaster.toast("Failed to open $string")
                     }
                 }
             }
