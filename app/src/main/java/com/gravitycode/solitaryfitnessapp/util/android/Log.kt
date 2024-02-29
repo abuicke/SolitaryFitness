@@ -154,7 +154,7 @@ object Log {
     }
 
     /**
-     * Log events which have or could have raised an exception if not intercepted.
+     * Log events which have or could have raised an exception.
      *
      * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
      *
@@ -169,7 +169,7 @@ object Log {
     }
 
     /**
-     * Log events which have or could have raised an exception if not intercepted.
+     * Log events which have or could have raised an exception.
      *
      * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
      *
