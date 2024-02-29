@@ -216,7 +216,12 @@ private fun TopBar(
                 if (menuItem != null) {
                     onMenuItemClicked(menuItem)
                 } else {
-                    error("Couldn't return MenuItem for string '$string'")
+                    error("Couldn't return MenuItem for string '$string'") { _, _ ->
+                        /**
+                         * TODO: Create parent class Screen that implements Messenger
+                         * */
+                        // toast("Failed to open $string")
+                    }
                 }
             }
         }

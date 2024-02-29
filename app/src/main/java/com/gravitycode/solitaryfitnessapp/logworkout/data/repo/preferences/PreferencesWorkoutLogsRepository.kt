@@ -100,9 +100,6 @@ class PreferencesWorkoutLogsRepository(
     }
 }
 
-/**
- * TODO: Should [add] and [remove] return a [Result]?
- * */
 private class PreferencesMetaData(
     scope: CoroutineScope,
     private val preferencesStore: DataStore<Preferences>

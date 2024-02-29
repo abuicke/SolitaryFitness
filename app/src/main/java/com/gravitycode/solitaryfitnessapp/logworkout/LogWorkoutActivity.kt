@@ -125,21 +125,6 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
 
     private lateinit var appControllerSettings: AppControllerSettings
 
-    /**
-     *
-     *
-     * TODO: Check the use of error() everywhere and see if errorWithRecovery() should be used instead.
-     *
-     * TODO: Make sure the correct error() function is being used everywhere.
-     *
-     * TODO: Finish documenting Preconditions functions, fix KDoc for last two functions.
-     *
-     *
-     *
-     *
-     *
-     * */
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
