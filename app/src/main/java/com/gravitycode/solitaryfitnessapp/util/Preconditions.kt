@@ -6,41 +6,85 @@ import com.gravitycode.solitaryfitnessapp.util.android.Log
 private const val TAG = "DEBUG_ERROR"
 
 /**
- * Throw an error or log an exception if the app is in debug mode, i.e. [BuildConfig.DEBUG] is set to true.
+ * Throws an error or logs an exception based on the build configuration.
  *
- * If [BuildConfig.CRASH_ON_ERROR] is set to true then the app will crash, if not then an error message will
- * be output to logcat.
+ * If both [BuildConfig.DEBUG] and [BuildConfig.CRASH_ON_ERROR] are set to `true`,
+ * throws an [IllegalStateException] with the specified [message] and [cause].
  *
- * An optional recovery block can be specified which will be run to attempt to recover from the failed state
- * if the error occurred while in production; such as cleaning up variables, showing a message to the user, etc.
+ * If only [BuildConfig.DEBUG] is set to `true`, logs [message] and [cause] at level [android.util.Log.ERROR].
  *
- * @param[message] The message describing the error
- * @param[throwable] The cause of the error if one exists
- * @param[recoveryBlock] The recovery block to be executed if in production mode
+ * If neither are set to `true` nothing happens.
+ *
+ * @param message The message describing the error
+ * @param cause The cause of the error if one exists
  * */
-fun error(message: String, throwable: Throwable? = null, recoveryBlock: () -> Unit = {}) {
+fun error(message: String, cause: Throwable? = null) {
     if (BuildConfig.DEBUG && BuildConfig.CRASH_ON_ERROR) {
-        throw IllegalStateException(message, throwable)
+        throw IllegalStateException(message, cause)
     } else if (BuildConfig.DEBUG) {
-        Log.e(TAG, message, throwable)
-    } else {
-        recoveryBlock()
+        Log.e(TAG, message, cause)
     }
 }
 
 /**
- * Throw an error or log an exception if the app is in debug mode, i.e. [BuildConfig.DEBUG] is set to true.
+ * Throws an error or logs an exception based on the build configuration.
  *
- * If [BuildConfig.CRASH_ON_ERROR] is set to true then the app will crash, if not then an error message will
- * be output to logcat.
+ * If both [BuildConfig.DEBUG] and [BuildConfig.CRASH_ON_ERROR] are set to `true`, throws an
+ * [IllegalStateException] with the specified [message] and cause retrieved from [Result.exceptionOrNull].
  *
- * An optional recovery block can be specified which will be run to attempt to recover from the failed state,
- * such as cleaning up variables, showing a message to the user, etc.
+ * If only [BuildConfig.DEBUG] is set to `true`, logs [message] and the cause
+ * retrieved from [Result.exceptionOrNull] at level [android.util.Log.ERROR].
  *
- * @param[message] The message describing the error
- * @param[result] The [Result] which an exception will be retrieved from using [Result.exceptionOrNull]
- * @param[recoveryBlock] The recovery block to be executed if no crash occurs.
+ * If neither are set to `true` nothing happens.
+ *
+ * @param message The message describing the error
+ * @param result The result which [Result.exceptionOrNull] will be called on to retrieve the cause if one exists
  * */
-fun error(message: String, result: Result<Any?>, recoveryBlock: () -> Unit = {}) {
-    error(message, result.exceptionOrNull(), recoveryBlock)
+fun error(message: String, result: Result<*>) {
+    error(message, result.exceptionOrNull())
+}
+
+/**
+ * Throws an error or executes a recovery function depending on the build configuration.
+ *
+ * If both [BuildConfig.DEBUG] and [BuildConfig.CRASH_ON_ERROR] are set to `true`,
+ * throws an [IllegalStateException] with the specified [message] and [cause].
+ *
+ * If only [BuildConfig.DEBUG] is set to `true`, logs [message] and [cause] at
+ * level [android.util.Log.ERROR] and executes [recover] returning its return value.
+ *
+ * If neither are set to `true`, executes [recover] and returns its return value.
+ *
+ * @param message The message describing the error
+ * @param cause The cause of the error if one exists
+ * @param recover The recovery function, which takes two parameters: the [message] and the [cause]
+ * */
+fun <T> error(message: String, cause: Throwable? = null, recover: (String, Throwable?) -> T): T {
+    return if (BuildConfig.DEBUG && BuildConfig.CRASH_ON_ERROR) {
+        throw IllegalStateException(message, cause)
+    } else if (BuildConfig.DEBUG) {
+        Log.e(TAG, message, cause)
+        recover(message, cause)
+    } else {
+        recover(message, cause)
+    }
+}
+
+/**
+ * Throws an error or executes a recovery function depending on the build configuration.
+ *
+ * If both [BuildConfig.DEBUG] and [BuildConfig.CRASH_ON_ERROR] are set to `true`, throws an
+ * [IllegalStateException] with the specified [message] and cause retrieved from [Result.exceptionOrNull]
+ *
+ * If only [BuildConfig.DEBUG] is set to `true`, logs [message] and the cause retrieved from
+ * [Result.exceptionOrNull] at level [android.util.Log.ERROR] and executes [recover] returning its return value.
+ *
+ * If neither are set to `true`, executes [recover] and returns its return value.
+ *
+ * @param message The message describing the error
+ * @param result The result which [Result.exceptionOrNull] will be called on to retrieve the cause if one exists
+ * @param recover The recovery function, which takes two parameters: the [message] and the cause retrieved from [Result.exceptionOrNull]
+ * */
+fun <T> error(message: String, result: Result<*>, recover: (String, Throwable?) -> T): T {
+    return error(message, result.exceptionOrNull(), recover)
 }

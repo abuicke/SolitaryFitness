@@ -98,7 +98,9 @@ class LogWorkoutViewModel(
                 updateState(state.value.copy(log = WorkoutLog()))
             }
         } else {
-            error("failed to read workout log from repository", result)
+            error("failed to read workout log from repository", result) { _, _ ->
+                messenger.showToast("Unable to load workout data")
+            }
         }
     }
 
@@ -134,9 +136,10 @@ class LogWorkoutViewModel(
             }
 
             if (result.isFailure) {
-                updateState(oldState)
-                messenger.showToast("Couldn't save reps")
-                error("Failed to write workout log to repository", result)
+                error("Failed to write workout log to repository", result) { _, _ ->
+                    updateState(oldState)
+                    messenger.showToast("Couldn't save reps")
+                }
             } else {
                 Log.i(TAG, "incrementWorkout(${workout.string}, $quantity)")
             }
@@ -152,9 +155,10 @@ class LogWorkoutViewModel(
         viewModelScope.launch {
             val result = repository.writeWorkoutLog(state.value.date, log)
             if (result.isFailure) {
-                updateState(oldState)
-                messenger.showToast("Couldn't reset reps")
-                error("Failed to reset reps and write to repository", result)
+                error("Failed to reset reps and write to repository", result) { _, _ ->
+                    updateState(oldState)
+                    messenger.showToast("Couldn't reset reps")
+                }
             } else {
                 Log.i(TAG, "reps reset successfully")
             }

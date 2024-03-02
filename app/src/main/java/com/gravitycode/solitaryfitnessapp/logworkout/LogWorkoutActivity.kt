@@ -57,16 +57,6 @@ import javax.annotation.concurrent.NotThreadSafe
 import javax.inject.Inject
 
 /**
- * TODO: Need to recheck the functioning of application scope. I'm basically relying on Android killing the
- *  app process to cancel the scope for me, otherwise it runs indefinitely and has all the same drawbacks
- *  as using [kotlinx.coroutines.GlobalScope]. Is there a use case for an activity level scope that the activity
- *  is responsible for cancelling? I do not want to use [lifecycleScope] because that will kill the coroutines
- *  whenever the activity is off screen (i.e. paused) which may not ne the desired behavior. This would make
- *  an even better case for a base activity that handles common logic I want across all activities such as
- *  showing the snackbar etc.
- *
- * TODO: Actually make use of [InternetMonitor]
- *
  * TODO: There's a lot of logic that would be fragile to repeat across multiple activities, i.e. setting up
  *  the authentication state, launching flows, providing [Messenger] functionality, specifically Snackbar,
  *  but there is also an opportunity to provide a convenient `toast` function in the child activities.
@@ -74,34 +64,7 @@ import javax.inject.Inject
  * TODO: Need to gracefully recover from exceptions anywhere they're thrown. Look through the source code
  *  and look for anywhere there's an explicit `throw` and change this.
  *
- * TODO: What happens if I kill the internet mid-sync or when uploading a workout log? Should have
- *  [SyncDataService] observe [InternetMonitor], I think firestore has an option to manage this itself,
- *  how does it work and does it need to be enabled?
- *
- * TODO: Do I need to redo how I write the getInstance pattern?
- *  [https://stackoverflow.com/questions/35587652/kotlin-thread-safe-native-lazy-singleton-with-parameter]
- *  [https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom#Example_Java_Implementation]
- *  [https://stackoverflow.com/questions/17799976/why-is-static-inner-class-singleton-thread-safe/17800038]
- *  [https://stackoverflow.com/questions/6109896/singleton-pattern-bill-pughs-solution]
- *
- * TODO: Is `@Volatile` required on singleton pattern?
- *  [https://stackoverflow.com/questions/59208041/do-we-need-volatile-when-implementing-singleton-using-double-check-locking]
- *
- * TODO: [lifecycleScope] on cancels jobs when the activity is destroyed. What is the point of this? (I guess
- *  it's for moving between activities, but with something like the [InternetMonitor] in continues to
- *  observe the state even when the activity is off-screen and in the `STOPPED` state) What scope cancels the
- *  couroutines when the activity goes off-screen?
- *
- * TODO: Add a test that signs out on UIAutomator.
- * TODO: Write test to test UI with firebase that doesn't choosing an account to sign in with.
- * TODO: Use Mockito for Firestore: https://softwareengineering.stackexchange.com/questions/450508
- * TODO: Need error handling and return [Result] everywhere preferences store is accessed.
- * TODO: Check to see if there are other locations where I can use runCatching to return [Result]s
- * TODO: Write test for [AppControllerSettings]
- * TODO: Are there any places where it would be more profitable to us async/await? (Anywhere a result is
- *  waited for, what about logging in and out?)
  * TODO: `onEvent(DateSelected)` still being called 3 times
- * TODO: Am I nesting a `withContext` inside a `launch` anywhere? Replace with `launch(Dispatchers...)`
  * */
 class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObservable, FlowLauncher {
 
@@ -171,9 +134,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
         if (authenticator.isUserSignedIn()) {
             val currentUser = authenticator.getSignedInUser()!!
             val name = currentUser.name ?: currentUser.email ?: currentUser.id
-            showToast("You are already signed in as $name")
-            error("user is already signed in as $name")
-            return
+            return error("user is already signed in as $name") { _, _ ->
+                showToast("You are already signed in as $name")
+            }
         }
 
         lifecycleScope.launch {
@@ -208,16 +171,18 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
             } else {
-                showToast("Failed to sign in")
-                error("Sign in failed", result)
+                error("Sign in failed", result) { message, _ ->
+                    showToast(message)
+                }
             }
         }
     }
 
     override fun launchSignOutFlow() {
         if (!authenticator.isUserSignedIn()) {
-            showToast("Can't sign out, you're not signed in")
-            error("no user is signed in")
+            return error("no user is signed in, cannot sign out") { _, _ ->
+                showToast("Can't sign out, you're not signed in")
+            }
         }
 
         lifecycleScope.launch {
@@ -230,8 +195,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
-                showToast("Failed to sign out")
-                error("Sign out failed", result)
+                error("Sign out failed", result) { message, _ ->
+                    showToast(message)
+                }
             }
         }
     }
@@ -266,11 +232,9 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                             }
                         }
                     } catch (t: Throwable) {
-                        showToast("Sync failed...")
-                        error(
-                            "sync data service failed: ${t.message}",
-                            t
-                        )
+                        error("sync data service failed: ${t.message}", t) { _, _ ->
+                            showToast("Sync failed...")
+                        }
                     } finally {
                         progressDialog.dismiss()
                         onComplete?.invoke()
@@ -355,10 +319,7 @@ private class AppControllerSettings private constructor(dataStoreManager: DataSt
                         users.addAll(userIds)
                     }
                 } catch (ioe: IOException) {
-                    error(
-                        "failed to read app controller settings from preferences store",
-                        ioe
-                    )
+                    error("failed to read app controller settings from preferences store", ioe)
                 }
 
                 instance = this

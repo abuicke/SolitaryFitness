@@ -42,19 +42,26 @@ fun firestoreSettings(persistentCacheSizeMb: Int): FirebaseFirestoreSettings {
  *
  * [Firestore not listing documents with collection but no fields](https://stackoverflow.com/questions/69569496)
  * */
-suspend fun CollectionReference.deleteDocuments() {
+suspend fun CollectionReference.deleteDocuments(): Result<Unit> {
     return suspendCoroutine { continuation ->
         get().addOnCompleteListener { queryTask ->
-            /**
-             * TODO: I seem to be going on to use the `queryTask.result` even if `queryTask.isSuccessful` is false?
-             * */
-            if (!queryTask.isSuccessful) error("query firestore task failed", queryTask.exception)
+            if (!queryTask.isSuccessful) {
+                error("query firestore task failed", queryTask.exception) { message, _ ->
+                    val result: Result<Unit> = if (queryTask.exception != null) {
+                        Result.failure(queryTask.exception!!)
+                    } else {
+                        Result.failure(IllegalStateException(message))
+                    }
+                    continuation.resume(result)
+                }
+            }
             val query: QuerySnapshot = queryTask.result
             val documents = query.documents
             val completed = Array(documents.size) { false }
             Log.v(TAG, "number of documents to delete = ${documents.size}")
             if (query.documents.isEmpty()) {
-                continuation.resume(Unit)
+                val result = Result.success(Unit)
+                continuation.resume(result)
             } else {
                 for (i in 0 until query.documents.size) {
                     val document = query.documents[i]
@@ -69,7 +76,8 @@ suspend fun CollectionReference.deleteDocuments() {
 
                         if (completed.reduce { acc, next -> acc && next }) {
                             Log.i(TAG, "all documents have been deleted")
-                            continuation.resume(Unit)
+                            val result = Result.success(Unit)
+                            continuation.resume(result)
                         }
                     }
                 }

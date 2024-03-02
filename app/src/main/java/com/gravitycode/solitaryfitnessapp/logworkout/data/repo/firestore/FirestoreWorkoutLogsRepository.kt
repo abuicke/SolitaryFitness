@@ -84,9 +84,10 @@ sealed class FirestoreWorkoutLogsRepository(
                     val result = Result.success(Unit)
                     continuation.resume(result)
                 }.addOnFailureListener { e ->
-                    error("error writing workout logs to firestore")
-                    val result = Result.failure<Unit>(e)
-                    continuation.resume(result)
+                    error("error writing workout logs to firestore", e) { _, _ ->
+                        val result = Result.failure<Unit>(e)
+                        continuation.resume(result)
+                    }
                 }
         }
     }
@@ -131,7 +132,7 @@ sealed class FirestoreWorkoutLogsRepository(
     protected abstract fun users(): CollectionReference
 
     /**
-     * @param[userId] The user's ID
+     * @param userId The user's ID
      *
      * @return a collection containing all the data (including workout logs) for the specified user
      * */
@@ -146,7 +147,7 @@ sealed class FirestoreWorkoutLogsRepository(
     protected fun workoutLogs() = workoutLogs(authenticator.getSignedInUser()!!.id)
 
     /**
-     * @param[date] The date of the workout logs
+     * @param date The date of the workout logs
      *
      * @return a document containing the workout logs for the specified date (for the current user)
      * */
