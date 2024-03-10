@@ -7,7 +7,7 @@ import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.megabytesToBytes
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.error.error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -46,7 +46,7 @@ suspend fun CollectionReference.deleteDocuments(): Result<Unit> {
     return suspendCoroutine { continuation ->
         get().addOnCompleteListener { queryTask ->
             if (!queryTask.isSuccessful) {
-                error("query firestore task failed", queryTask.exception) { message, _ ->
+                error("query firestore task failed", queryTask.exception) { message ->
                     val result: Result<Unit> = if (queryTask.exception != null) {
                         Result.failure(queryTask.exception!!)
                     } else {
@@ -55,10 +55,12 @@ suspend fun CollectionReference.deleteDocuments(): Result<Unit> {
                     continuation.resume(result)
                 }
             }
+
             val query: QuerySnapshot = queryTask.result
             val documents = query.documents
             val completed = Array(documents.size) { false }
             Log.v(TAG, "number of documents to delete = ${documents.size}")
+
             if (query.documents.isEmpty()) {
                 val result = Result.success(Unit)
                 continuation.resume(result)

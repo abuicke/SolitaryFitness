@@ -2,7 +2,9 @@ package com.gravitycode.solitaryfitnessapp.app
 
 import android.app.Application
 import androidx.activity.ComponentActivity
+import com.gravitycode.solitaryfitnessapp.BuildConfig
 import com.gravitycode.solitaryfitnessapp.auth.AuthenticationObservable
+import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
 import com.gravitycode.solitaryfitnessapp.util.android.Messenger
 import com.gravitycode.solitaryfitnessapp.util.android.debug
 import com.gravitycode.solitaryfitnessapp.util.android.disableLogcatThrottling
@@ -18,6 +20,11 @@ class SolitaryFitnessApp : Application() {
             .application(this)
             .build()
         applicationComponent.inject(this)
+
+        AppConfiguration.setup(
+            debug = BuildConfig.DEBUG,
+            crashOnError = BuildConfig.CRASH_ON_ERROR
+        )
 
         debug {
             disableLogcatThrottling()

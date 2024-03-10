@@ -9,7 +9,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.MetaData
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.error.error
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
@@ -84,7 +84,7 @@ sealed class FirestoreWorkoutLogsRepository(
                     val result = Result.success(Unit)
                     continuation.resume(result)
                 }.addOnFailureListener { e ->
-                    error("error writing workout logs to firestore", e) { _, _ ->
+                    error("error writing workout logs to firestore", e) {
                         val result = Result.failure<Unit>(e)
                         continuation.resume(result)
                     }

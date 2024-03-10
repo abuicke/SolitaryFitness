@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitnessapp.util
+package com.gravitycode.solitaryfitnessapp.util.error
 
 import com.gravitycode.solitaryfitnessapp.logworkout.data.sync.LazySyncDataService
 import kotlinx.coroutines.delay

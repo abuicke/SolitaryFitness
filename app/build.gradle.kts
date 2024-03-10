@@ -99,7 +99,8 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     // Not part of the BoM, so requires an explicit version
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    // TODO: https://developers.google.com/android/guides/releases#february_15_2024
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coil - Image Loading
     // implementation("io.coil-kt:coil:2.5.0")

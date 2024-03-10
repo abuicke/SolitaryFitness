@@ -5,7 +5,7 @@
 
 package com.gravitycode.solitaryfitnessapp.util.android
 
-import com.gravitycode.solitaryfitnessapp.BuildConfig
+import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
 
 /**
  * Verbose: A non-critical event has succeeded. Also covers any event which does not belong at another level,
@@ -29,14 +29,14 @@ object Log {
      * Log events which do not belong to any other log level; non-critical conditions succeeding, the state
      * of a particular procedure or module across time, lifecycle events, initial function calls etc.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun v(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.v("$META_TAG$tag", message, throwable)
         }
     }
@@ -45,7 +45,7 @@ object Log {
      * Log events which do not belong to any other log level; non-critical conditions succeeding, the state
      * of a particular procedure or module across time, lifecycle events, initial function calls etc.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
@@ -62,14 +62,14 @@ object Log {
      * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
      * condition not being met.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun d(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.d("$META_TAG$tag", message, throwable)
         }
     }
@@ -78,7 +78,7 @@ object Log {
      * Log events in which non-critical conditions fail, e.g. an event was not triggered due to a certain
      * condition not being met.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
@@ -94,14 +94,14 @@ object Log {
     /**
      * Log events which are crucial to the functioning of the application which have executed correctly.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun i(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.i("$META_TAG$tag", message, throwable)
         }
     }
@@ -109,7 +109,7 @@ object Log {
     /**
      * Log events which are crucial to the functioning of the application which have executed correctly.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
@@ -125,14 +125,14 @@ object Log {
     /**
      * Log events which could be indicative of an error, but which have not actually raised an exception.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun w(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.w("$META_TAG$tag", message, throwable)
         }
     }
@@ -140,7 +140,7 @@ object Log {
     /**
      * Log events which could be indicative of an error, but which have not actually raised an exception.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
@@ -156,14 +156,14 @@ object Log {
     /**
      * Log events which have or could have raised an exception.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun e(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.e("$META_TAG$tag", message, throwable)
         }
     }
@@ -171,7 +171,7 @@ object Log {
     /**
      * Log events which have or could have raised an exception.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
@@ -188,14 +188,14 @@ object Log {
      * Log system critical events which have not occurred as the result of a bug in code, but as a result of
      * a failure of the framework, the virtual machine, or some other external tool or dependency.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message
      * @param throwable An exception to log
      * */
     fun wtf(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) {
+        if (AppConfiguration.isDebug()) {
             android.util.Log.wtf("$META_TAG$tag", message, throwable)
         }
     }
@@ -204,7 +204,7 @@ object Log {
      * Log system critical events which have not occurred as the result of a bug in code, but as a result of
      * a failure of the framework, the virtual machine, or some other external tool or dependency.
      *
-     * **IMPORTANT**: Logging will only take place if [BuildConfig.DEBUG] is set to `true`.
+     * **IMPORTANT**: Logging will only take place if [AppConfiguration.isDebug] returns `true`.
      *
      * @param tag The log tag, which will be prepended with [META_TAG]
      * @param message The log message

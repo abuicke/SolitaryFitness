@@ -11,7 +11,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.android.Messenger
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.error.error
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -98,7 +98,7 @@ class LogWorkoutViewModel(
                 updateState(state.value.copy(log = WorkoutLog()))
             }
         } else {
-            error("failed to read workout log from repository", result) { _, _ ->
+            error("failed to read workout log from repository", result) {
                 messenger.showToast("Unable to load workout data")
             }
         }
@@ -136,7 +136,7 @@ class LogWorkoutViewModel(
             }
 
             if (result.isFailure) {
-                error("Failed to write workout log to repository", result) { _, _ ->
+                error("Failed to write workout log to repository", result) {
                     updateState(oldState)
                     messenger.showToast("Couldn't save reps")
                 }
@@ -155,7 +155,7 @@ class LogWorkoutViewModel(
         viewModelScope.launch {
             val result = repository.writeWorkoutLog(state.value.date, log)
             if (result.isFailure) {
-                error("Failed to reset reps and write to repository", result) { _, _ ->
+                error("Failed to reset reps and write to repository", result) {
                     updateState(oldState)
                     messenger.showToast("Couldn't reset reps")
                 }

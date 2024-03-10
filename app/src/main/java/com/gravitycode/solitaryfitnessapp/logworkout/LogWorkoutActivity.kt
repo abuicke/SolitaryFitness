@@ -43,7 +43,7 @@ import com.gravitycode.solitaryfitnessapp.util.android.ToastDuration
 import com.gravitycode.solitaryfitnessapp.util.android.Toaster
 import com.gravitycode.solitaryfitnessapp.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitnessapp.util.android.data.stringSetPreferencesKey
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.error.error
 import com.gravitycode.solitaryfitnessapp.util.net.InternetMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -134,7 +134,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
         if (authenticator.isUserSignedIn()) {
             val currentUser = authenticator.getSignedInUser()!!
             val name = currentUser.name ?: currentUser.email ?: currentUser.id
-            return error("user is already signed in as $name") { _, _ ->
+            return error("user is already signed in as $name") {
                 showToast("You are already signed in as $name")
             }
         }
@@ -171,7 +171,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed in: ${user.email}")
                 Log.i(TAG, "signed in as user: $user")
             } else {
-                error("Sign in failed", result) { message, _ ->
+                error("Sign in failed", result) { message ->
                     showToast(message)
                 }
             }
@@ -180,7 +180,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
 
     override fun launchSignOutFlow() {
         if (!authenticator.isUserSignedIn()) {
-            return error("no user is signed in, cannot sign out") { _, _ ->
+            return error("no user is signed in, cannot sign out") {
                 showToast("Can't sign out, you're not signed in")
             }
         }
@@ -195,7 +195,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                 showToast("Signed out")
                 Log.i(TAG, "signed out")
             } else {
-                error("Sign out failed", result) { message, _ ->
+                error("Sign out failed", result) { message ->
                     showToast(message)
                 }
             }
@@ -232,7 +232,7 @@ class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObserva
                             }
                         }
                     } catch (t: Throwable) {
-                        error("sync data service failed: ${t.message}", t) { _, _ ->
+                        error("sync data service failed: ${t.message}", t) {
                             showToast("Sync failed...")
                         }
                     } finally {

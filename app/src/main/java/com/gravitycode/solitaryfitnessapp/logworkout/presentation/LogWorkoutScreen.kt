@@ -10,7 +10,6 @@
 package com.gravitycode.solitaryfitnessapp.logworkout.presentation
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,7 +49,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.util.ViewModel
 import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.android.Toaster
-import com.gravitycode.solitaryfitnessapp.util.error
+import com.gravitycode.solitaryfitnessapp.util.error.error
 import com.gravitycode.solitaryfitnessapp.util.ui.Grid
 import com.gravitycode.solitaryfitnessapp.util.ui.OverflowMenu
 import java.time.LocalDate
@@ -221,7 +220,7 @@ private fun TopBar(
                 if (menuItem != null) {
                     onMenuItemClicked(menuItem)
                 } else {
-                    error("Couldn't return MenuItem for string '$string'") { _, _ ->
+                    error("Couldn't return MenuItem for string '$string'") {
                         toaster.toast("Failed to open $string")
                     }
                 }
@@ -330,7 +329,7 @@ private fun AddRepsGrid(
             onClick = {
                 when (cell) {
                     in 0..3 -> onClickAddReps(repValues[cell])
-                    else -> error("invalid cell") { _, _ ->
+                    else -> error("invalid cell") {
                         onClickAddReps(null)
                     }
                 }
@@ -339,7 +338,7 @@ private fun AddRepsGrid(
             Text(
                 when (cell) {
                     in 0..3 -> repValues[cell].toString()
-                    else -> error("invalid cell") { _, _ ->
+                    else -> error("invalid cell") {
                         "X"
                     }
                 }
