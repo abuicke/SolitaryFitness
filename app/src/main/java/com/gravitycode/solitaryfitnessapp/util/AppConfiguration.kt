@@ -24,6 +24,8 @@ object AppConfiguration {
         return debug!!
     }
 
+    fun isProduction() = !isDebug()
+
     fun shouldCrashOnError(): Boolean {
         if (crashOnError == null) {
             throw IllegalStateException("setup never called")

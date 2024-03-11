@@ -66,7 +66,7 @@ dependencies {
     // Compose
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -93,13 +93,13 @@ dependencies {
     // Firebase
     // Use the BoM (Bill-of-Materials) so that only compatible versions of the Firebase libraries are
     // used, provided no explicit version is set on the libraries (https://reflectoring.io/maven-bom/)
-    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-firestore-ktx")
     // Not part of the BoM, so requires an explicit version
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    // TODO: https://developers.google.com/android/guides/releases#february_15_2024
+    //noinspection GradleDependency TODO: https://developers.google.com/android/guides/releases#february_15_2024
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coil - Image Loading
@@ -135,7 +135,7 @@ dependencies {
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
 
     // UI Testing (Compose)
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.01"))
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 

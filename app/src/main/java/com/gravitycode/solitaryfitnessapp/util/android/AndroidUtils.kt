@@ -8,16 +8,16 @@ import android.os.StrictMode.ThreadPolicy
 import android.os.StrictMode.VmPolicy
 import android.os.strictmode.Violation
 import androidx.annotation.RequiresApi
-import com.gravitycode.solitaryfitnessapp.BuildConfig
+import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
 import java.util.concurrent.Executor
 
 private const val TAG = "AndroidUtils"
 
 /**
- * Only run the selected code if in debug, i.e. [BuildConfig.DEBUG] is set to `true`.
+ * Only run the selected code if in debug, i.e. [AppConfiguration.isDebug] returns `true`.
  * */
 fun debug(block: () -> Unit) {
-    if (BuildConfig.DEBUG) {
+    if (AppConfiguration.isDebug()) {
         block()
     }
 }
@@ -53,10 +53,11 @@ fun disableLogcatThrottling() {
 fun enableStrictMode(context: Context, listenerExecutor: Executor) {
 
     val penaltyListener: (Violation) -> Unit = { violation ->
-        val violationOriginatesFromApp = violation.stackTrace.fold(false) { acc, stackTraceElement ->
-            val containsPackageName = stackTraceElement.toString().contains(context.packageName)
-            acc || containsPackageName
-        }
+        val violationOriginatesFromApp =
+            violation.stackTrace.fold(false) { acc, stackTraceElement ->
+                val containsPackageName = stackTraceElement.toString().contains(context.packageName)
+                acc || containsPackageName
+            }
 
         if (violationOriginatesFromApp) {
             throw violation
@@ -89,9 +90,9 @@ private val DISABLE_STRICT_MODE_LOCK = Any()
  * thus far strict mode has caused me nothing but problems and provided no actual value. So I'm abandoning
  * it for now, but keeping the code here in case I want to take this back up in the future.
  * */
-@Deprecated("potentially broken")
+@Deprecated("potentially broken, threading issues")
 fun <T> temporarilyDisableStrictMode(block: () -> T): T {
-    if (!BuildConfig.DEBUG) {
+    if (!AppConfiguration.isProduction()) {
         return block()
     }
 

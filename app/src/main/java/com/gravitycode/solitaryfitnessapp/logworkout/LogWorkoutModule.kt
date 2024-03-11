@@ -3,7 +3,6 @@ package com.gravitycode.solitaryfitnessapp.logworkout
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
-import com.gravitycode.solitaryfitnessapp.BuildConfig
 import com.gravitycode.solitaryfitnessapp.app.FlowLauncher
 import com.gravitycode.solitaryfitnessapp.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitnessapp.auth.Authenticator
@@ -16,6 +15,7 @@ import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.preferences.Prefe
 import com.gravitycode.solitaryfitnessapp.logworkout.data.sync.LazySyncDataService
 import com.gravitycode.solitaryfitnessapp.logworkout.data.sync.SyncDataService
 import com.gravitycode.solitaryfitnessapp.logworkout.presentation.LogWorkoutViewModel
+import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
 import com.gravitycode.solitaryfitnessapp.util.android.Messenger
 import com.gravitycode.solitaryfitnessapp.util.android.data.DataStoreManager
 import com.gravitycode.solitaryfitnessapp.util.firebase.firestoreSettings
@@ -75,7 +75,7 @@ object LogWorkoutModule {
         authenticator: Authenticator,
         @InternalDependency firestore: FirebaseFirestore
     ): WorkoutLogsRepository {
-        return if (BuildConfig.DEBUG) {
+        return if (AppConfiguration.isDebug()) {
             DebugFirestoreWorkoutLogsRepository(applicationScope, authenticator, firestore)
         } else {
             ProductionFirestoreWorkoutLogsRepository(applicationScope, authenticator, firestore)
