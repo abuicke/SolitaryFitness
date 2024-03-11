@@ -328,7 +328,7 @@ private fun AddRepsGrid(
             modifier = Modifier.fillMaxSize(),
             onClick = {
                 when (cell) {
-                    in 0..3 -> onClickAddReps(repValues[cell])
+                    in 0..2 -> onClickAddReps(repValues[cell])
                     else -> error("invalid cell") {
                         onClickAddReps(null)
                     }
@@ -337,7 +337,7 @@ private fun AddRepsGrid(
         ) {
             Text(
                 when (cell) {
-                    in 0..3 -> repValues[cell].toString()
+                    in 0..2 -> repValues[cell].toString()
                     else -> error("invalid cell") {
                         "X"
                     }
