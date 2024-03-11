@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +72,7 @@ fun Grid(
                         }
                     }
                     if (useDividers) {
-                        Divider(
+                        VerticalDivider(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .width(1.dp),
@@ -80,7 +82,7 @@ fun Grid(
                 }
             }
             if (useDividers) {
-                Divider(color = dividerColour)
+                HorizontalDivider(color = dividerColour)
             }
         }
     }
