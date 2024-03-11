@@ -14,5 +14,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Solitary Fitness"
+rootProject.name = "SolitaryFitness"
 include(":app")
+
+include(":caimito")
+project(":caimito").projectDir = File("..\\caimito\\caimito")

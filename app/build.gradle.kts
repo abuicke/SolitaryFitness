@@ -60,6 +60,8 @@ android {
 
 dependencies {
 
+    implementation(project(":caimito"))
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
@@ -99,7 +101,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     // Not part of the BoM, so requires an explicit version
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    //noinspection GradleDependency TODO: https://developers.google.com/android/guides/releases#february_15_2024
+    // noinspection GradleDependency TODO: https://developers.google.com/android/guides/releases#february_15_2024
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coil - Image Loading
