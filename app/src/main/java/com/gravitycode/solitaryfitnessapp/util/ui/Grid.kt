@@ -25,7 +25,7 @@ import kotlin.math.ceil
 
 @Composable
 @Preview(showSystemUi = true)
-private fun Grid() {
+private fun GridPreview() {
     Grid(
         modifier = Modifier.fillMaxSize(),
         columns = 3,
