@@ -1,6 +1,6 @@
-package com.gravitycode.solitaryfitnessapp.test_implementations
+package dev.gravitycode.solitaryfitness.test_implementations
 
-import com.gravitycode.solitaryfitnessapp.auth.User
+import dev.gravitycode.solitaryfitness.auth.User
 
 object TestUsers {
 

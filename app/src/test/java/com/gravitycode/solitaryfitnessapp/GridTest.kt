@@ -1,6 +1,6 @@
-package com.gravitycode.solitaryfitnessapp
+package dev.gravitycode.solitaryfitness
 
-import com.gravitycode.solitaryfitnessapp.util.ui.calculateGridRows
+import dev.gravitycode.solitaryfitness.util.ui.calculateGridRows
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

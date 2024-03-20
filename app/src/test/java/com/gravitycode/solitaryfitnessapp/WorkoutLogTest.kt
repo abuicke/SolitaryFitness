@@ -1,7 +1,7 @@
-package com.gravitycode.solitaryfitnessapp
+package dev.gravitycode.solitaryfitness
 
-import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
-import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
+import dev.gravitycode.solitaryfitness.logworkout.domain.Workout
+import dev.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

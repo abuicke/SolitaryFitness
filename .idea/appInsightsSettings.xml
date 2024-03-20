@@ -28,7 +28,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.gravitycode.solitaryfitnessapp" />
+                  <option name="appId" value="dev.gravitycode.solitaryfitness" />
                   <option name="mobileSdkAppId" value="1:703007876114:android:481fce6e9f62925ed324cb" />
                   <option name="projectId" value="solitaryfitness-65dc2" />
                   <option name="projectNumber" value="703007876114" />

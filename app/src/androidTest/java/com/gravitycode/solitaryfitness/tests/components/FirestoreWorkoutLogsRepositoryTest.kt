@@ -1,13 +1,13 @@
-package com.gravitycode.solitaryfitnessapp.tests.components
+package dev.gravitycode.solitaryfitness.tests.components
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitnessapp.logworkout.LogWorkoutModule
-import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.firestore.TestingFirestoreWorkoutLogsRepository
-import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
-import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitnessapp.test_implementations.TestUsers
-import com.gravitycode.solitaryfitnessapp.test_utils.assertSuccess
+import dev.gravitycode.solitaryfitness.logworkout.LogWorkoutModule
+import dev.gravitycode.solitaryfitness.logworkout.data.repo.firestore.TestingFirestoreWorkoutLogsRepository
+import dev.gravitycode.solitaryfitness.logworkout.domain.Workout
+import dev.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog
+import dev.gravitycode.solitaryfitness.test_implementations.TestUsers
+import dev.gravitycode.solitaryfitness.test_utils.assertSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope

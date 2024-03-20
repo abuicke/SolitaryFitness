@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitnessapp.test_utils
+package dev.gravitycode.solitaryfitness.test_utils
 
 import org.junit.Assert.assertTrue
 

@@ -1,10 +1,10 @@
-package com.gravitycode.solitaryfitnessapp.tests.components
+package dev.gravitycode.solitaryfitness.tests.components
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.LazyWorkoutLogsRepositoryFactory
-import com.gravitycode.solitaryfitnessapp.test_implementations.EmptyWorkoutLogsRepository
-import com.gravitycode.solitaryfitnessapp.test_utils.attack
+import dev.gravitycode.solitaryfitness.logworkout.data.repo.LazyWorkoutLogsRepositoryFactory
+import dev.gravitycode.solitaryfitness.test_implementations.EmptyWorkoutLogsRepository
+import dev.gravitycode.solitaryfitness.test_utils.attack
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith

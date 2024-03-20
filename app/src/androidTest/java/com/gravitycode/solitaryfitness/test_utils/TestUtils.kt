@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitnessapp.test_utils
+package dev.gravitycode.solitaryfitness.test_utils
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi

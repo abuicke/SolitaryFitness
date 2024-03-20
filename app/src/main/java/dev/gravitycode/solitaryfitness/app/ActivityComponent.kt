@@ -1,0 +1,32 @@
+package dev.gravitycode.solitaryfitness.app
+
+import androidx.activity.ComponentActivity
+import com.gravitycode.caimito.kotlin.ui.Messenger
+import dev.gravitycode.solitaryfitness.auth.AuthModule
+import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import dev.gravitycode.solitaryfitness.logworkout.LogWorkoutComponent
+import dagger.BindsInstance
+import dagger.Subcomponent
+
+@ActivityScope
+@Subcomponent(modules = [AuthModule::class])
+interface ActivityComponent {
+
+    @Subcomponent.Builder
+    interface Builder {
+
+        @BindsInstance fun componentActivity(activity: ComponentActivity): Builder
+
+        @BindsInstance fun messenger(messenger: Messenger): Builder
+
+        @BindsInstance fun authenticationObservable(observable: AuthenticationObservable): Builder
+
+        @BindsInstance fun flowLauncher(flowLauncher: FlowLauncher): Builder
+
+        fun build(): ActivityComponent
+    }
+
+    fun logWorkoutComponentBuilder(): LogWorkoutComponent.Builder
+
+    // fun inject(activity: MainActivity)
+}

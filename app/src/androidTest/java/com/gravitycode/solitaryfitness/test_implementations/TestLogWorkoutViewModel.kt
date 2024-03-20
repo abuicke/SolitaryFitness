@@ -1,11 +1,11 @@
-package com.gravitycode.solitaryfitnessapp.test_implementations
+package dev.gravitycode.solitaryfitness.test_implementations
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.gravitycode.solitaryfitnessapp.app.AppEvent
-import com.gravitycode.solitaryfitnessapp.logworkout.presentation.LogWorkoutEvent
-import com.gravitycode.solitaryfitnessapp.logworkout.presentation.LogWorkoutState
-import com.gravitycode.solitaryfitnessapp.util.ViewModel
+import dev.gravitycode.solitaryfitness.app.AppEvent
+import dev.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutEvent
+import dev.gravitycode.solitaryfitness.logworkout.presentation.LogWorkoutState
+import dev.gravitycode.solitaryfitness.util.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.setMain
 
