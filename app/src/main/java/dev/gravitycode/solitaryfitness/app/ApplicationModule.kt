@@ -3,7 +3,7 @@ package dev.gravitycode.solitaryfitness.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import com.gravitycode.caimito.kotlin.net.InternetMonitor
+import dev.gravitycode.caimito.kotlin.net.InternetMonitor
 import dev.gravitycode.solitaryfitness.util.data.DataStoreManager
 import dagger.Module
 import dagger.Provides

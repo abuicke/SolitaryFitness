@@ -5,9 +5,9 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.persistentCacheSettings
-import com.gravitycode.caimito.kotlin.core.Log
-import com.gravitycode.caimito.kotlin.core.error
-import com.gravitycode.caimito.kotlin.data.megabytesToBytes
+import dev.gravitycode.caimito.kotlin.core.Log
+import dev.gravitycode.caimito.kotlin.core.error
+import dev.gravitycode.caimito.kotlin.data.megabytesToBytes
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

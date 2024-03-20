@@ -3,8 +3,8 @@ package dev.gravitycode.solitaryfitness.logworkout.data.repo.firestore
 import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
-import com.gravitycode.caimito.kotlin.core.Log
-import com.gravitycode.caimito.kotlin.core.error
+import dev.gravitycode.caimito.kotlin.core.Log
+import dev.gravitycode.caimito.kotlin.core.error
 import dev.gravitycode.solitaryfitness.auth.Authenticator
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import dev.gravitycode.solitaryfitness.logworkout.domain.Workout

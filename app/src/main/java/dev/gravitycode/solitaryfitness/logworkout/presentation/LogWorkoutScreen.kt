@@ -42,11 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.gravitycode.caimito.kotlin.core.Log
-import com.gravitycode.caimito.kotlin.core.error
-import com.gravitycode.caimito.kotlin.ui.android.Toaster
-import com.gravitycode.caimito.kotlin.ui.compose.Grid
-import com.gravitycode.caimito.kotlin.ui.compose.OverflowMenu
+import dev.gravitycode.caimito.kotlin.core.Log
+import dev.gravitycode.caimito.kotlin.core.error
+import dev.gravitycode.caimito.kotlin.ui.android.Toaster
+import dev.gravitycode.caimito.kotlin.ui.compose.Grid
+import dev.gravitycode.caimito.kotlin.ui.compose.OverflowMenu
 import dev.gravitycode.solitaryfitness.R
 import dev.gravitycode.solitaryfitness.app.AppEvent
 import dev.gravitycode.solitaryfitness.auth.User

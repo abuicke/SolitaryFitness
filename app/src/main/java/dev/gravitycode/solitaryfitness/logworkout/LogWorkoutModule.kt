@@ -3,8 +3,8 @@ package dev.gravitycode.solitaryfitness.logworkout
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
-import com.gravitycode.caimito.kotlin.core.AppConfiguration
-import com.gravitycode.caimito.kotlin.ui.Messenger
+import dev.gravitycode.caimito.kotlin.core.AppConfiguration
+import dev.gravitycode.caimito.kotlin.ui.Messenger
 import dev.gravitycode.solitaryfitness.app.FlowLauncher
 import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
 import dev.gravitycode.solitaryfitness.auth.Authenticator

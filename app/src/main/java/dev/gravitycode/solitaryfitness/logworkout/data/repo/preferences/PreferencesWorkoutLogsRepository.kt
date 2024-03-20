@@ -3,9 +3,9 @@ package dev.gravitycode.solitaryfitness.logworkout.data.repo.preferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.gravitycode.caimito.kotlin.core.Log
-import com.gravitycode.caimito.kotlin.data.intPreferencesKey
-import com.gravitycode.caimito.kotlin.data.stringSetPreferencesKey
+import dev.gravitycode.caimito.kotlin.core.Log
+import dev.gravitycode.caimito.kotlin.data.intPreferencesKey
+import dev.gravitycode.caimito.kotlin.data.stringSetPreferencesKey
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import dev.gravitycode.solitaryfitness.logworkout.domain.Workout
 import dev.gravitycode.solitaryfitness.logworkout.domain.WorkoutLog

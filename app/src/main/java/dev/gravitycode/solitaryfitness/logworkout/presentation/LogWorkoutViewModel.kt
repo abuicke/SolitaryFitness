@@ -1,9 +1,9 @@
 package dev.gravitycode.solitaryfitness.logworkout.presentation
 
 import androidx.lifecycle.viewModelScope
-import com.gravitycode.caimito.kotlin.core.Log
-import com.gravitycode.caimito.kotlin.core.error
-import com.gravitycode.caimito.kotlin.ui.Messenger
+import dev.gravitycode.caimito.kotlin.core.Log
+import dev.gravitycode.caimito.kotlin.core.error
+import dev.gravitycode.caimito.kotlin.ui.Messenger
 import dev.gravitycode.solitaryfitness.app.AppEvent
 import dev.gravitycode.solitaryfitness.app.FlowLauncher
 import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
