@@ -2,7 +2,7 @@ package dev.gravitycode.solitaryfitness.auth
 
 import kotlinx.coroutines.flow.Flow
 
-interface AuthenticationObservable {
+interface AuthenticationStatus {
 
     val authState: Flow<AuthState>
 }

@@ -7,7 +7,7 @@ import dev.gravitycode.caimito.kotlin.android.disableLogcatThrottling
 import dev.gravitycode.caimito.kotlin.core.AppConfiguration
 import dev.gravitycode.caimito.kotlin.ui.Messenger
 import dev.gravitycode.solitaryfitness.BuildConfig
-import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import dev.gravitycode.solitaryfitness.auth.AuthenticationStatus
 
 class SolitaryFitnessApp : Application() {
 
@@ -34,13 +34,13 @@ class SolitaryFitnessApp : Application() {
     fun activityComponent(
         activity: ComponentActivity,
         messenger: Messenger,
-        authenticationObservable: AuthenticationObservable,
+        authenticationStatus: AuthenticationStatus,
         flowLauncher: FlowLauncher
     ): ActivityComponent {
         return applicationComponent.activityComponentBuilder()
             .componentActivity(activity)
             .messenger(messenger)
-            .authenticationObservable(authenticationObservable)
+            .authenticationObservable(authenticationStatus)
             .flowLauncher(flowLauncher)
             .build()
     }
@@ -48,7 +48,7 @@ class SolitaryFitnessApp : Application() {
     fun activityComponent(activity: ComponentActivity) = activityComponent(
         activity,
         activity as Messenger,
-        activity as AuthenticationObservable,
+        activity as AuthenticationStatus,
         activity as FlowLauncher
     )
 }

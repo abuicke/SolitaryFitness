@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dev.gravitycode.caimito.kotlin.core.AppConfiguration
 import dev.gravitycode.caimito.kotlin.ui.Messenger
 import dev.gravitycode.solitaryfitness.app.FlowLauncher
-import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import dev.gravitycode.solitaryfitness.auth.AuthenticationStatus
 import dev.gravitycode.solitaryfitness.auth.Authenticator
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.LazyWorkoutLogsRepositoryFactory
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
@@ -104,8 +104,8 @@ object LogWorkoutModule {
     @LogWorkoutScope
     fun providesLogWorkoutViewModel(
         messenger: Messenger,
-        authenticationObservable: AuthenticationObservable,
+        authenticationStatus: AuthenticationStatus,
         flowLauncher: FlowLauncher,
         factory: WorkoutLogsRepositoryFactory
-    ) = LogWorkoutViewModel(messenger, authenticationObservable, flowLauncher, factory)
+    ) = LogWorkoutViewModel(messenger, authenticationStatus, flowLauncher, factory)
 }

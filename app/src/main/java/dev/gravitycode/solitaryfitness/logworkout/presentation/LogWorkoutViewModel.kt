@@ -6,7 +6,7 @@ import dev.gravitycode.caimito.kotlin.core.error
 import dev.gravitycode.caimito.kotlin.ui.Messenger
 import dev.gravitycode.solitaryfitness.app.AppEvent
 import dev.gravitycode.solitaryfitness.app.FlowLauncher
-import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import dev.gravitycode.solitaryfitness.auth.AuthenticationStatus
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepository
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
 import dev.gravitycode.solitaryfitness.logworkout.domain.Workout
@@ -37,7 +37,7 @@ import java.time.LocalDate
  * */
 class LogWorkoutViewModel(
     private val messenger: Messenger,
-    private val authenticationObservable: AuthenticationObservable,
+    private val authenticationStatus: AuthenticationStatus,
     private val flowLauncher: FlowLauncher,
     private val repositoryFactory: WorkoutLogsRepositoryFactory
 ) : ViewModel<LogWorkoutState, LogWorkoutEvent>(LogWorkoutState()) {
@@ -51,7 +51,7 @@ class LogWorkoutViewModel(
 
     init {
         viewModelScope.launch {
-            authenticationObservable.authState.collect { appState ->
+            authenticationStatus.authState.collect { appState ->
                 Log.i(TAG, "app state collected: $appState")
                 updateState(state.value.copy(user = appState.user))
                 repository = if (appState.isUserSignedIn()) {

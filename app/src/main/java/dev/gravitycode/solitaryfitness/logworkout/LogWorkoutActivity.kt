@@ -36,7 +36,7 @@ import dev.gravitycode.solitaryfitness.app.FlowLauncher
 import dev.gravitycode.solitaryfitness.app.SolitaryFitnessApp
 import dev.gravitycode.solitaryfitness.app.ui.SolitaryFitnessTheme
 import dev.gravitycode.solitaryfitness.auth.AuthState
-import dev.gravitycode.solitaryfitness.auth.AuthenticationObservable
+import dev.gravitycode.solitaryfitness.auth.AuthenticationStatus
 import dev.gravitycode.solitaryfitness.auth.Authenticator
 import dev.gravitycode.solitaryfitness.auth.User
 import dev.gravitycode.solitaryfitness.logworkout.data.repo.WorkoutLogsRepositoryFactory
@@ -66,7 +66,7 @@ import javax.inject.Inject
  *
  * TODO: `onEvent(DateSelected)` still being called 3 times
  * */
-class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationObservable, FlowLauncher {
+class LogWorkoutActivity : ComponentActivity(), Messenger, AuthenticationStatus, FlowLauncher {
 
     private companion object {
 
