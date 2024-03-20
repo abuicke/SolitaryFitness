@@ -1,4 +1,4 @@
-package com.gravitycode.solitaryfitnessapp.util.android.data
+package com.gravitycode.solitaryfitnessapp.util.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore

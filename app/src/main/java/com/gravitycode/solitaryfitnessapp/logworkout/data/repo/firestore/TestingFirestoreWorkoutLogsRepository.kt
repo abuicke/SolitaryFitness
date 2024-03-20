@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
 import com.gravitycode.solitaryfitnessapp.auth.Authenticator
 import com.gravitycode.solitaryfitnessapp.auth.User
-import com.gravitycode.solitaryfitnessapp.util.firebase.deleteDocuments
+import com.gravitycode.solitaryfitnessapp.util.deleteDocuments
 import kotlinx.coroutines.CoroutineScope
 
 class TestingFirestoreWorkoutLogsRepository(

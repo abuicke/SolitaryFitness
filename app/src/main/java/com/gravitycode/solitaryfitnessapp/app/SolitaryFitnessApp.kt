@@ -2,12 +2,12 @@ package com.gravitycode.solitaryfitnessapp.app
 
 import android.app.Application
 import androidx.activity.ComponentActivity
+import com.gravitycode.caimito.kotlin.android.debug
+import com.gravitycode.caimito.kotlin.android.disableLogcatThrottling
+import com.gravitycode.caimito.kotlin.core.AppConfiguration
+import com.gravitycode.caimito.kotlin.ui.Messenger
 import com.gravitycode.solitaryfitnessapp.BuildConfig
 import com.gravitycode.solitaryfitnessapp.auth.AuthenticationObservable
-import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
-import com.gravitycode.solitaryfitnessapp.util.android.Messenger
-import com.gravitycode.solitaryfitnessapp.util.android.debug
-import com.gravitycode.solitaryfitnessapp.util.android.disableLogcatThrottling
 
 class SolitaryFitnessApp : Application() {
 

@@ -3,8 +3,8 @@ package com.gravitycode.solitaryfitnessapp.app
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
-import com.gravitycode.solitaryfitnessapp.util.android.data.DataStoreManager
-import com.gravitycode.solitaryfitnessapp.util.net.InternetMonitor
+import com.gravitycode.caimito.kotlin.net.InternetMonitor
+import com.gravitycode.solitaryfitnessapp.util.data.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineScope

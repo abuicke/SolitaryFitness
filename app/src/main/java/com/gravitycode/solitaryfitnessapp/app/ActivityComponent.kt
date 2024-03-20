@@ -1,10 +1,10 @@
 package com.gravitycode.solitaryfitnessapp.app
 
 import androidx.activity.ComponentActivity
+import com.gravitycode.caimito.kotlin.ui.Messenger
 import com.gravitycode.solitaryfitnessapp.auth.AuthModule
 import com.gravitycode.solitaryfitnessapp.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitnessapp.logworkout.LogWorkoutComponent
-import com.gravitycode.solitaryfitnessapp.util.android.Messenger
 import dagger.BindsInstance
 import dagger.Subcomponent
 

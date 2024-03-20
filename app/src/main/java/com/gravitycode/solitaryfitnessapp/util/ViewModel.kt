@@ -4,6 +4,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.gravitycode.solitaryfitnessapp.app.AppEvent
 
+/**
+ * TODO: Move to caimito when ready.
+ * */
 abstract class ViewModel<S, E>(initialState: S) : androidx.lifecycle.ViewModel() {
 
     /**

@@ -5,10 +5,10 @@ import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
+import com.gravitycode.caimito.kotlin.android.GetActivityResult
+import com.gravitycode.caimito.kotlin.core.Log
+import com.gravitycode.caimito.kotlin.core.error
 import com.gravitycode.solitaryfitnessapp.R
-import com.gravitycode.solitaryfitnessapp.util.android.Log
-import com.gravitycode.solitaryfitnessapp.util.android.data.GetActivityResult
-import com.gravitycode.solitaryfitnessapp.util.error.error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

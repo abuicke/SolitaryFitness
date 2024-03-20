@@ -3,13 +3,13 @@ package com.gravitycode.solitaryfitnessapp.logworkout.data.repo.firestore
 import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
+import com.gravitycode.caimito.kotlin.core.Log
+import com.gravitycode.caimito.kotlin.core.error
 import com.gravitycode.solitaryfitnessapp.auth.Authenticator
 import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.WorkoutLogsRepository
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.Workout
 import com.gravitycode.solitaryfitnessapp.logworkout.domain.WorkoutLog
-import com.gravitycode.solitaryfitnessapp.util.android.Log
 import com.gravitycode.solitaryfitnessapp.util.data.MetaData
-import com.gravitycode.solitaryfitnessapp.util.error.error
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow

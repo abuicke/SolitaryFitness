@@ -3,6 +3,8 @@ package com.gravitycode.solitaryfitnessapp.logworkout
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.google.firebase.firestore.FirebaseFirestore
+import com.gravitycode.caimito.kotlin.core.AppConfiguration
+import com.gravitycode.caimito.kotlin.ui.Messenger
 import com.gravitycode.solitaryfitnessapp.app.FlowLauncher
 import com.gravitycode.solitaryfitnessapp.auth.AuthenticationObservable
 import com.gravitycode.solitaryfitnessapp.auth.Authenticator
@@ -15,10 +17,8 @@ import com.gravitycode.solitaryfitnessapp.logworkout.data.repo.preferences.Prefe
 import com.gravitycode.solitaryfitnessapp.logworkout.data.sync.LazySyncDataService
 import com.gravitycode.solitaryfitnessapp.logworkout.data.sync.SyncDataService
 import com.gravitycode.solitaryfitnessapp.logworkout.presentation.LogWorkoutViewModel
-import com.gravitycode.solitaryfitnessapp.util.AppConfiguration
-import com.gravitycode.solitaryfitnessapp.util.android.Messenger
-import com.gravitycode.solitaryfitnessapp.util.android.data.DataStoreManager
-import com.gravitycode.solitaryfitnessapp.util.firebase.firestoreSettings
+import com.gravitycode.solitaryfitnessapp.util.data.DataStoreManager
+import com.gravitycode.solitaryfitnessapp.util.firestoreSettings
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides

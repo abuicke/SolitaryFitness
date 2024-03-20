@@ -1,6 +1,6 @@
 package com.gravitycode.solitaryfitnessapp.logworkout.data.sync
 
-import com.gravitycode.solitaryfitnessapp.util.ResultOf
+import com.gravitycode.caimito.kotlin.core.ResultOf
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
