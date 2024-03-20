@@ -19,7 +19,7 @@ interface ActivityComponent {
 
         @BindsInstance fun messenger(messenger: Messenger): Builder
 
-        @BindsInstance fun authenticationObservable(observable: AuthenticationStatus): Builder
+        @BindsInstance fun authenticationStatus(observable: AuthenticationStatus): Builder
 
         @BindsInstance fun flowLauncher(flowLauncher: FlowLauncher): Builder
 

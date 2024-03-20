@@ -34,13 +34,13 @@ class SolitaryFitnessApp : Application() {
     fun activityComponent(
         activity: ComponentActivity,
         messenger: Messenger,
-        authenticationStatus: AuthenticationStatus,
+        authStatus: AuthenticationStatus,
         flowLauncher: FlowLauncher
     ): ActivityComponent {
         return applicationComponent.activityComponentBuilder()
             .componentActivity(activity)
             .messenger(messenger)
-            .authenticationObservable(authenticationStatus)
+            .authenticationStatus(authStatus)
             .flowLauncher(flowLauncher)
             .build()
     }
