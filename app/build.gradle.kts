@@ -60,7 +60,7 @@ android {
 
 dependencies {
 
-    implementation("dev.gravitycode.caimito:caimito:2.0.1")
+    implementation("dev.gravitycode.caimito:caimito:2.0.2")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
